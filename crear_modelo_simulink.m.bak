@@ -1,0 +1,456 @@
+%% crear_modelo_simulink.m
+% =========================================================================
+% GENERADOR DEL MODELO SIMULINK: modelo_miso_compuerta.slx
+% Sistema MISO: Compuerta Pasiva + Ventilador 24V PWM + Carro Movil IMU
+% =========================================================================
+
+clear; clc;
+
+mdl = 'modelo_miso_compuerta';
+
+% Cargar parametros en el workspace base antes de configurar el modelo:
+run('init_parametros.m');
+
+% Cerrar si ya esta abierto:
+if bdIsLoaded(mdl)
+    close_system(mdl, 0);
+end
+
+% Crear nuevo modelo de Simulink:
+new_system(mdl);
+open_system(mdl);
+
+% Configuracion del solver (paso continuo con Runge-Kutta orden 4 o paso variable ode45):
+set_param(mdl, 'Solver', 'ode45');
+set_param(mdl, 'StopTime', 't_sim');
+set_param(mdl, 'RelTol', '1e-5');
+set_param(mdl, 'AbsTol', '1e-6');
+set_param(mdl, 'MaxStep', '0.01');
+set_param(mdl, 'SaveOutput', 'on');
+
+%% --- 1. Bloques de Entrada / Referencia ---
+add_block('simulink/Sources/Constant', [mdl '/Ref_Angulo_Deg'], ...
+    'Value', 'theta_ref_deg', 'Position', [40, 100, 100, 130]);
+
+add_block('simulink/Math Operations/Gain', [mdl '/Deg2Rad'], ...
+    'Gain', 'pi/180', 'Position', [130, 100, 180, 130]);
+
+add_line(mdl, 'Ref_Angulo_Deg/1', 'Deg2Rad/1');
+
+%% --- 2. Subsystem Carro Movil e IMU ---
+car_sub = [mdl '/Carro_Movil_IMU'];
+add_block('simulink/Ports & Subsystems/Subsystem', car_sub, ...
+    'Position', [40, 260, 160, 340]);
+
+% Eliminar puertos default dentro del subsistema:
+Simulink.SubSystem.deleteContents(car_sub);
+
+% Contenido del subsistema Carro Movil:
+add_block('simulink/Sources/Step', [car_sub '/Step_Movimiento'], ...
+    'Time', '3.5', 'Before', '0', 'After', '0.04', 'SampleTime', '0', ...
+    'Position', [30, 50, 80, 80]);
+
+add_block('simulink/Sources/Constant', [car_sub '/Dist_Inicial_d0'], ...
+    'Value', 'd0', 'Position', [30, 105, 80, 135]);
+
+add_block('simulink/Math Operations/Sum', [car_sub '/Sum_DistReal'], ...
+    'Inputs', '++', 'Position', [120, 75, 145, 115]);
+
+add_block('simulink/Continuous/Transfer Fcn', [car_sub '/Filtro_Movimiento'], ...
+    'Numerator', '[1]', 'Denominator', '[0.4 1]', 'Position', [170, 80, 230, 110]);
+
+add_block('simulink/Ports & Subsystems/Outport', [car_sub '/d_real'], ...
+    'Position', [500, 85, 530, 105]);
+
+% IMU y aceleracion del carro:
+add_block('simulink/Continuous/Derivative', [car_sub '/Deriv_Vel'], ...
+    'Position', [260, 80, 290, 110]);
+add_block('simulink/Continuous/Derivative', [car_sub '/Deriv_Acel'], ...
+    'Position', [320, 80, 350, 110]);
+
+add_block('simulink/Sources/Constant', [car_sub '/Sesgo_IMU'], ...
+    'Value', 'imu_bias', 'Position', [280, 140, 330, 165]);
+
+add_block('simulink/Sources/Band-Limited White Noise', [car_sub '/Ruido_IMU'], ...
+    'Cov', 'imu_noise_pow', 'Ts', 'imu_Ts', 'seed', '[42]', ...
+    'Position', [280, 185, 330, 215]);
+
+add_block('simulink/Math Operations/Sum', [car_sub '/Sum_Acel_Meas'], ...
+    'Inputs', '+++', 'Position', [380, 95, 410, 155]);
+
+add_block('simulink/Ports & Subsystems/Outport', [car_sub '/a_meas'], ...
+    'Position', [500, 130, 530, 150]);
+
+% Observador de Kalman para estimar d_est:
+% d_est = d0 + integral(v_est)
+add_block('simulink/Continuous/State-Space', [car_sub '/Kalman_Observer'], ...
+    'A', 'A_obs - L_obs*C_obs', 'B', 'L_obs', 'C', '[1 0; 0 1]', 'D', '[0; 0]', ...
+    'Position', [440, 190, 520, 240]);
+
+add_block('simulink/Signal Routing/Demux', [car_sub '/Demux_Obs'], ...
+    'Outputs', '2', 'Position', [545, 195, 550, 235]);
+
+add_block('simulink/Continuous/Integrator', [car_sub '/Integ_Vel_Est'], ...
+    'InitialCondition', '0', 'Position', [580, 190, 610, 220]);
+
+add_block('simulink/Math Operations/Sum', [car_sub '/Sum_d_est'], ...
+    'Inputs', '++', 'Position', [640, 150, 665, 190]);
+
+add_block('simulink/Sources/Constant', [car_sub '/d0_Const'], ...
+    'Value', 'd0', 'Position', [580, 140, 620, 165]);
+
+add_block('simulink/Ports & Subsystems/Outport', [car_sub '/d_est'], ...
+    'Position', [700, 160, 730, 180]);
+
+% Estimacion cruda por doble integracion (para comparar deriva):
+add_block('simulink/Continuous/Integrator', [car_sub '/Integ_Raw_1'], ...
+    'InitialCondition', '0', 'Position', [460, 270, 490, 300]);
+add_block('simulink/Continuous/Integrator', [car_sub '/Integ_Raw_2'], ...
+    'InitialCondition', '0', 'Position', [520, 270, 550, 300]);
+add_block('simulink/Math Operations/Sum', [car_sub '/Sum_d_raw'], ...
+    'Inputs', '++', 'Position', [580, 260, 605, 300]);
+add_block('simulink/Ports & Subsystems/Outport', [car_sub '/d_raw'], ...
+    'Position', [700, 270, 730, 290]);
+
+% Conexiones internas de Carro_Movil_IMU:
+add_line(car_sub, 'Step_Movimiento/1', 'Sum_DistReal/1');
+add_line(car_sub, 'Dist_Inicial_d0/1', 'Sum_DistReal/2');
+add_line(car_sub, 'Sum_DistReal/1', 'Filtro_Movimiento/1');
+add_line(car_sub, 'Filtro_Movimiento/1', 'd_real/1');
+add_line(car_sub, 'Filtro_Movimiento/1', 'Deriv_Vel/1');
+add_line(car_sub, 'Deriv_Vel/1', 'Deriv_Acel/1');
+add_line(car_sub, 'Deriv_Acel/1', 'Sum_Acel_Meas/1');
+add_line(car_sub, 'Sesgo_IMU/1', 'Sum_Acel_Meas/2');
+add_line(car_sub, 'Ruido_IMU/1', 'Sum_Acel_Meas/3');
+add_line(car_sub, 'Sum_Acel_Meas/1', 'a_meas/1');
+add_line(car_sub, 'Sum_Acel_Meas/1', 'Kalman_Observer/1');
+add_line(car_sub, 'Kalman_Observer/1', 'Demux_Obs/1');
+add_line(car_sub, 'Demux_Obs/1', 'Integ_Vel_Est/1');
+add_line(car_sub, 'd0_Const/1', 'Sum_d_est/1');
+add_line(car_sub, 'Integ_Vel_Est/1', 'Sum_d_est/2');
+add_line(car_sub, 'Sum_d_est/1', 'd_est/1');
+
+add_line(car_sub, 'Sum_Acel_Meas/1', 'Integ_Raw_1/1');
+add_line(car_sub, 'Integ_Raw_1/1', 'Integ_Raw_2/1');
+add_line(car_sub, 'd0_Const/1', 'Sum_d_raw/1');
+add_line(car_sub, 'Integ_Raw_2/1', 'Sum_d_raw/2');
+add_line(car_sub, 'Sum_d_raw/1', 'd_raw/1');
+
+%% --- 3. Subsystem Controlador Compuerta (PID vs LQR vs H-infinita) ---
+ctrl_sub = [mdl '/Controlador_Compuerta'];
+add_block('simulink/Ports & Subsystems/Subsystem', ctrl_sub, ...
+    'Position', [220, 80, 360, 200]);
+Simulink.SubSystem.deleteContents(ctrl_sub);
+
+% Puertos del controlador:
+add_block('simulink/Ports & Subsystems/Inport', [ctrl_sub '/theta_ref'], 'Position', [30, 60, 60, 80]);
+add_block('simulink/Ports & Subsystems/Inport', [ctrl_sub '/theta_meas'], 'Position', [30, 120, 60, 140]);
+add_block('simulink/Ports & Subsystems/Inport', [ctrl_sub '/d_est'], 'Position', [30, 180, 60, 200]);
+
+% Calculo del error angular e = theta_ref - theta_meas:
+add_block('simulink/Math Operations/Sum', [ctrl_sub '/Sum_Error'], ...
+    'Inputs', '+-', 'Position', [100, 65, 125, 95]);
+
+% Feedforward gravitacional base: u_ff = m_g*g*l_c*cos(theta_ref)/k_m
+add_block('simulink/Math Operations/Math Function', [ctrl_sub '/Cos_Ref'], ...
+    'Function', 'cos', 'Position', [100, 25, 130, 50]);
+add_block('simulink/Math Operations/Gain', [ctrl_sub '/Gain_FF'], ...
+    'Gain', '(m_g*g*l_c)/k_m', 'Position', [150, 25, 230, 50]);
+
+% Rama 1: PID con Anti-Windup Clamping
+add_block('simulink/Continuous/PID Controller', [ctrl_sub '/PID_Controller'], ...
+    'Controller', 'PID', 'TimeDomain', 'Continuous-time', ...
+    'P', 'pid_Kp', 'I', 'pid_Ki', 'D', 'pid_Kd', 'N', 'pid_N', ...
+    'LimitOutput', 'off', ...
+    'Position', [180, 65, 240, 105]);
+
+add_block('simulink/Math Operations/Sum', [ctrl_sub '/Sum_PID_FF'], ...
+    'Inputs', '++', 'Position', [270, 45, 295, 85]);
+
+% Rama 2: LQR con Accion Integral y Gain Scheduling
+add_block('simulink/Continuous/Integrator', [ctrl_sub '/Integ_Error_LQR'], ...
+    'InitialCondition', '0', 'Position', [180, 130, 210, 160]);
+
+add_block('simulink/Continuous/Derivative', [ctrl_sub '/Deriv_Omega_LQR'], ...
+    'Position', [180, 175, 210, 205]);
+
+add_block('simulink/Math Operations/Gain', [ctrl_sub '/Gain_K1'], ...
+    'Gain', '-K_lqr(1)', 'Position', [260, 105, 320, 135]);
+add_block('simulink/Math Operations/Gain', [ctrl_sub '/Gain_K3'], ...
+    'Gain', '-K_lqr(3)', 'Position', [260, 140, 320, 170]);
+add_block('simulink/Math Operations/Gain', [ctrl_sub '/Gain_K2'], ...
+    'Gain', '-K_lqr(2)', 'Position', [260, 175, 320, 205]);
+
+add_block('simulink/Sources/Constant', [ctrl_sub '/Const_u_eq'], ...
+    'Value', 'u_eq', 'Position', [260, 215, 300, 240]);
+
+add_block('simulink/Math Operations/Sum', [ctrl_sub '/Sum_LQR'], ...
+    'Inputs', '++++', 'Position', [350, 135, 375, 195]);
+
+% Rama 3: Control Robusto H-infinita
+add_block('simulink/Continuous/Transfer Fcn', [ctrl_sub '/TF_H_infinita'], ...
+    'Numerator', 'num_hinf', 'Denominator', 'den_hinf', ...
+    'Position', [180, 270, 290, 310]);
+
+add_block('simulink/Math Operations/Sum', [ctrl_sub '/Sum_Hinf_FF'], ...
+    'Inputs', '++', 'Position', [330, 260, 355, 300]);
+
+% Selector Multiport Switch segun ctrl_modo (1:PID, 2:LQR, 3:H-infinito):
+add_block('simulink/Sources/Constant', [ctrl_sub '/Ctrl_Modo_Const'], ...
+    'Value', 'ctrl_modo', 'Position', [380, 20, 420, 45]);
+
+add_block('simulink/Signal Routing/Multiport Switch', [ctrl_sub '/Switch_Modo'], ...
+    'Inputs', '3', 'Position', [450, 80, 490, 170]);
+
+add_block('simulink/Discontinuities/Saturation', [ctrl_sub '/Saturacion_PWM'], ...
+    'UpperLimit', '100.0', 'LowerLimit', '0.0', 'Position', [520, 115, 560, 145]);
+
+add_block('simulink/Ports & Subsystems/Outport', [ctrl_sub '/u_PWM'], ...
+    'Position', [600, 120, 630, 140]);
+
+% Conexiones internas de Controlador_Compuerta:
+add_line(ctrl_sub, 'theta_ref/1', 'Sum_Error/1');
+add_line(ctrl_sub, 'theta_meas/1', 'Sum_Error/2');
+add_line(ctrl_sub, 'theta_ref/1', 'Cos_Ref/1');
+add_line(ctrl_sub, 'Cos_Ref/1', 'Gain_FF/1');
+
+% PID + FF:
+add_line(ctrl_sub, 'Gain_FF/1', 'Sum_PID_FF/1');
+add_line(ctrl_sub, 'Sum_Error/1', 'PID_Controller/1');
+add_line(ctrl_sub, 'PID_Controller/1', 'Sum_PID_FF/2');
+add_line(ctrl_sub, 'Sum_PID_FF/1', 'Switch_Modo/2');
+
+% LQR + I:
+add_line(ctrl_sub, 'Sum_Error/1', 'Gain_K1/1');
+add_line(ctrl_sub, 'Sum_Error/1', 'Integ_Error_LQR/1');
+add_line(ctrl_sub, 'Integ_Error_LQR/1', 'Gain_K3/1');
+add_line(ctrl_sub, 'theta_meas/1', 'Deriv_Omega_LQR/1');
+add_line(ctrl_sub, 'Deriv_Omega_LQR/1', 'Gain_K2/1');
+add_line(ctrl_sub, 'Const_u_eq/1', 'Sum_LQR/1');
+add_line(ctrl_sub, 'Gain_K1/1', 'Sum_LQR/2');
+add_line(ctrl_sub, 'Gain_K3/1', 'Sum_LQR/3');
+add_line(ctrl_sub, 'Gain_K2/1', 'Sum_LQR/4');
+add_line(ctrl_sub, 'Sum_LQR/1', 'Switch_Modo/3');
+
+% H-infinita:
+add_line(ctrl_sub, 'Gain_FF/1', 'Sum_Hinf_FF/1');
+add_line(ctrl_sub, 'Sum_Error/1', 'TF_H_infinita/1');
+add_line(ctrl_sub, 'TF_H_infinita/1', 'Sum_Hinf_FF/2');
+add_line(ctrl_sub, 'Sum_Hinf_FF/1', 'Switch_Modo/4');
+
+% Salida con selector y saturacion:
+add_line(ctrl_sub, 'Ctrl_Modo_Const/1', 'Switch_Modo/1');
+add_line(ctrl_sub, 'Switch_Modo/1', 'Saturacion_PWM/1');
+add_line(ctrl_sub, 'Saturacion_PWM/1', 'u_PWM/1');
+
+%% --- 4. Subsystem Actuador Ventilador Aerodinamico ---
+fan_sub = [mdl '/Actuador_Ventilador'];
+add_block('simulink/Ports & Subsystems/Subsystem', fan_sub, ...
+    'Position', [410, 80, 530, 170]);
+Simulink.SubSystem.deleteContents(fan_sub);
+
+add_block('simulink/Ports & Subsystems/Inport', [fan_sub '/u_PWM'], 'Position', [30, 45, 60, 65]);
+add_block('simulink/Ports & Subsystems/Inport', [fan_sub '/d_carro'], 'Position', [30, 125, 60, 145]);
+
+% Dinamica de primer orden del motor del ventilador: 1 / (fan_tau*s + 1)
+add_block('simulink/Continuous/Transfer Fcn', [fan_sub '/Lag_Motor_Fan'], ...
+    'Numerator', '[1]', 'Denominator', '[fan_tau 1]', 'Position', [90, 40, 160, 70]);
+
+% Ley cuadratica de distancia: factor = (d0 / d)^2
+add_block('simulink/Sources/Constant', [fan_sub '/Const_d0'], ...
+    'Value', 'd0', 'Position', [90, 105, 120, 125]);
+
+add_block('simulink/Math Operations/Divide', [fan_sub '/Divide_d'], ...
+    'Inputs', '*/', 'Position', [150, 110, 175, 145]);
+
+add_block('simulink/Math Operations/Math Function', [fan_sub '/Square_d'], ...
+    'Function', 'square', 'Position', [200, 115, 230, 145]);
+
+% Torque aerodinamico: tau_aero = k_m * v_fan * (d0/d)^2
+add_block('simulink/Math Operations/Product', [fan_sub '/Prod_Torque'], ...
+    'Inputs', '**', 'Position', [260, 50, 285, 95]);
+
+add_block('simulink/Math Operations/Gain', [fan_sub '/Gain_km'], ...
+    'Gain', 'k_m', 'Position', [310, 60, 360, 85]);
+
+add_block('simulink/Ports & Subsystems/Outport', [fan_sub '/tau_aero'], ...
+    'Position', [400, 65, 430, 85]);
+
+add_line(fan_sub, 'u_PWM/1', 'Lag_Motor_Fan/1');
+add_line(fan_sub, 'Const_d0/1', 'Divide_d/1');
+add_line(fan_sub, 'd_carro/1', 'Divide_d/2');
+add_line(fan_sub, 'Divide_d/1', 'Square_d/1');
+add_line(fan_sub, 'Lag_Motor_Fan/1', 'Prod_Torque/1');
+add_line(fan_sub, 'Square_d/1', 'Prod_Torque/2');
+add_line(fan_sub, 'Prod_Torque/1', 'Gain_km/1');
+add_line(fan_sub, 'Gain_km/1', 'tau_aero/1');
+
+%% --- 5. Subsystem Planta de la Compuerta ---
+gate_sub = [mdl '/Planta_Compuerta'];
+add_block('simulink/Ports & Subsystems/Subsystem', gate_sub, ...
+    'Position', [580, 75, 720, 175]);
+Simulink.SubSystem.deleteContents(gate_sub);
+
+add_block('simulink/Ports & Subsystems/Inport', [gate_sub '/tau_aero'], 'Position', [30, 55, 60, 75]);
+
+% Torque gravitacional: tau_grav = m_g*g*l_c*cos(theta)
+add_block('simulink/Math Operations/Math Function', [gate_sub '/Cos_Theta'], ...
+    'Function', 'cos', 'Position', [220, 130, 250, 160]);
+
+add_block('simulink/Math Operations/Gain', [gate_sub '/Gain_Torque_Grav'], ...
+    'Gain', 'm_g*g*l_c', 'Position', [280, 135, 350, 165]);
+
+% Friccion de pivote: b_c*omega + tau_f*tanh(50*omega)
+add_block('simulink/Math Operations/Gain', [gate_sub '/Gain_Viscosa'], ...
+    'Gain', 'b_c', 'Position', [280, 205, 340, 235]);
+
+% Suma neta de torques: tau_net = tau_aero - tau_grav - tau_fricc
+add_block('simulink/Math Operations/Sum', [gate_sub '/Sum_Torques'], ...
+    'Inputs', '+--', 'Position', [110, 50, 135, 95]);
+
+% Aceleracion: alpha = tau_net / J_g
+add_block('simulink/Math Operations/Gain', [gate_sub '/Gain_Inv_Inercia'], ...
+    'Gain', '1/J_g', 'Position', [160, 60, 210, 85]);
+
+% Integrador 1: alpha -> omega
+add_block('simulink/Continuous/Integrator', [gate_sub '/Integ_Omega'], ...
+    'InitialCondition', '0.0', 'Position', [240, 60, 270, 90]);
+
+% Integrador 2: omega -> theta (con limites de saturacion mecanicos [0, pi])
+add_block('simulink/Continuous/Integrator', [gate_sub '/Integ_Theta'], ...
+    'InitialCondition', 'theta0', ...
+    'LimitOutput', 'on', 'UpperSaturationLimit', 'theta_max', 'LowerSaturationLimit', 'theta_min', ...
+    'Position', [320, 60, 350, 90]);
+
+add_block('simulink/Ports & Subsystems/Outport', [gate_sub '/theta'], 'Position', [420, 65, 450, 85]);
+add_block('simulink/Ports & Subsystems/Outport', [gate_sub '/omega'], 'Position', [420, 105, 450, 125]);
+
+% Conexiones internas de Planta_Compuerta:
+add_line(gate_sub, 'tau_aero/1', 'Sum_Torques/1');
+add_line(gate_sub, 'Gain_Torque_Grav/1', 'Sum_Torques/2');
+add_line(gate_sub, 'Gain_Viscosa/1', 'Sum_Torques/3');
+add_line(gate_sub, 'Sum_Torques/1', 'Gain_Inv_Inercia/1');
+add_line(gate_sub, 'Gain_Inv_Inercia/1', 'Integ_Omega/1');
+add_line(gate_sub, 'Integ_Omega/1', 'Integ_Theta/1');
+add_line(gate_sub, 'Integ_Omega/1', 'omega/1');
+add_line(gate_sub, 'Integ_Omega/1', 'Gain_Viscosa/1');
+add_line(gate_sub, 'Integ_Theta/1', 'theta/1');
+add_line(gate_sub, 'Integ_Theta/1', 'Cos_Theta/1');
+add_line(gate_sub, 'Cos_Theta/1', 'Gain_Torque_Grav/1');
+
+%% --- 6. Subsystem Sensor de Angulo (Potenciometro 0V - 2.5V - 5V) ---
+sens_sub = [mdl '/Sensor_Potenciometro'];
+add_block('simulink/Ports & Subsystems/Subsystem', sens_sub, ...
+    'Position', [760, 80, 890, 170]);
+Simulink.SubSystem.deleteContents(sens_sub);
+
+add_block('simulink/Ports & Subsystems/Inport', [sens_sub '/theta_real'], 'Position', [30, 65, 60, 85]);
+
+% Conversion a grados:
+add_block('simulink/Math Operations/Gain', [sens_sub '/Rad2Deg'], ...
+    'Gain', '180/pi', 'Position', [90, 60, 140, 90]);
+
+% Sensibilidad exacta: 5.0 V / 180 deg = 0.02778 V/deg
+% (0V = 0 deg, 2.5V = 90 deg, 5.0V = 180 deg)
+add_block('simulink/Math Operations/Gain', [sens_sub '/Gain_Kpot'], ...
+    'Gain', 'K_pot_deg', 'Position', [170, 60, 230, 90]);
+
+add_block('simulink/Discontinuities/Saturation', [sens_sub '/Sat_Voltaje'], ...
+    'UpperLimit', '5.0', 'LowerLimit', '0.0', 'Position', [260, 60, 290, 90]);
+
+add_block('simulink/Ports & Subsystems/Outport', [sens_sub '/V_pot'], 'Position', [480, 45, 510, 65]);
+
+% Cuantizacion ADC de 10 bits (0-1023 sobre 5V):
+add_block('simulink/Discontinuities/Quantizer', [sens_sub '/Quant_ADC'], ...
+    'QuantizationInterval', '5.0/adc_counts', 'Position', [320, 60, 360, 90]);
+
+% Reconstruccion del angulo medido:
+add_block('simulink/Math Operations/Gain', [sens_sub '/Volt2Deg'], ...
+    'Gain', '1/K_pot_deg', 'Position', [390, 60, 440, 90]);
+
+add_block('simulink/Math Operations/Gain', [sens_sub '/Deg2Rad_Meas'], ...
+    'Gain', 'pi/180', 'Position', [465, 60, 505, 90]);
+
+add_block('simulink/Ports & Subsystems/Outport', [sens_sub '/theta_meas'], 'Position', [540, 65, 570, 85]);
+
+add_line(sens_sub, 'theta_real/1', 'Rad2Deg/1');
+add_line(sens_sub, 'Rad2Deg/1', 'Gain_Kpot/1');
+add_line(sens_sub, 'Gain_Kpot/1', 'Sat_Voltaje/1');
+add_line(sens_sub, 'Sat_Voltaje/1', 'V_pot/1');
+add_line(sens_sub, 'Sat_Voltaje/1', 'Quant_ADC/1');
+add_line(sens_sub, 'Quant_ADC/1', 'Volt2Deg/1');
+add_line(sens_sub, 'Volt2Deg/1', 'Deg2Rad_Meas/1');
+add_line(sens_sub, 'Deg2Rad_Meas/1', 'theta_meas/1');
+
+%% --- 7. Bloques de Exportacion al Workspace (To Workspace) ---
+add_block('simulink/Sinks/To Workspace', [mdl '/ToWks_Theta'], ...
+    'VariableName', 'theta_out', 'SaveFormat', 'Timeseries', ...
+    'Position', [800, 25, 870, 55]);
+
+add_block('simulink/Sinks/To Workspace', [mdl '/ToWks_PWM'], ...
+    'VariableName', 'pwm_out', 'SaveFormat', 'Timeseries', ...
+    'Position', [420, 25, 480, 55]);
+
+add_block('simulink/Sinks/To Workspace', [mdl '/ToWks_Vpot'], ...
+    'VariableName', 'vpot_out', 'SaveFormat', 'Timeseries', ...
+    'Position', [930, 75, 990, 105]);
+
+add_block('simulink/Sinks/To Workspace', [mdl '/ToWks_Tau'], ...
+    'VariableName', 'tau_out', 'SaveFormat', 'Timeseries', ...
+    'Position', [570, 25, 630, 55]);
+
+add_block('simulink/Sinks/To Workspace', [mdl '/ToWks_DistReal'], ...
+    'VariableName', 'd_out', 'SaveFormat', 'Timeseries', ...
+    'Position', [220, 245, 290, 275]);
+
+add_block('simulink/Sinks/To Workspace', [mdl '/ToWks_DistEst'], ...
+    'VariableName', 'd_est_out', 'SaveFormat', 'Timeseries', ...
+    'Position', [220, 285, 290, 315]);
+
+add_block('simulink/Sinks/To Workspace', [mdl '/ToWks_DistRaw'], ...
+    'VariableName', 'd_raw_out', 'SaveFormat', 'Timeseries', ...
+    'Position', [220, 325, 290, 355]);
+
+add_block('simulink/Sinks/To Workspace', [mdl '/ToWks_AcelMeas'], ...
+    'VariableName', 'a_meas_out', 'SaveFormat', 'Timeseries', ...
+    'Position', [220, 365, 290, 395]);
+
+%% --- 8. Interconexion Top-Level del Sistema ---
+% Conectar referencia a Controlador:
+add_line(mdl, 'Deg2Rad/1', 'Controlador_Compuerta/1');
+
+% Conectar Controlador a Ventilador:
+add_line(mdl, 'Controlador_Compuerta/1', 'Actuador_Ventilador/1');
+add_line(mdl, 'Controlador_Compuerta/1', 'ToWks_PWM/1');
+
+% Conectar Carro_Movil_IMU a Ventilador y Controlador:
+add_line(mdl, 'Carro_Movil_IMU/1', 'Actuador_Ventilador/2');
+add_line(mdl, 'Carro_Movil_IMU/1', 'ToWks_DistReal/1');
+add_line(mdl, 'Carro_Movil_IMU/3', 'Controlador_Compuerta/3');
+add_line(mdl, 'Carro_Movil_IMU/3', 'ToWks_DistEst/1');
+add_line(mdl, 'Carro_Movil_IMU/4', 'ToWks_DistRaw/1');
+add_line(mdl, 'Carro_Movil_IMU/2', 'ToWks_AcelMeas/1');
+
+% Conectar Ventilador a Planta_Compuerta:
+add_line(mdl, 'Actuador_Ventilador/1', 'Planta_Compuerta/1');
+add_line(mdl, 'Actuador_Ventilador/1', 'ToWks_Tau/1');
+
+% Conectar Planta_Compuerta a Sensor_Potenciometro:
+add_line(mdl, 'Planta_Compuerta/1', 'Sensor_Potenciometro/1');
+add_line(mdl, 'Planta_Compuerta/1', 'ToWks_Theta/1');
+
+% Conectar Sensor_Potenciometro a To Workspace y Retroalimentacion a Controlador:
+add_line(mdl, 'Sensor_Potenciometro/1', 'ToWks_Vpot/1');
+add_line(mdl, 'Sensor_Potenciometro/2', 'Controlador_Compuerta/2');
+
+%% --- 9. Guardar y Cerrar Sistema ---
+save_system(mdl, [mdl '.slx']);
+fprintf('\n=================================================================\n');
+fprintf('  MODELO SIMULINK GENERADO EXITOSAMENTE: %s.slx\n', mdl);
+fprintf('=================================================================\n');
+fprintf('  * Planta: Compuerta pasiva articulada al suelo (pendulo invertido)\n');
+fprintf('  * Actuador: Ventilador Sanyo Denki accionado por PWM\n');
+fprintf('  * Sensor: Potenciometro 0V = 0 deg | 2.5V = 90 deg | 5.0V = 180 deg\n');
+fprintf('  * Carro movil: Sistema independiente (arranque 10 cm, IMU + Kalman)\n');
+fprintf('  * Controladores: Multiport Switch (1: PID+FF, 2: LQR+I, 3: H-infinita)\n');
+fprintf('=================================================================\n');

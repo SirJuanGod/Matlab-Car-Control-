@@ -1,0 +1,10 @@
+{
+  "0": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+  "1": "3. Estrategia 2: Control Óptimo LQR con Acción Integral ($LQR+I$)",
+  "2": "CLAUDE.md",
+  "5": "Especificaciones del Carro (Plataforma Móvil con Control Independiente)",
+  "6": "Especificaciones de la Compuerta (Planta Pasiva y Sensor con ADC ESP32)",
+  "7": "Especificaciones del Ventilador y Etapa de Potencia L298N (24V)",
+  "8": "Arquitectura del Sistema de Control Angular y Plataforma Móvil",
+  "9": "arquitectura_sistema.md"
+}

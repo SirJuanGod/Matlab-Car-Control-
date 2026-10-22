@@ -1,0 +1,57 @@
+# =========================
+# ROS 2 & C++
+# =========================
+build/
+install/
+log/
+*.o
+*.so
+*.out
+*.cmake
+
+# =========================
+# MATLAB & Simulink
+# =========================
+*.asv
+*.m~
+*.mat
+*.slxc
+slprj/
+sfprj/
+
+# =========================
+# Python & Entornos Virtuales (Conda)
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+.conda/
+.env
+.claude
+
+# =========================
+# Arduino / Microcontroladores
+# =========================
+*.hex
+*.elf
+*.bin
+build-*/
+
+# =========================
+# Editores y Entornos (VS Code)
+# =========================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.code-workspace
+
+# =========================
+# Archivos del Sistema Operativo
+# =========================
+Thumbs.db
+desktop.ini
+.DS_Store

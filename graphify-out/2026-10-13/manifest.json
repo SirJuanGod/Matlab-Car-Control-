@@ -1,0 +1,62 @@
+{
+  ".claude/settings.json": {
+    "mtime": 1791698614.520176,
+    "seen": 1791702154.8592355,
+    "ast_hash": "14766313051c818c001f3eafead19b88",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1791698614.5113733,
+    "seen": 1791702154.8592465,
+    "ast_hash": "8a6643a420fdad6bfb583523bc6cef16",
+    "semantic_hash": ""
+  },
+  "arquitectura_general_del_sistema.md": {
+    "mtime": 1791940249.7970147,
+    "seen": 1791940338.3571732,
+    "ast_hash": "9acb2fe6b9088714adc35118710393e1",
+    "semantic_hash": ""
+  },
+  "especificaciones_de_la_compuerta.md": {
+    "mtime": 1791940243.522993,
+    "seen": 1791940338.357182,
+    "ast_hash": "8799897364ffe803cad3552b06185345",
+    "semantic_hash": ""
+  },
+  "especificaciones_del_chasis_y_motores.md": {
+    "mtime": 1791940238.167041,
+    "seen": 1791940338.3571835,
+    "ast_hash": "21cb7d3778dbaee27173772fb1748ece",
+    "semantic_hash": ""
+  },
+  "especificaciones_del_ventilador.md": {
+    "mtime": 1791940230.604143,
+    "seen": 1791940338.3571854,
+    "ast_hash": "21328538383e5047f8cd055b8c41f234",
+    "semantic_hash": ""
+  },
+  "arquitectura_sistema.md": {
+    "mtime": 1791940265.8197577,
+    "seen": 1791940338.357176,
+    "ast_hash": "725d12ed395aec301d486a47f320a681",
+    "semantic_hash": ""
+  },
+  "especificaciones_carro.md": {
+    "mtime": 1791940281.028878,
+    "seen": 1791940338.3571787,
+    "ast_hash": "1aff7af8273bae9d6cc9ddc027757ed6",
+    "semantic_hash": ""
+  },
+  "especificaciones_compuerta.md": {
+    "mtime": 1791940309.2432194,
+    "seen": 1791940338.3571799,
+    "ast_hash": "67a05c68236fa8f6fcd1e66cc037a965",
+    "semantic_hash": ""
+  },
+  "especificaciones_ventilador.md": {
+    "mtime": 1791940295.3155105,
+    "seen": 1791940338.3571868,
+    "ast_hash": "55044c317d55e9c5774250ee3cd441a8",
+    "semantic_hash": ""
+  }
+}
