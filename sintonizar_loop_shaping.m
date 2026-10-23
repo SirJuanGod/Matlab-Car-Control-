@@ -1,16 +1,4 @@
-%% sintonizar_loop_shaping.m
-% =========================================================================
-% SINTONIA ESTRUCTURADA (systune, Control System Toolbox) DEL COMPENSADOR
-% ROBUSTO DE LA COMPUERTA
-%   C(s) = Kp + Ki/s + Kd*s/(Tf*s+1) = K_h (s+z_lead)(s+z_lag) / [ s (s+p_lag) ]
-% Planta vista por el controlador: G(s) = G_p(s) * 1/(tau_fan*s + 1)  (con ventilador)
-% Requisitos: lazo estable, margenes de disco >= (GM_obj dB, PM_obj deg) en la
-% entrada de la planta, polos con decaimiento/amortiguamiento minimos y filtro
-% derivativo con N <= pid_N (limita la amplificacion del ruido del ADC).
-% La ganancia efectiva del ventilador varia como (d0/d)^2 al mover el carro, por
-% eso el margen de ganancia se traduce a un rango de distancias tolerado.
-% NO modifica init_parametros.m: imprime los valores a copiar en su seccion 11.
-% =========================================================================
+%% sintonizar_loop_shaping.m — Sintonia estructurada (systune) del compensador de la compuerta.
 clear; clc; close all;
 run('init_parametros.m');
 
@@ -85,4 +73,6 @@ for i = 1:size(cand, 1)
     plot(t, min(max(y, -3), 3), 'LineWidth', 1.5);
 end
 legend(cand{:,1}, 'Location', 'best'); xlabel('t [s]'); title('Escalon unitario de referencia (recortado a \pm3)');
-saveas(gcf, 'comparacion_loop_shaping.png');
+out_dir = fullfile(fileparts(mfilename('fullpath')), 'outputs');
+if ~exist(out_dir, 'dir'), mkdir(out_dir); end
+saveas(gcf, fullfile(out_dir, 'comparacion_loop_shaping.png'));

@@ -1,10 +1,4 @@
-%% diseno_polos_ceros.m
-% =========================================================================
-% ANALISIS FORMAL DE CONTROLADORES POR LUGAR GEOMETRICO DE LAS RAICES
-% (PID por asignacion de polos, LQR+I y compensador por loop shaping)
-% Incluye el ancho de banda real del actuador (ventilador: tau = 0.15 s).
-% Todos los parametros y ganancias vienen de init_parametros.m (unica fuente).
-% =========================================================================
+%% diseno_polos_ceros.m — Analisis formal de controladores por LGR: PID, LQR+I y loop shaping.
 
 clear; clc; close all;
 
@@ -57,8 +51,7 @@ fprintf('  * Autovalores CON ventilador (max Re = %+.3f): %s\n', max(real(e_lqr)
 fprintf('=================================================================\n\n');
 
 %% --- 4. Compensador por loop shaping (NO es sintesis H-inf) ---
-% C(s) = K_h (s + z_lead)(s + z_lag) / [ s (s + p_lag) ]; sintonia manual de init_parametros.m.
-% La sintesis H-inf (mixsyn/hinfsyn) requiere Robust Control Toolbox (no instalado).
+% C(s) = K_h (s + z_lead)(s + z_lag) / [ s (s + p_lag) ]
 C_hinf = G_hinf;
 L_hinf = C_hinf * G_pl;
 info_mrg = allmargin(L_hinf);
@@ -124,5 +117,7 @@ xlabel('Eje Real \sigma [s^{-1}]'); ylabel('Eje Imaginario j\omega [rad/s]');
 title('Polos en Lazo Cerrado (con el ventilador)');
 legend('Location', 'northwest');
 
-saveas(fig, 'analisis_polos_ceros_rlocus.png');
-fprintf('Grafica diagnostica actualizada en: analisis_polos_ceros_rlocus.png\n');
+out_dir = fullfile(fileparts(mfilename('fullpath')), 'outputs');
+if ~exist(out_dir, 'dir'), mkdir(out_dir); end
+saveas(fig, fullfile(out_dir, 'analisis_polos_ceros_rlocus.png'));
+fprintf('Grafica diagnostica actualizada en: outputs/analisis_polos_ceros_rlocus.png\n');

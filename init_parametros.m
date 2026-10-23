@@ -1,117 +1,89 @@
-%% init_parametros.m
-% =========================================================================
-% PROYECTO: Control de Angulo de Compuerta mediante Ventilador y Carro Movil
-% UNICO archivo de configuracion: lo ejecutan lqr_simo.m, simular_sistema.m,
-% diseno_polos_ceros.m, gui_simulacion.m y modelo_miso_compuerta.slx.
-% =========================================================================
-% Planteamiento (ver arquitectura_sistema.md):
-%   - Planta pasiva (subactuada): compuerta (pendulo invertido) articulada al suelo.
-%   - Controlador SIMO: entrada theta (potenciometro) -> salidas u_PWM (ventilador)
-%     y d_ref (carro). Planta MISO: [u_PWM, d] -> theta.
-%   - Sensor: potenciometro lineal alimentado a 3.3 V, conexion DIRECTA al ADC de
-%     12 bits del ESP32 (sin divisor):
-%       * 0.00 V <=> 0 deg | 1.65 V <=> 90 deg | 3.30 V <=> 180 deg
-%       * K_pot = 3.3/180 = 0.01833 V/deg ; 4095 cuentas ; 0.044 deg/LSB
-%   - Carro movil: arranca a d_ini (10 cm), mide con IMU (MPU6050) + Kalman,
-%     lazo interno PID de posicion con banda muerta de +/-5 mm.
-%   - Diseno de controladores:
-%       1) PID por asignacion de polos (LGR)            -> simular_sistema.m
-%       2) LQR+I (Riccati) con gain scheduling          -> simular_sistema.m
-%       3) Compensador robusto por loop shaping         -> simular_sistema.m
-%          (sintonizado con systune; ver sintonizar_loop_shaping.m. No es
-%           hinfsyn de orden completo: requiere Robust Control Toolbox)
-%       4) LQR+I SIMO (u_PWM y d_ref), 5 estados        -> lqr_simo.m y el .slx
-% =========================================================================
+%% init_parametros.m — Parametros del sistema: compuerta, ventilador, carro, controladores.
 
 %% --- 1. Constantes Generales ---
-g       = 9.81;          % [m/s^2] aceleracion de la gravedad
-rho_air = 1.225;         % [kg/m^3] densidad del aire a nivel del mar
+g       = 9.81;          % [m/s^2]
+rho_air = 1.225;         % [kg/m^3]
 
 %% --- 2. Compuerta Fisica (Planta: Pendulo Invertido) ---
-gate_t      = 0.0015;    % [m] espesor del material (carton 1.5 mm)
-gate_W      = 0.15;      % [m] ancho de la compuerta (15 cm)
-gate_L      = 0.20;      % [m] largo de la compuerta (20 cm)
-gate_A      = gate_W * gate_L; % [m^2] area expuesta total (0.03 m^2)
-m_g         = 0.015;     % [kg] masa total de la compuerta (15 g)
-l_c         = 0.10;      % [m] distancia del pivote al centro de masa (10 cm)
-J_g         = 0.0002;    % [kg*m^2] momento de inercia respecto al eje de giro
-b_c         = 0.0010;    % [N*m*s/rad] amortiguamiento viscoso del pivote
-tau_f       = 0.0001;    % [N*m] friccion de Coulomb/estatica en el pivote
-theta_min   = 0.0;       % [rad] limite mecanico inferior (reposo colgante, 0 deg)
-theta_max   = pi;        % [rad] limite mecanico superior (180 deg)
-tau_stop    = 0.005;     % [s] constante de tiempo del tope mecanico (choque inelastico)
+gate_t      = 0.0015;    % [m]
+gate_W      = 0.15;      % [m]
+gate_L      = 0.20;      % [m]
+gate_A      = gate_W * gate_L; % [m^2]
+m_g         = 0.015;     % [kg]
+l_c         = 0.10;      % [m]
+J_g         = 0.0002;    % [kg*m^2]
+b_c         = 0.0010;    % [N*m*s/rad]
+tau_f       = 0.0001;    % [N*m]
+theta_min   = 0.0;       % [rad]
+theta_max   = pi;        % [rad]
+tau_stop    = 0.005;     % [s]
 
 %% --- 3. Sensor de Angulo (Potenciometro 0 - 3.3 V, ADC 12 bits del ESP32) ---
-V_pot_min   = 0.0;       % [V] voltaje a 0 deg
-V_pot_mid   = 1.65;      % [V] voltaje a 90 deg
-V_pot_max   = 3.3;       % [V] voltaje a 180 deg
-K_pot_deg   = V_pot_max / 180.0;   % [V/deg] 0.018333 V/deg (18.33 mV/deg)
-K_pot_rad   = V_pot_max / pi;      % [V/rad] ~1.0504 V/rad
+V_pot_min   = 0.0;       % [V]
+V_pot_mid   = 1.65;      % [V]
+V_pot_max   = 3.3;       % [V]
+K_pot_deg   = V_pot_max / 180.0;   % [V/deg]
+K_pot_rad   = V_pot_max / pi;      % [V/rad]
 
-adc_bits    = 12;                  % [-] resolucion del ADC del ESP32 (0 - 4095)
-adc_counts  = 2^adc_bits - 1;      % 4095 cuentas
-adc_Vref    = V_pot_max;           % [V] rango nativo 0 - 3.3 V
-adc_res_deg = 180.0 / adc_counts;  % [deg/LSB] ~0.0440 deg/LSB
+adc_bits    = 12;                  % [-]
+adc_counts  = 2^adc_bits - 1;
+adc_Vref    = V_pot_max;           % [V]
+adc_res_deg = 180.0 / adc_counts;  % [deg/LSB]
 
 %% --- 4. Ventilador (Actuador Aerodinamico: Sanyo Denki San Ace 40) ---
-fan_Vnom    = 24.0;      % [V] voltaje nominal de operacion (L298N a 24 VDC)
-fan_tau     = 0.15;      % [s] constante de tiempo del ventilador (polo en -6.67 rad/s)
-pwm_min     = 10.0;      % [%] ciclo de trabajo minimo del ventilador (limite de saturacion)
-pwm_max     = 90.0;      % [%] ciclo de trabajo maximo del ventilador (limite de saturacion)
+fan_Vnom    = 24.0;      % [V]
+fan_tau     = 0.15;      % [s]
+pwm_min     = 10.0;      % [%]
+pwm_max     = 90.0;      % [%]
 
 % d0 = distancia de REFERENCIA aerodinamica (donde k_m fue definido); no cambia.
-d0          = 0.10;      % [m] distancia de referencia carro-compuerta (10 cm)
-k_m         = 0.00030;   % [N*m/%] torque aerodinamico a d=d0 por cada 1% de PWM
-                         % SUPUESTO teorico: calibrar experimentalmente
+d0          = 0.10;      % [m]
+k_m         = 0.00030;   % [N*m/%] calibrar experimentalmente
 
 %% --- 5. Carro Movil (Plataforma Independiente con IMU) ---
-m_car        = 0.421;    % [kg] masa del carro completo
-car_b        = 3.5;      % [N*s/m] amortiguamiento lineal
-car_F_max    = 3.0;      % [N] empuje maximo de traccion (2 motorreductores TGP01D-A130)
-d_ini_cm     = 10.0;     % [cm] distancia inicial de arranque (10 cm)
-d_min        = 0.05;     % [m] distancia minima permitida (5 cm)
-d_max        = 0.25;     % [m] distancia maxima permitida (25 cm)
+m_car        = 0.421;    % [kg]
+car_b        = 3.5;      % [N*s/m]
+car_F_max    = 3.0;      % [N]
+d_ini_cm     = 10.0;     % [cm]
+d_min        = 0.05;     % [m]
+d_max        = 0.25;     % [m]
 car_deadband = 0.005;    % [m] banda muerta del lazo de posicion (+/-5 mm)
 
 % PID de posicion del carro (u_car en % de empuje maximo; positivo = avanzar):
-%   u_car = Kp*e_a + Ki*int(e_a) - Kd*v_adv ,  e_a = d_est - d_ref
-car_Kp = 130;            % [%/m]     (equivale a ~3.9 N/m -> tau del lazo ~0.7 s)
+car_Kp = 130;            % [%/m]
 car_Ki = 10;             % [%/(m*s)]
-car_Kd = 5;              % [%*s/m]   (derivada sobre la velocidad estimada)
+car_Kd = 5;              % [%*s/m]
 
 % Sensores IMU (acelerometro longitudinal; positivo = avanzar hacia la compuerta):
-imu_bias      = 0.02;    % [m/s^2] sesgo constante del acelerometro
-imu_noise_pow = 1e-5;    % [(m/s^2)^2*s] densidad espectral de potencia del ruido
-imu_Ts        = 0.01;    % [s] periodo de muestreo de la IMU (100 Hz)
+imu_bias      = 0.02;    % [m/s^2]
+imu_noise_pow = 1e-5;    % [(m/s^2)^2*s]
+imu_Ts        = 0.01;    % [s]
 obs_qv        = 0.5;     % covarianza de proceso para velocidad
 obs_qb        = 1.0;     % covarianza de proceso para sesgo
 
 %% --- 6. Condiciones Iniciales, Referencia y Parametros del Controlador SIMO ---
-theta_ref_deg = 35.0;    % [deg] angulo de consigna deseado
-theta0_deg    = 0.0;     % [deg] angulo inicial (0 = reposo en suelo)
-t_sim         = 8.0;     % [s] tiempo de simulacion
-tau_ref       = 0.15;    % [s] filtro de primer orden de la referencia
-ref_rate_deg  = 200.0;    % [deg/s] velocidad maxima de la referencia (rampa)
+theta_ref_deg = 35.0;    % [deg]
+theta0_deg    = 0.0;     % [deg]
+t_sim         = 8.0;     % [s]
+tau_ref       = 0.15;    % [s]
+ref_rate_deg  = 200.0;    % [deg/s]
 usar_imu      = 1;       % 1: el controlador usa d estimada (IMU+Kalman); 0: d real (ideal)
-fan_fac       = 1.0;     % [-] fuerza del ventilador REAL al final de la degradacion / la supuesta (k_m).
-                         %     1 = sin degradacion; 0.4 = pierde 60 % (p. ej. caida de bateria). Solo afecta a la planta
+fan_fac       = 1.0;     % [-] 1 = sin degradacion; 0.4 = pierde 60 %. Solo afecta a la planta
 fan_t0        = 3.0;     % [s] inicio de la degradacion del ventilador
 fan_dur       = 10.0;    % [s] duracion de la rampa de degradacion
-gov_deg       = 180.0;     % [deg] gobernador de referencia: theta_ref <= theta_medida + gov_deg
-                         %       (levanta la compuerta suave desde el suelo; 180 = desactivado)
+gov_deg       = 180.0;     % [deg] gobernador: theta_ref <= theta_medida + gov_deg (180 = desactivado)
 
 % Supervisor de distancia (acerca el carro cuando el ventilador no alcanza):
-sup_v_hi = 70;           % [%]    si el PWM demandado supera este umbral, el carro AVANZA
-sup_v_lo = 20;           % [%]    si queda por debajo, el carro vuelve hacia d_ini
-sup_adv  = 5;            % [cm/s] velocidad maxima del punto de operacion al acercarse
-sup_ret  = 1;            % [cm/s] velocidad de regreso hacia d_ini
-xi_lim   = 2.0;          % [rad*s] limite de la integral del error (autoridad ~ |K15|*xi_lim en % de PWM);
-                         %         la integral se congela si el PWM satura empujando en la misma direccion
+sup_v_hi = 70;           % [%]
+sup_v_lo = 20;           % [%]
+sup_adv  = 5;            % [cm/s]
+sup_ret  = 1;            % [cm/s]
+xi_lim   = 2.0;          % [rad*s] la integral se congela si el PWM satura empujando en la misma direccion
 xi_band_deg = 5.0;      % [deg]  la integral del error solo acumula con |error| < xi_band_deg (evita sobrepico en la subida)
 
 % LQR+I SIMO: x = [d_theta; omega; d_v_fan; d_d(cm); x_i], u = [d_u_PWM; d_d_ref(cm)]
-tau_car   = 0.8;         % [s]   lazo interno del carro (canal lento, ~5x fan_tau)
-v_car_max = 0.75;        % [m/s] velocidad maxima del carro (motorreductores)
+tau_car   = 0.8;         % [s]
+v_car_max = 0.75;        % [m/s]
 q_th      = 10000;          % peso de d_theta   [1/rad^2]
 q_om      = 60;           % peso de omega
 q_d       = 0.5;         % peso de d_d       [1/cm^2]
@@ -122,8 +94,8 @@ tau_w     = 0.04;        % [s] filtro de la derivada que estima omega a partir d
 
 % Perturbacion externa de torque sobre la compuerta (pulso rectangular):
 pert_tau_mNm = 0.0;      % [mN*m] amplitud (0 = sin perturbacion)
-pert_t_on    = 4.0;      % [s] instante de inicio
-pert_dur     = 1.0;      % [s] duracion
+pert_t_on    = 4.0;      % [s]
+pert_dur     = 1.0;      % [s]
 
 %% --- 7. Sobrescritura desde Interfaz de Usuario (struct 'ovr') ---
 if exist('ovr','var') && isstruct(ovr)
@@ -175,16 +147,13 @@ wn_des   = 3.2;
 p_int    = 1.0;
 
 % El diseno INCLUYE el polo del ventilador (tau_fan): lazo de 4.o orden
-%   s(tau s+1)(s^2 - a22 s - a21) + b2 (Kd s^2 + Kp s + Ki) = tau (s^2+2 zeta wn s+wn^2)(s+p_int)(s+p4)
-% p4 queda fijado por el coeficiente de s^3 (suma de polos). Ignorar el ventilador
-% da Kd = 0.96 y un lazo INESTABLE.
 p4_des = (-a22*fan_tau + 1)/fan_tau - 2*zeta_des*wn_des - p_int;
 P_des  = fan_tau * conv(conv([1, 2*zeta_des*wn_des, wn_des^2], [1, p_int]), [1, p4_des]);  % [s^4 ... s^0]
 
 pid_Kd = (P_des(3) - (-a22 - a21*fan_tau)) / b2;
 pid_Kp = (P_des(4) + a21) / b2;
 pid_Ki = P_des(5) / b2;
-pid_N  = 30.0; % [rad/s] polo de filtrado derivativo (estrategias_control.md: N ~ 30)
+pid_N  = 30.0; % [rad/s] polo de filtrado derivativo
 
 ceros_pid = roots([pid_Kd, pid_Kp, pid_Ki]);
 
@@ -215,26 +184,17 @@ u_eq  = interp1(theta_grid_deg, ueq_tab, min(max(theta_ref_deg, 10), 80), 'linea
 
 %% --- 11. Controlador 3: Compensador Robusto por Loop Shaping ---
 % C_hinf(s) = K_h * (s + z_lead) * (s + z_lag) / [ s * (s + p_lag) ]
-% Sintonizado con systune (Control System Toolbox, sintonia estructurada basada en
-% normas H-inf) sobre la planta CON ventilador: margenes de disco objetivo 3 dB / 25 deg,
-% polos con Re < -1 y zeta > 0.4, N <= pid_N. Reproducible con sintonizar_loop_shaping.m.
-% Resultado: GM [0.68, 2.87], PM 21 deg, Ms 2.9 (objetivo de margenes no cumplido del todo:
-% es el optimo de esta estructura con N <= 30). Estable solo con el carro en d = 5.9 a 12.1 cm.
-% NO es la sintesis de sensibilidad mixta S/KS/T de orden completo (hinfsyn: Robust Control Toolbox).
-z_lead = 4.214;  % [rad/s] cero de adelanto
-z_lag  = 0.196;  % [rad/s] cero de atraso (accion integral)
-p_lag  = 30.0;   % [rad/s] polo de filtrado (limita el ruido del ADC)
-K_hinf = 293.9;  % ganancia de alta frecuencia
+z_lead = 4.214;  % [rad/s]
+z_lag  = 0.196;  % [rad/s]
+p_lag  = 30.0;   % [rad/s]
+K_hinf = 293.9;
 
 num_hinf = K_hinf * conv([1, z_lead], [1, z_lag]);
 den_hinf = [1, p_lag, 0];
 G_hinf = tf(num_hinf, den_hinf);
 
 %% --- 12. LQR+I SIMO: tablas de ganancias programadas (para el .slx) ---
-% Linealizacion alrededor de (theta_eq, d_eq) en una rejilla 2-D: el equilibrio depende
-% del angulo (gravedad) Y de la distancia del carro (torque ~ (d0/d)^2). La tabla se
-% interpola con theta_ref y con el punto de operacion de distancia d_nom que fija el
-% supervisor; el carro actua en transitorios, perturbaciones y cuando el ventilador no alcanza.
+% fila (j-1)*nGs+i <-> (theta_i, d_j); reshape(K(2x5),1,10)
 thg_simo = 10:5:80;                         % [deg] rejilla de scheduling en theta
 dg_simo  = linspace(d_min, d_max, 9)*100;   % [cm]  rejilla de scheduling en d (5:2.5:25 cm)
 nGs      = numel(thg_simo);   nDs = numel(dg_simo);
@@ -242,7 +202,7 @@ Q_simo   = diag([q_th, q_om, 0, q_d, q_xi]);
 R_simo   = diag([r_pwm, r_d]);
 kd_eq    = k_m * (d0/d_eq)^2;               % [N*m/%] ganancia aerodinamica en d_eq (= d_ini)
 B_simo   = [0 0; 0 0; 1/fan_tau 0; 0 1/tau_car; 0 0];
-Kg_simo  = zeros(nGs*nDs, 10);              % fila (j-1)*nGs+i <-> (theta_i, d_j); reshape(K(2x5),1,10)
+Kg_simo  = zeros(nGs*nDs, 10);
 for jS = 1:nDs
     dj   = dg_simo(jS)/100;                                   % [m]
     kd_j = k_m * (d0/dj)^2;                                   % [N*m/%]

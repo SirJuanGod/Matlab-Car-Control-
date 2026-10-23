@@ -1,27 +1,12 @@
-%% lqr_simo.m
-% =========================================================================
-% LQR+I SIMO: ENTRADA theta (potenciometro) -> SALIDAS u_PWM (ventilador) y
-% d_ref (carro).   Planta vista desde el controlador: MISO [u_PWM, d] -> theta
-%   tau_aero = k_m * v_fan * (d0/d)^2
-% - Estados:  x = [d_theta (rad); omega; d_v_fan (%); d_d (cm); x_i]
-% - Entradas: u = [d_u_PWM (%); d_d_ref (cm)]
-% - Ganancias programadas (gain scheduling) sobre theta_ref, equilibrio con
-%   el carro en d0 (el PWM lleva el equilibrio; el carro actua en transitorios
-%   y perturbaciones).
-% - Se compara contra el LQR+I solo con ventilador (d fijo en d0), mismos
-%   pesos de theta, omega, x_i y mismo R_pwm.
+%% lqr_simo.m — LQR+I SIMO: [u_PWM, d_ref] controlando theta.
 % NOTA: realimentacion de estado completo (estados ideales). Falta el
 %       observador de omega, v_fan y d (IMU + Kalman) para el hardware real.
-% Parametros fisicos: salen de init_parametros.m (no se modifican aqui).
-% =========================================================================
 
 if ~exist('ovr_simo','var'), clear; end   % con ovr_simo (barridos) no se borra el workspace
 clc; close all;
 run('init_parametros.m');
 
 %% --- 1. Parametros del diseno SIMO (ajustables) ---
-% tau_car, v_car_max, q_th, q_om, q_d, q_xi, r_pwm y r_d se definen en
-% init_parametros.m (seccion 6); aqui solo se sobrescriben con ovr_simo.
 tau_dist_mNm = 1.0;  % [mN*m] amplitud del pulso de torque externo (con 2 mN*m el SIMO empeora vs solo fan)
 graficar  = true;    % false: solo imprime metricas (barridos)
 
@@ -33,12 +18,10 @@ end
 Q = diag([q_th, q_om, 0, q_d, q_xi]);   % [theta(rad), omega, v_fan(%), d(cm), x_i]
 R = diag([r_pwm, r_d]);
 
-% Escenario de prueba:
 sc.dt = 1e-3;  sc.T = 10;
 sc.th0_deg = 0;  sc.th1_deg = 35;  sc.t_step = 0.5;  sc.tau_ref = tau_ref;
 sc.t_dist = [6 7];  sc.tau_dist = tau_dist_mNm*1e-3;     % pulso de torque externo [N*m]
 
-% Parametros fisicos en una struct:
 p = struct('g',g,'m_g',m_g,'l_c',l_c,'J_g',J_g,'b_c',b_c,'tau_f',tau_f, ...
            'k_m',k_m,'fan_tau',fan_tau,'tau_car',tau_car,'d0',d0, ...
            'd_min',d_min,'d_max',d_max,'v_car_max',v_car_max,'pwm_min',pwm_min,'pwm_max',pwm_max,'xi_lim',xi_lim);
@@ -136,14 +119,15 @@ txt = sprintf(['%-22s %8s %9s\n' ...
 text(0.00, 0.80, txt, 'FontName', 'Courier', 'FontSize', 9, 'VerticalAlignment', 'top');
 text(0.00, 0.25, sprintf('tau_{car}=%.2f s | q_d=%.2f | r_{PWM}=%.2f | r_d=%.2f', tau_car, q_d, r_pwm, r_d), 'FontSize', 8.5);
 
-saveas(fig, 'simulacion_lqr_simo.png');
-fprintf('Grafica guardada en: simulacion_lqr_simo.png\n');
+out_dir = fullfile(fileparts(mfilename('fullpath')), 'outputs');
+if ~exist(out_dir, 'dir'), mkdir(out_dir); end
+saveas(fig, fullfile(out_dir, 'simulacion_lqr_simo.png'));
+fprintf('Grafica guardada en: outputs/simulacion_lqr_simo.png\n');
 
 %% =========================== Funciones locales ===========================
 function [A,B,veq] = linealizar(th, p)
-% Linealizacion en theta_eq = th, con el carro en d = d0 (d_eq = d0).
-    veq = p.m_g*p.g*p.l_c*sin(th)/p.k_m;                 % [%] PWM de equilibrio (gravedad ~ sin: compuerta colgante)
-    a21 = -p.m_g*p.g*p.l_c*cos(th)/p.J_g;                % [1/s^2] rigidez gravitacional restauradora (planta estable)
+    veq = p.m_g*p.g*p.l_c*sin(th)/p.k_m;                 % [%] PWM de equilibrio
+    a21 = -p.m_g*p.g*p.l_c*cos(th)/p.J_g;                % [1/s^2] rigidez gravitacional
     kv  = p.k_m/p.J_g;                                    % [rad/s^2 por %]
     gd  = -2*p.k_m*veq/(p.J_g*p.d0)/100;                  % [rad/s^2 por cm] (<0: alejar reduce torque)
     A = [0, 1, 0, 0, 0;
@@ -192,7 +176,11 @@ function out = simular(modo, p, Kg, Kg4, thg, sc)
         vf = min(max(vf + dt*(u_cmd - vf)/p.fan_tau, 0), 100);
         dd = min(max((d_ref - d)/p.tau_car, -p.v_car_max), p.v_car_max);
         d  = min(max(d + dt*dd, p.d_min), p.d_max);
-        e_i = th - thr;                                   % anti-windup condicional (PWM saturado empujando igual)\n        if (u_pwm >= p.pwm_max && e_i < 0) || (u_pwm <= p.pwm_min && e_i > 0), e_i = 0; end\n        xi = min(max(xi + dt*e_i, -p.xi_lim), p.xi_lim);
+        e_i = th - thr;
+        if (u_pwm >= p.pwm_max && e_i < 0) || (u_pwm <= p.pwm_min && e_i > 0)
+            e_i = 0;
+        end
+        xi = min(max(xi + dt*e_i, -p.xi_lim), p.xi_lim);
     end
     out.t = t;  out.H = H;
 end

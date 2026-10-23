@@ -1,8 +1,5 @@
 function gui_simulacion()
 %GUI_SIMULACION Interfaz para variar parametros y simular modelo_miso_compuerta.slx
-%   - "Simular": una corrida con los valores de los campos.
-%   - "Barrer parametro": varias corridas variando un parametro entre dos valores.
-%   - Los campos se pasan a init_parametros.m mediante la struct 'ovr' (base workspace).
 mdl    = 'modelo_miso_compuerta';
 folder = fileparts(mfilename('fullpath'));
 addpath(folder);
