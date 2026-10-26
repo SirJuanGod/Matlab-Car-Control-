@@ -1,0 +1,56 @@
+#ifndef PROTOCOL_DEFS_H
+#define PROTOCOL_DEFS_H
+
+#include <stdint.h>
+#include <stddef.h>
+
+#define ESPNOW_WIFI_CHANNEL 1
+
+#pragma pack(push, 1)
+
+/**
+ * @brief Paquete transmitido desde la Estación Base hacia el Carro.
+ */
+typedef struct {
+    uint32_t seq_num;          // Contador secuencial de trama
+    float    theta_meas_deg;   // Angulo medido de la compuerta por ADC [0.0 - 180.0 deg]
+    float    theta_ref_deg;    // Consigna de angulo deseada [deg]
+    float    d_ref_cm;         // Consigna de distancia deseada [cm]
+    float    matlab_pwm_feed;  // Esfuerzo de control PWM calculado en MATLAB (modo HIL) [%]
+    uint8_t  control_mode;     // 0: Control autonomo en Carro, 1: Feedback/HIL desde MATLAB
+    uint8_t  enable_motors;    // 1: Habilitar motores de traccion, 0: Parada segura
+    uint8_t  enable_fan;       // 1: Habilitar ventilador, 0: Ventilador apagado
+    uint8_t  flags;            // Banderas auxiliares
+    uint16_t checksum;         // Suma de comprobacion
+} base_to_car_packet_t;
+
+/**
+ * @brief Paquete de telemetria transmitido desde el Carro hacia la Estación Base.
+ */
+typedef struct {
+    uint32_t seq_num;          // Contador secuencial de trama
+    float    dist_est_cm;      // Distancia estimada d(t) = 10cm - Delta_x [cm]
+    float    vel_est_ms;       // Velocidad lineal estimada por Kalman [m/s]
+    float    accel_x_ms2;      // Aceleracion longitudinal ax medida por IMU [m/s^2]
+    float    u_fan_pwm;        // Ciclo de trabajo aplicado al ventilador [10.0 - 90.0 %]
+    float    u_motor_pwm;      // Esfuerzo de traccion del PID del carro [-100.0 a +100.0 %]
+    float    error_dist_cm;    // Error de distancia instantaneo e_d [cm]
+    uint8_t  imu_ready;        // 1: IMU calibrada y operativa
+    uint8_t  control_status;   // Banderas de estado del controlador
+    uint16_t checksum;         // Suma de comprobacion
+} car_to_base_packet_t;
+
+#pragma pack(pop)
+
+/**
+ * @brief Calcula una suma de verificacion de 16 bits para validar paquetes.
+ */
+static inline uint16_t protocol_checksum(const uint8_t *data, size_t len) {
+    uint16_t sum = 0;
+    for (size_t i = 0; i < len; i++) {
+        sum += data[i];
+    }
+    return sum;
+}
+
+#endif // PROTOCOL_DEFS_H

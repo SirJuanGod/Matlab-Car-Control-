@@ -6,11 +6,10 @@
 %     SUSPENDIDA: el pivote (potenciometro) esta en la punta del brazo y la compuerta
 %     cuelga de el, sin tocar el suelo.
 %   * Carro con IMU, ruedas que giran al avanzar y el VENTILADOR SOBRE EL CHASIS,
-%     soplando horizontalmente hacia la compuerta (aspas y flujo segun el PWM).
-%   * theta = desvio de la compuerta respecto de su posicion de reposo colgante
-%     (theta = 0: cuelga vertical; el aire la empuja hacia el soporte).
-%   * Referencias: theta_ref, d_ref y d_nom (punto de operacion del supervisor),
-%     junto con graficas de theta, PWM y distancias con un cursor que avanza.
+%     soplando horizontalmente hacia la compuerta.
+%   * theta = desvio de la compuerta respecto de su posicion de reposo colgante.
+%
+%   * Referencias: theta_ref, d_ref y d_nom, junto con graficas de theta, PWM y distancias con un cursor que avanza.
 %
 % Uso:
 %   >> animar_sistema                                  % escenario por defecto
@@ -258,6 +257,6 @@ for k = 1:nF
         end
     end
 end
-if use_mp4, close(vw); fprintf('Video: %s\n', fullfile(pwd,[base_nom '.mp4'])); end
-if use_gif, fprintf('GIF:   %s\n', fullfile(pwd,[base_nom '.gif'])); end
+%if use_mp4, close(vw); fprintf('Video: %s\n', fullfile(pwd,[base_nom '.mp4'])); end
+%if use_gif, fprintf('GIF:   %s\n', fullfile(pwd,[base_nom '.gif'])); end
 fprintf('Escenario "%s": theta final %.2f deg | d final %.2f cm | PWM max %.1f %%\n', ani.escenario, S.th(end), S.d(end), max(S.pwm));

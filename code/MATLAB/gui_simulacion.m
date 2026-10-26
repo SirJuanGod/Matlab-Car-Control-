@@ -1,34 +1,37 @@
 function gui_simulacion()
-%GUI_SIMULACION Interfaz para variar parametros y simular modelo_miso_compuerta.slx
-%   - "Simular": una corrida con los valores de los campos.
-%   - "Barrer parametro": varias corridas variando un parametro entre dos valores.
-%   - Los campos se pasan a init_parametros.m mediante la struct 'ovr' (base workspace).
 mdl    = 'modelo_miso_compuerta';
 folder = fileparts(mfilename('fullpath'));
 addpath(folder);
+
+% Bandera para evitar que Simulink colapse si se envían muchos comandos rápidos
+is_simulating = false; 
 
 % {variable en init_parametros.m, etiqueta, valor por defecto}
 P = {'theta_ref_deg','Angulo ref. [deg]',35; ...
      'theta0_deg','Angulo inicial [deg]',0; ...
      'd_ini_cm','Distancia inicial [cm]',10; ...
      'ref_rate_deg','Rampa de ref. [deg/s]',200; ...
-     't_sim','Tiempo de simulacion [s]',8; ...
+     'gov_deg','Gobernador de ref. [deg]',90; ...
+     't_sim','Tiempo de simulacion [s]',10; ...
      'k_m','k_m [N m/%]',0.0003; ...
      'tau_f','Friccion Coulomb [N m]',1e-4; ...
      'b_c','Amortig. pivote [N m s/rad]',1e-3; ...
      'imu_bias','Sesgo IMU [m/s^2]',0.02; ...
      'imu_noise_pow','Ruido IMU (potencia)',1e-5; ...
      'pert_tau_mNm','Pulso de torque ext. [mN m]',0; ...
-     'fan_fac','Fuerza real ventilador (final)/supuesta',1; ...
+     'fan_fac','Degradacion: factor de fuerza final',0.4; ...
+     'fan_t0','Degradacion: inicio [s]',3.0; ...
+     'fan_dur','Degradacion: duracion [s]',12.0; ...
      'pwm_min','PWM minimo [%]',10; ...
      'pwm_max','PWM maximo [%]',90; ...
-     'sup_v_hi','Supervisor: acercar carro si PWM > [%]',70; ...
+     'sup_v_hi','Supervisor: acercar carro si PWM > [%]',90; ...
      'tau_car','tau lazo carro [s]',0.8; ...
      'q_th','Peso Q theta',10000; ...
      'q_d','Peso Q d [1/cm^2]',0.5; ...
      'q_xi','Peso Q integral',10000; ...
      'r_pwm','Peso R PWM',0.02; ...
      'r_d','Peso R d_ref [1/cm^2]',1};
+
 nP = size(P,1);
 
 fig = uifigure('Name','Simulacion MISO: carro + ventilador + compuerta','Position',[40 40 1300 760]);
@@ -37,35 +40,55 @@ gl.ColumnWidth = {340,'1x'};
 
 % ---- Panel de parametros ----
 pl = uipanel(gl,'Title','Parametros y variaciones');
-pg = uigridlayout(pl,[nP+11 2]);
-pg.RowHeight   = repmat({24},1,nP+11);
+pg = uigridlayout(pl,[nP+13 2]); % Aumentado para el nuevo checkbox Auto-Simular
+pg.RowHeight   = repmat({24},1,nP+13);
 pg.ColumnWidth = {'1.6x','1x'};
 pg.Scrollable  = 'on';
+
 ef = struct();
 for i = 1:nP
     uilabel(pg,'Text',P{i,2});
-    ef.(P{i,1}) = uieditfield(pg,'numeric','Value',P{i,3},'ValueDisplayFormat','%.6g');
+    % Cada vez que se cambia un valor numérico, se llama a autoSimular()
+    ef.(P{i,1}) = uieditfield(pg,'numeric','Value',P{i,3}, ...
+        'ValueDisplayFormat','%.6g', ...
+        'ValueChangedFcn', @(~,~) autoSimular());
 end
-chkIMU = uicheckbox(pg,'Text','Lazo con IMU + observador','Value',true);
+
+% Checkboxes (También disparan simulación al hacerles clic)
+chkIMU = uicheckbox(pg,'Text','Lazo con IMU + observador','Value',true, 'ValueChangedFcn', @(~,~) autoSimular());
 chkIMU.Layout.Column = [1 2];
+
+chkDeg = uicheckbox(pg,'Text','Simular caida de bateria (degradacion)','Value',false, 'ValueChangedFcn', @(~,~) autoSimular());
+chkDeg.Layout.Column = [1 2];
+
 chkHold = uicheckbox(pg,'Text','Mantener curvas anteriores','Value',false);
 chkHold.Layout.Column = [1 2];
+
+chkAuto = uicheckbox(pg,'Text','Auto-Simular al cambiar parametros','Value',true, 'FontWeight', 'bold', 'FontColor', [0.85 0.33 0.1]);
+chkAuto.Layout.Column = [1 2];
+
 uilabel(pg,'Text','Barrer parametro');
-ddP = uidropdown(pg,'Items',P(:,1)','Value','theta0_deg');
+ddP = uidropdown(pg,'Items',P(:,1)','Value','gov_deg');
+
 uilabel(pg,'Text','Desde');
-efA = uieditfield(pg,'numeric','Value',25);
+efA = uieditfield(pg,'numeric','Value',10);
 uilabel(pg,'Text','Hasta');
-efB = uieditfield(pg,'numeric','Value',40);
+efB = uieditfield(pg,'numeric','Value',90);
 uilabel(pg,'Text','N puntos');
 efN = uieditfield(pg,'numeric','Value',4,'Limits',[2 12],'RoundFractionalValues','on');
-btnSim = uibutton(pg,'Text','Simular','ButtonPushedFcn',@(~,~) onSimular());
+
+btnSim = uibutton(pg,'Text','Simular Manualmente','ButtonPushedFcn',@(~,~) onSimular());
 btnSim.Layout.Column = [1 2];
+
 btnSwp = uibutton(pg,'Text','Barrer parametro','ButtonPushedFcn',@(~,~) onBarrido());
 btnSwp.Layout.Column = [1 2];
+
 btnClr = uibutton(pg,'Text','Limpiar graficas','ButtonPushedFcn',@(~,~) limpiar());
 btnClr.Layout.Column = [1 2];
+
 lblSt = uilabel(pg,'Text','Listo.','WordWrap','on');
 lblSt.Layout.Column = [1 2];
+
 lblPWM = uilabel(pg,'Text','PWM enviado: -- %','FontWeight','bold','FontColor',[0 0.45 0.74],'WordWrap','on');
 lblPWM.Layout.Column = [1 2];
 
@@ -74,18 +97,21 @@ ag = uigridlayout(gl,[3 2]);
 titulos = {'Angulo de la compuerta \theta','Senal PWM enviada al actuador [%]','Distancia carro-compuerta d (IMU vs Real)','Torque aerodinamico \tau_a', ...
            'Error del estimador de distancia (est. - real)','Aceleracion medida por la IMU'};
 ylabs   = {'\theta [deg]','PWM [%]','d [cm]','\tau_a [mN m]','error [cm]','a_x [m/s^2]'};
+
 axs = gobjects(1,6);
 for k = 1:6
     axs(k) = uiaxes(ag);
     title(axs(k),titulos{k}); ylabel(axs(k),ylabs{k}); xlabel(axs(k),'t [s]');
     grid(axs(k),'on'); hold(axs(k),'on');
 end
+
 nCurvas = 0;
 
     function ov = leerCampos()
         ov = struct();
         for ii = 1:nP, ov.(P{ii,1}) = ef.(P{ii,1}).Value; end
         ov.usar_imu = double(chkIMU.Value);
+        ov.usar_degradacion_fan = double(chkDeg.Value);
     end
 
     function out = correr(ov)
@@ -138,7 +164,20 @@ nCurvas = 0;
         legend(axs(5),'show','Location','best');
     end
 
+    % --- NUEVA FUNCION INTERMEDIA PARA AUTO-SIMULAR ---
+    function autoSimular()
+        if chkAuto.Value
+            onSimular();
+        end
+    end
+
     function onSimular()
+        % Seguro anti-choque: Si ya esta simulando, ignorar la peticion
+        if is_simulating
+            return;
+        end
+        is_simulating = true; % Activar candado
+        
         try
             lblSt.Text = 'Simulando...'; drawnow;
             ov = leerCampos();
@@ -154,9 +193,14 @@ nCurvas = 0;
             lblSt.Text = ['Error: ' ME.message];
             uialert(fig,ME.message,'Error de simulacion');
         end
+        
+        is_simulating = false; % Liberar candado
     end
 
     function onBarrido()
+        if is_simulating, return; end
+        is_simulating = true;
+        
         try
             ov = leerCampos();
             prm = ddP.Value;
@@ -177,5 +221,7 @@ nCurvas = 0;
             lblSt.Text = ['Error: ' ME.message];
             uialert(fig,ME.message,'Error en el barrido');
         end
+        
+        is_simulating = false;
     end
 end
