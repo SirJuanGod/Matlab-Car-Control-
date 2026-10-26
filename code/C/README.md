@@ -109,6 +109,12 @@ flowchart LR
   * `en_fan`: `1` para habilitar ventilador, `0` para apagarlo.
   * Los 6 campos son obligatorios y deben ser números finitos; si no, la trama se descarta.
 
+* **Lectura desde MATLAB:** `code/MATLAB/uart_esp32.m` abre el puerto, envía la consigna, grafica θ y d en vivo y devuelve los datos; al terminar (o con Ctrl+C) apaga motores y ventilador.
+  ```matlab
+  datos = uart_esp32("COM5", 30, 35, 10);   % puerto, duracion [s], theta_ref [deg], d_ref [cm]
+  plot(datos.t, datos.theta_deg)
+  ```
+
 ### 2.2 Emparejamiento ESP-NOW (Base $\leftrightarrow$ Carro)
 
 Por defecto ambos nodos usan broadcast y aceptan paquetes de **cualquier** ESP32 en el canal 1. Para que dos montajes del laboratorio no se crucen:
