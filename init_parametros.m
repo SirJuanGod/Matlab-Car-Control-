@@ -5,7 +5,7 @@
 % diseno_polos_ceros.m, gui_simulacion.m y modelo_miso_compuerta.slx.
 % =========================================================================
 % Planteamiento (ver arquitectura_sistema.md):
-%   - Planta pasiva (subactuada): compuerta (pendulo invertido) articulada al suelo.
+%   - Planta pasiva (subactuada): compuerta colgante de un soporte en L invertida (pendulo con pivote elevado, estable); theta = 0 es el reposo colgante.
 %   - Controlador SIMO: entrada theta (potenciometro) -> salidas u_PWM (ventilador)
 %     y d_ref (carro). Planta MISO: [u_PWM, d] -> theta.
 %   - Sensor: potenciometro lineal alimentado a 3.3 V, conexion DIRECTA al ADC de
@@ -27,7 +27,7 @@
 g       = 9.81;          % [m/s^2] aceleracion de la gravedad
 rho_air = 1.225;         % [kg/m^3] densidad del aire a nivel del mar
 
-%% --- 2. Compuerta Fisica (Planta: Pendulo Invertido) ---
+%% --- 2. Compuerta Fisica (Planta: Pendulo Colgante del Soporte en L Invertida) ---
 gate_t      = 0.0015;    % [m] espesor del material (carton 1.5 mm)
 gate_W      = 0.15;      % [m] ancho de la compuerta (15 cm)
 gate_L      = 0.20;      % [m] largo de la compuerta (20 cm)
@@ -169,21 +169,15 @@ B_p = [0; b2];
 C_p = [1, 0];
 D_p = 0;
 
-%% --- 9. Diseno Analitico del PID por Lugar Geometrico de las Raices (LGR) ---
-zeta_des = 0.85;
-wn_des   = 3.2;
-p_int    = 1.0;
-
-% El diseno INCLUYE el polo del ventilador (tau_fan): lazo de 4.o orden
-%   s(tau s+1)(s^2 - a22 s - a21) + b2 (Kd s^2 + Kp s + Ki) = tau (s^2+2 zeta wn s+wn^2)(s+p_int)(s+p4)
-% p4 queda fijado por el coeficiente de s^3 (suma de polos). Ignorar el ventilador
-% da Kd = 0.96 y un lazo INESTABLE.
-p4_des = (-a22*fan_tau + 1)/fan_tau - 2*zeta_des*wn_des - p_int;
-P_des  = fan_tau * conv(conv([1, 2*zeta_des*wn_des, wn_des^2], [1, p_int]), [1, p4_des]);  % [s^4 ... s^0]
-
-pid_Kd = (P_des(3) - (-a22 - a21*fan_tau)) / b2;
-pid_Kp = (P_des(4) + a21) / b2;
-pid_Ki = P_des(5) / b2;
+%% --- 9. PID rapido (solo ventilador) ---
+% Sintonizado por optimizacion directa sobre el lazo lineal CON el ventilador (ver
+% sintonizar_loop_shaping.m): minimiza el ITAE del escalon con sobrepico <= 2 % y PM >= 50 deg.
+% El diseno anterior por asignacion de polos ya no sirve: con la compuerta colgante (planta
+% estable, polos -2.5 +/- 7.35j) los polos objetivo lentos daban ganancias negativas.
+% Resultado: subida 0.38 s, sobrepico 2 %, PM 66 deg, Ms 1.5; estable con el carro de 5 a 20 cm.
+pid_Kp = 10.701;
+pid_Ki = 128.763;
+pid_Kd = 1.646;
 pid_N  = 30.0; % [rad/s] polo de filtrado derivativo (estrategias_control.md: N ~ 30)
 
 ceros_pid = roots([pid_Kd, pid_Kp, pid_Ki]);
@@ -192,8 +186,8 @@ ceros_pid = roots([pid_Kd, pid_Kp, pid_Ki]);
 A_aug = [A_p, [0; 0]; 1, 0, 0];
 B_aug = [B_p; 0];
 
-Q_lqr = diag([60.0, 3.0, 120.0]);
-R_lqr = 0.05;
+Q_lqr = diag([q_th, q_om, q_xi]);   % mismos pesos que el SIMO (version de solo ventilador)
+R_lqr = r_pwm;
 
 [K_lqr_nom, P_ricc, autovalores_lqr] = lqr(A_aug, B_aug, Q_lqr, R_lqr);
 
@@ -215,16 +209,14 @@ u_eq  = interp1(theta_grid_deg, ueq_tab, min(max(theta_ref_deg, 10), 80), 'linea
 
 %% --- 11. Controlador 3: Compensador Robusto por Loop Shaping ---
 % C_hinf(s) = K_h * (s + z_lead) * (s + z_lag) / [ s * (s + p_lag) ]
-% Sintonizado con systune (Control System Toolbox, sintonia estructurada basada en
-% normas H-inf) sobre la planta CON ventilador: margenes de disco objetivo 3 dB / 25 deg,
-% polos con Re < -1 y zeta > 0.4, N <= pid_N. Reproducible con sintonizar_loop_shaping.m.
-% Resultado: GM [0.68, 2.87], PM 21 deg, Ms 2.9 (objetivo de margenes no cumplido del todo:
-% es el optimo de esta estructura con N <= 30). Estable solo con el carro en d = 5.9 a 12.1 cm.
+% Sintonizado por optimizacion directa (sintonizar_loop_shaping.m): minimiza Ms + 2*ITAE con
+% PM >= 55 deg sobre la planta CON ventilador. Con la planta estable el optimo degenera en un PI
+% filtrado (ceros dobles en 27.5 rad/s): PM 70 deg, Ms 1.5, sin sobrepico, pero mas lento que el PID.
 % NO es la sintesis de sensibilidad mixta S/KS/T de orden completo (hinfsyn: Robust Control Toolbox).
-z_lead = 4.214;  % [rad/s] cero de adelanto
-z_lag  = 0.196;  % [rad/s] cero de atraso (accion integral)
+z_lead = 27.482;  % [rad/s] cero
+z_lag  = 27.482;  % [rad/s] cero (accion integral)
 p_lag  = 30.0;   % [rad/s] polo de filtrado (limita el ruido del ADC)
-K_hinf = 293.9;  % ganancia de alta frecuencia
+K_hinf = 2.8751;  % ganancia de alta frecuencia
 
 num_hinf = K_hinf * conv([1, z_lead], [1, z_lag]);
 den_hinf = [1, p_lag, 0];
@@ -271,7 +263,7 @@ fprintf('  * Polos de la planta:        %s rad/s\n', mat2str(round(polos_ol.', 3
 fprintf('  * Sensor potenciometro:      0V=0 deg | %.2fV=90 deg | %.1fV=180 deg (K_pot = %.5f V/deg)\n', V_pot_mid, V_pot_max, K_pot_deg);
 fprintf('  * ADC:                       %d bits (%d cuentas), %.4f deg/LSB\n', adc_bits, adc_counts, adc_res_deg);
 fprintf('  * PWM de equilibrio nominal: %.2f %%\n', u_eq);
-fprintf('  * PID (LGR formal):          Kp=%.2f, Ki=%.2f, Kd=%.2f (Ceros en s=%.2f, s=%.2f)\n', ...
+fprintf('  * PID rapido (optimizado):   Kp=%.2f, Ki=%.2f, Kd=%.2f (Ceros en s=%.2f, s=%.2f)\n', ...
     pid_Kp, pid_Ki, pid_Kd, ceros_pid(1), ceros_pid(2));
 fprintf('  * LQR+I (Riccati):           K=[%.2f, %.2f, %.2f]\n', K_lqr(1), K_lqr(2), K_lqr(3));
 fprintf('  * Loop shaping:              K_h=%.2f, z1=%.2f, z2=%.2f, p=%.2f\n', K_hinf, z_lead, z_lag, p_lag);

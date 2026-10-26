@@ -23,19 +23,20 @@ $$\theta[^\circ] = \left(\frac{\text{Lectura\_ADC}}{4095}\right) \times 180.0^\c
 ### 1.2 Ecuación Dinámica No Lineal
 $$\begin{aligned}
 \tau_{fan} \dot{v}_a(t) + v_a(t) &= K_v \cdot u_{PWM}(t) \\
-J_g \ddot{\theta}(t) + b_c \dot{\theta}(t) + m_g g \ell_c \cos(\theta(t)) + \tau_{fric}\text{sign}(\dot{\theta}) &= \tau_{aero}(v_a, d, \theta)
+J_g \ddot{\theta}(t) + b_c \dot{\theta}(t) + m_g g \ell_c \sin(\theta(t)) + \tau_{fric}\text{sign}(\dot{\theta}) &= \tau_{aero}(v_a, d, \theta)
 \end{aligned}$$
 
 Donde:
-* $u_{PWM} \in [0\%, 100\%]$ (señal PWM enviada al L298N y visualizada en la GUI).
+* $u_{PWM} \in [10\%, 90\%]$ (señal PWM enviada al L298N y visualizada en la GUI).
 * $\tau_{aero} \approx k_m(d) \cdot u_{PWM}(t)$, con $k_m(d) \approx k_0 \left(\frac{d_0}{d}\right)^2$.
 * $d(t) = 10\text{ cm} - \Delta x(t)$ es la distancia instantánea estimada mediante la **IMU del carro**.
+* $\theta = 0$ es la compuerta **colgando en reposo** del soporte en L invertida (el aire la empuja alejándola del carro); ver [[especificaciones_compuerta]].
 
 ### 1.3 Punto de Operación y Equilibrio ($\theta_{eq}$)
-$$u_{eq} = \frac{m_g g \ell_c \cos(\theta_{eq})}{k_m(d)}$$
+$$u_{eq} = \frac{m_g g \ell_c \sin(\theta_{eq})}{k_m(d)}$$
 
 ### 1.4 Modelo Linealizado (Pequeña Señal)
-$$G_p(s) = \frac{\delta \theta(s)}{\delta u(s)} = \frac{\frac{k_m(d)}{J_g}}{s^2 + \frac{b_c}{J_g}s - \frac{m_g g \ell_c \sin(\theta_{eq})}{J_g}}$$
+$$G_p(s) = \frac{\delta \theta(s)}{\delta u(s)} = \frac{\frac{k_m(d)}{J_g}}{s^2 + \frac{b_c}{J_g}s + \frac{m_g g \ell_c \cos(\theta_{eq})}{J_g}}$$
 
 Incluyendo la dinámica del actuador y el sensor ($K_{pot} = \frac{3.3}{180}\text{ V/deg}$):
 $$G_{total}(s) = \frac{V_{pot}(s)}{\delta u(s)} = \left(\frac{1}{\tau_{fan}s + 1}\right) G_p(s) \cdot K_{pot}$$
@@ -51,15 +52,15 @@ $$u_{PID}(t) = K_p e(t) + K_i \int_0^t e(\tau) d\tau + K_d \frac{d e_f(t)}{dt}$$
 
 ### 2.1 Componentes de Implementación
 1. **Compensación Feedforward Gravitacional ($u_{ff}$):**
-   $$u(t) = \text{sat}_{[0, 100]}\left( u_{PID}(t) + \frac{m_g g \ell_c \cos(\theta_{ref})}{k_m(d_0)} \right)$$
+   $$u(t) = \text{sat}_{[10, 90]}\left( u_{PID}(t) + \frac{m_g g \ell_c \sin(\theta_{ref})}{k_m(d_0)} \right)$$
    con $d_0 = 10\text{ cm}$.
 2. **Filtrado Derivativo en ESP32:**
    El ADC nativo de 12 bits entrega lecturas estables. Se utiliza un derivativo filtrado $D(s) = \frac{K_d s}{s/N + 1}$ ($N \approx 30$).
 3. **Anti-Windup (Clamping):**
-   Evita la saturación del integrador cuando el PWM alcanza $0\%$ o $100\%$.
+   Evita la saturación del integrador cuando el PWM alcanza $10\%$ o $90\%$.
 4. **Monitoreo en GUI:**
    La señal $u(t)$ resultante se envía continuamente por telemetría para su graficación en la GUI.
-5. **Sintonía (`init_parametros.m`):** asignación de polos de 4.º orden que **incluye el polo del ventilador** ($\zeta=0.85$, $\omega_n=3.2$ rad/s, $p_{int}=1$, $p_4=-5.23$): $K_p=37.35$, $K_i=5.35$, $K_d=5.82$. Diseñarlo sin el ventilador da $K_d=0.96$ y un lazo inestable.
+5. **Sintonía (`init_parametros.m`, `sintonizar_loop_shaping.m`):** optimización directa sobre el lazo lineal **con el ventilador** (ITAE del escalón, sobrepico $\le 2\%$, $PM \ge 50^\circ$, $N = 30$): $K_p=10.70$, $K_i=128.8$, $K_d=1.65$. Respuesta lineal: subida 0.38 s, sobrepico 2 %, $PM = 66^\circ$, $M_s = 1.5$; estable con el carro entre 5 y 20 cm. La asignación de polos anterior ya no sirve: con la compuerta colgante (planta estable, polos $-2.5 \pm 7.35j$) los polos objetivo lentos daban ganancias negativas.
 
 ---
 
@@ -68,14 +69,14 @@ $$u_{PID}(t) = K_p e(t) + K_i \int_0^t e(\tau) d\tau + K_d \frac{d e_f(t)}{dt}$$
 ### 3.1 Espacio de Estados Aumentado
 Vector de estados: $x(t) = [\delta \theta, \; \delta \dot{\theta}, \; x_i]^T$, donde $\dot{x}_i = \theta(t) - \theta_{ref}$:
 
-$$A_a = \begin{bmatrix} 0 & 1 & 0 \\ \frac{m_g g \ell_c \sin(\theta_{eq})}{J_g} & -\frac{b_c}{J_g} & 0 \\ 1 & 0 & 0 \end{bmatrix}, \quad B_a = \begin{bmatrix} 0 \\ \frac{k_m(d)}{J_g} \\ 0 \end{bmatrix}, \quad C_a = \begin{bmatrix} 1 & 0 & 0 \end{bmatrix}$$
+$$A_a = \begin{bmatrix} 0 & 1 & 0 \\ -\frac{m_g g \ell_c \cos(\theta_{eq})}{J_g} & -\frac{b_c}{J_g} & 0 \\ 1 & 0 & 0 \end{bmatrix}, \quad B_a = \begin{bmatrix} 0 \\ \frac{k_m(d)}{J_g} \\ 0 \end{bmatrix}, \quad C_a = \begin{bmatrix} 1 & 0 & 0 \end{bmatrix}$$
 
 ### 3.2 Optimización Cuadrática
 $$J = \int_0^\infty \left( x^T Q x + R \cdot \delta u^2 \right) dt$$
 * $Q = \text{diag}([q_\theta, \; q_\omega, \; q_{int}])$, $R > 0$.
 * Ganancia: $K_{LQR} = \text{lqr}(A_a, B_a, Q, R)$.
 * Ley de control:
-  $$u(t) = \text{sat}_{[0, 100]}\left( u_{eq} - K_{LQR} x(t) \right)$$
+  $$u(t) = \text{sat}_{[10, 90]}\left( u_{eq} - K_{LQR} x(t) \right)$$
 * Se implementa **Gain Scheduling** interpolando las ganancias según $\theta_{eq}$.
 
 ---
@@ -87,16 +88,16 @@ El controlador recibe solo $\theta_{meas}$ y entrega dos salidas, $u = [\delta u
 Linealizando $\tau_{aero} = k_m \, v_{fan} \, (d_0/d)^2$ alrededor de $(v_{eq}, d_{eq})$:
 $$k_v = k_m \left(\frac{d_0}{d_{eq}}\right)^2, \qquad g_d = -\frac{2 \, k_m \, v_{eq} \, d_0^2}{J_g \, d_{eq}^3} \; (<0: \text{alejar el carro reduce el torque})$$
 
-$$A = \begin{bmatrix} 0 & 1 & 0 & 0 & 0 \\ \frac{m_g g \ell_c \sin\theta_{eq}}{J_g} & -\frac{b_c}{J_g} & \frac{k_v}{J_g} & g_d & 0 \\ 0 & 0 & -\frac{1}{\tau_{fan}} & 0 & 0 \\ 0 & 0 & 0 & -\frac{1}{\tau_{car}} & 0 \\ 1 & 0 & 0 & 0 & 0 \end{bmatrix}, \quad B = \begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{\tau_{fan}} & 0 \\ 0 & \frac{1}{\tau_{car}} \\ 0 & 0 \end{bmatrix}$$
+$$A = \begin{bmatrix} 0 & 1 & 0 & 0 & 0 \\ -\frac{m_g g \ell_c \cos\theta_{eq}}{J_g} & -\frac{b_c}{J_g} & \frac{k_v}{J_g} & g_d & 0 \\ 0 & 0 & -\frac{1}{\tau_{fan}} & 0 & 0 \\ 0 & 0 & 0 & -\frac{1}{\tau_{car}} & 0 \\ 1 & 0 & 0 & 0 & 0 \end{bmatrix}, \quad B = \begin{bmatrix} 0 & 0 \\ 0 & 0 \\ \frac{1}{\tau_{fan}} & 0 \\ 0 & \frac{1}{\tau_{car}} \\ 0 & 0 \end{bmatrix}$$
 
 * Ganancia: $K = \text{lqr}(A, B, Q, R) \in \mathbb{R}^{2 \times 5}$, con $R = \text{diag}(r_{PWM}, r_d)$.
 * El reparto del esfuerzo entre ventilador y carro lo fijan $R$ y $\tau_{car}$ (propuesta: carro bastante más lento que el ventilador); a verificar y sintonizar en simulación.
 * Solo $\theta$ se mide directamente con el potenciómetro: $\omega$ y $v_{fan}$ requieren observador, y $d$ viene de la IMU con Kalman.
-* **Implementado en `lqr_simo.m`** (ganancias programadas sobre $\theta_{ref}$, equilibrio con el carro en $d_0$, realimentación de estado completo ideal). Parámetros en `init_parametros.m`: $\tau_{car}=0.8\text{ s}$, $Q=\text{diag}(60, 3, 0, 0.5, 120)$, $R=\text{diag}(0.05, 0.05)$. Genera `simulacion_lqr_simo.png`.
-* **Implementado en `modelo_miso_compuerta.slx`** (planta MISO en tres subsistemas: cinemática del carro + IMU, aerodinámica del ventilador, compuerta como péndulo invertido con tope inelástico; más `Sensor_Potenciometro_ADC`, `Lazo_Carro_IMU` y `Controlador_SIMO`). Estimación sin medir $\omega$ ni $v_{fan}$: $\hat\omega$ por derivada filtrada del ADC ($\tau_w=0.02$ s), $\hat v_{fan}$ por el modelo del ventilador (entrada conocida) y $\hat d$ por Kalman de la IMU con la fuerza de tracción como entrada. La ganancia $K$ se interpola sobre $\theta_{ref}$ y el equilibrio se linealiza en la distancia inicial $d_{ini}$.
-* **Resultado preliminar** (simulación no lineal, escalón $30^\circ \to 40^\circ$ y pulso de 1 mN·m, SIMO vs solo ventilador): asentamiento a $\pm 1^\circ$ en 1.0 s vs 3.1 s; desviación por perturbación $6.25^\circ$ vs $6.91^\circ$; excursión real del carro 0.84 cm. Con pulso de 2 mN·m el SIMO empeora ($31^\circ$ vs $16^\circ$) y con $r_d$ alto ($\geq 3$) el carro casi no actúa.
-* **El carro se mueve cuando hace falta (`Supervisor_d`):** el punto de operación de distancia $d_{nom}$ deja de ser fijo. Si el PWM demandado supera el 80 %, $d_{nom}$ avanza (hasta 5 cm/s, proporcional al exceso); si baja del 30 %, regresa a 1 cm/s hacia $d_{ini}$. Las ganancias $K$ se programan sobre $(\theta_{ref}, d_{nom})$ (rejilla $15\times 9$, $d\in[5,25]\text{ cm}$). Se añadieron un gobernador de referencia ($\theta_{ref}\le\theta_{med}+5^\circ$, para levantar la compuerta desde el suelo sin voltearla) y anti-windup condicional de la integral (límite $\pm 2$ rad·s). Resultados en el `.slx` ($35^\circ\to30^\circ$): con el carro arrancando a 18 cm (exige 130 % de PWM) **sin supervisor la compuerta queda en el suelo y con él se recupera a $30.3^\circ$**; una pérdida de hasta 50 % de fuerza del ventilador se compensa con la integral ($30.3^\circ$) y un pulso de $-8\text{ mN·m}$ se absorbe ($30.6^\circ$). **Límite:** con pérdidas $\ge 60\%$ (exigen $\ge 100\%$ de PWM a 10 cm) el carro se acerca a 6–7 cm pero el lazo oscila lentamente ($\theta$ entre $0^\circ$ y $38^\circ$); requiere calibrar $k_m$ o estimarlo en línea. Un gobernador más permisivo ($\ge 10^\circ$) recupera más rápido, pero un pulso de $-8\text{ mN·m}$ puede voltear la compuerta.
-* **Reservas:** el modelo de primer orden con $\tau_{car}$ de `lqr_simo.m` es optimista a la escala de la banda muerta de $\pm 5\text{ mm}$. En el `.slx` (escenario $35^\circ \to 30^\circ$, $d=10\text{ cm}$) con $d$ ideal el error final es $0.014^\circ$ y asienta en 1.0 s; con IMU + Kalman + banda muerta queda un ciclo límite lento de $\approx \pm 0.5^\circ$ (asentamiento 1.4 s). Sigue pendiente validar con el carro y la IMU reales.
+* **Implementado en `lqr_simo.m`** (ganancias programadas sobre $\theta_{ref}$, realimentación de estado completo ideal). Parámetros en `init_parametros.m`: $\tau_{car}=0.8\text{ s}$, $Q=\text{diag}(10^4, 60, 0, 0.5, 10^4)$, $R=\text{diag}(0.02, 1)$ ($r_d$ alto: el carro actúa poco mientras el ventilador alcanza). Genera `simulacion_lqr_simo.png`.
+* **Implementado en `modelo_miso_compuerta.slx`** (planta MISO en tres subsistemas: cinemática del carro + IMU, aerodinámica del ventilador, compuerta colgante (péndulo, gravedad ∝ sin θ) con tope inelástico; más `Sensor_Potenciometro_ADC`, `Lazo_Carro_IMU` y `Controlador_SIMO`). Estimación sin medir $\omega$ ni $v_{fan}$: $\hat\omega$ por derivada filtrada del ADC ($\tau_w=0.02$ s), $\hat v_{fan}$ por el modelo del ventilador (entrada conocida) y $\hat d$ por Kalman de la IMU con la fuerza de tracción como entrada. La ganancia $K$ se interpola sobre $\theta_{ref}$ y el equilibrio se linealiza en la distancia inicial $d_{ini}$.
+* **Resultado** (simulación no lineal, escalón $0^\circ \to 35^\circ$ y pulso de 1 mN·m, SIMO vs solo ventilador, `lqr_simo.m`): asentamiento a $\pm 1^\circ$ en 0.70 s en ambos; desviación por perturbación $1.39^\circ$ en ambos; excursión del carro 0.39 cm. Con la planta estable y el ventilador sobrado, el SIMO **no mejora** el caso nominal: su ventaja aparece cuando el ventilador no alcanza (siguiente punto).
+* **El carro se mueve cuando hace falta (`Supervisor_d`):** el punto de operación de distancia $d_{nom}$ no es fijo. Si el PWM demandado supera el 70 %, $d_{nom}$ **avanza** (hasta 5 cm/s, proporcional al exceso); si cae por debajo del mínimo (10 %), el ventilador 'sobra' y $d_{nom}$ se **aleja**; si queda bajo el 20 % regresa a 1 cm/s hacia $d_{ini}$. Las ganancias $K$ se programan sobre $(\theta_{ref}, d_{nom})$ (rejilla $15\times 9$, $d\in[5,25]\text{ cm}$). La orden de PWM se satura en $[10\%, 90\%]$ y la integral del error solo acumula con $|e| < 5^\circ$ y con el PWM sin saturar (anti-windup), lo que evita el sobrepico. Con $\theta_{ref} = 8^\circ$ (por debajo de lo que alcanza el 10 % mínimo a 10 cm, $\approx 11.8^\circ$) el carro se aleja a 13.9 cm y la compuerta llega a $8^\circ$; con el carro arrancando a 18–22 cm el ventilador solo no puede levantar la compuerta: el carro se acerca a unos 14.6 cm y el PWM llega al 90 % mientras sube.
+* **Rendimiento en el `.slx`** (escalón $0^\circ \to 35^\circ$, carro a 10 cm, referencia prefiltrada con $\tau_{ref}=0.15\text{ s}$): subida (10–90 %) 0.41 s, sobrepico $0.9^\circ$, asentamiento a $\pm 1^\circ$ en 0.59 s, error final $0.01^\circ$, PWM máximo 65 %, rizado del PWM de $\approx 4\%$ pico a pico por la cuantización del ADC. Pulsos de $\pm 5\text{ mN·m}$ durante 3 s se absorben (error final $0.01^\circ$, desviación máxima hasta $12.7^\circ$). **Reservas:** el modelo de primer orden con $\tau_{car}$ de `lqr_simo.m` es optimista a la escala de la banda muerta de $\pm 5\text{ mm}$; con un ventilador real mucho más débil que el supuesto ($\le 40\%$) la recuperación es lenta (decenas de segundos) porque la integral no actúa con errores mayores de $5^\circ$ y el supervisor solo avanza cuando el PWM pasa del 70 %. Sigue pendiente validar con el carro y la IMU reales.
 
 ---
 
@@ -115,8 +116,8 @@ $$\left\| \begin{bmatrix} W_p(s) S(s) \\ W_u(s) K(s) S(s) \\ W_m(s) T(s) \end{bm
 * $W_p(s)$: Desempeño y error nulo en régimen permanente.
 * $W_u(s)$: Limita la energía del PWM para no saturar el L298N.
 * $W_m(s)$: Robustez garantizada ante los cambios de distancia calculados por la IMU.
-* **Estado:** la síntesis de sensibilidad mixta de orden completo (`mixsyn`/`hinfsyn`) requiere Robust Control Toolbox, que no está instalada. En su lugar, el compensador $C(s)=293.9\,(s+4.21)(s+0.20)/[s(s+30)]$ se sintoniza con `systune` (Control System Toolbox; script `sintonizar_loop_shaping.m`): estructura fija con integrador, planta **con** el ventilador, margen de disco objetivo $3\text{ dB}/25^\circ$, polos con $\mathrm{Re}<-1$ y $N\le 30$. Resultado: $GM\in[0.68,\,2.87]$, $PM=21^\circ$, $M_s=2.9$ (el objetivo de margen no se cumple del todo; es el óptimo de esta estructura). El compensador anterior ($K=38$, ceros en $-2.5$ y $-0.8$) era inestable.
-* **Límite del control de ganancia fija:** como la ganancia efectiva del ventilador varía como $(d_0/d)^2$, ningún compensador de esta estructura estabiliza todo el rango $d\in[5,25]\text{ cm}$ ni el $\pm 75\%$ de 4.1. Este tolera $d\approx 5.9$ a $12.1\text{ cm}$ (el PID de 2.1, 5.7 a 11.2 cm). Cubrir más rango exige que el control conozca $d$, que es lo que hace el SIMO.
+* **Estado:** la síntesis de sensibilidad mixta de orden completo (`mixsyn`/`hinfsyn`) requiere Robust Control Toolbox, que no está instalada. Con la compuerta colgante la planta es estable y el compensador de loop shaping (`sintonizar_loop_shaping.m`, optimización directa con Control System Toolbox: mín. $M_s + 2\,\text{ITAE}$ con $PM \ge 55^\circ$) degenera en un PI filtrado, $C(s)=2.88\,(s+27.5)^2/[s(s+30)]$: $PM = 70^\circ$, $M_s = 1.5$, sin sobrepico, pero asienta en 1.5 s frente a 0.6 s del PID. `systune` sin una meta de desempeño converge a un controlador casi puramente integral (sobrepico 25 %), por eso no se usa. El compensador anterior ($K=293.9$, ceros en 4.2 y 0.2) estaba sintonizado para la planta inestable y ya no aplica.
+* **Robustez a la distancia del carro:** la ganancia efectiva del ventilador varía como $(d_0/d)^2$. El PID rápido sigue estable con el carro entre 5 y 20 cm (ganancia $\times 4$ a $\times 0.25$) y el compensador robusto entre unos 6 y 20 cm; con la planta estable el margen de ganancia inferior deja de ser un problema (al alejarse el carro solo se pierde velocidad).
 
 ---
 
@@ -142,6 +143,6 @@ $$u_{car}(t) = \text{sat}_{[-100, 100]}\left( K_{p,d}\, e_a(t) + K_{i,d} \int_0^
 
 ## 6. Monitoreo en la Interfaz Gráfica (GUI)
 La GUI en MATLAB (`gui_simulacion.m`):
-1. **Gráfica de la señal PWM:** Muestra la evolución temporal del PWM ($0-100\%$) enviado al actuador en el subplot superior derecho.
+1. **Gráfica de la señal PWM:** Muestra la evolución temporal del PWM ($10-90\%$) enviado al actuador en el subplot superior derecho.
 2. **Indicador de Estado PWM:** Muestra en texto el valor final y los picos mínimos/máximos de PWM aplicados.
 3. **Validación IMU:** Grafica la distancia real frente a la estimada por la IMU a partir de la condición inicial de $10\text{ cm}$.

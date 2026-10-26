@@ -51,7 +51,7 @@ El mismo lazo se describe desde dos lados:
 * **Redundancia de actuación:** existen infinitas combinaciones $(u_{PWM}, d)$ que dan el mismo torque de equilibrio, por lo que el controlador necesita una regla de reparto del esfuerzo.
 * **Regla de reparto (propuesta por defecto, pendiente de confirmar):** separación por velocidad.
   * $u_{PWM}$: canal rápido; corrige la dinámica de $\theta$ (limitada por $\tau_{fan} \approx 0.15\text{ s}$).
-  * $d_{ref}$: canal lento; el lazo interno del carro (IMU) debe ser bastante más lento que el del ventilador y su función es mantener el PWM lejos de la saturación (0 % / 100 %).
+  * $d_{ref}$: canal lento; el lazo interno del carro (IMU) debe ser bastante más lento que el del ventilador y su función es mantener el PWM lejos de la saturación (límites de 10 % / 90 %).
 
 ```
                           +-------------------+--- u_PWM ---> [ Ventilador ] --+

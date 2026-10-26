@@ -19,23 +19,23 @@ polos_planta = polos_ol;             % polos de la compuerta en lazo abierto
 fprintf('=================================================================\n');
 fprintf('  ANALISIS FORMAL DE POLOS Y CEROS DE LA PLANTA\n');
 fprintf('=================================================================\n');
-fprintf('  * Planta mecanica G_p(s) = %.2f / (s^2 + %.2f s - %.2f)\n', b2, -a22, a21);
-fprintf('  * Polo inestable en semiplano derecho (RHP): p1 = %+7.3f rad/s\n', p_rhp);
-fprintf('  * Polo estable en semiplano izquierdo (LHP):  p2 = %+7.3f rad/s\n', p_lhp);
+fprintf('  * Planta mecanica G_p(s) = %.2f / (s^2 + %.2f s + %.2f)\n', b2, -a22, -a21);
+fprintf('  * Polos de la compuerta (estables): %s rad/s  (zeta = %.2f, wn = %.2f rad/s)\n', mat2str(round(polos_planta.', 3)), -real(polos_planta(1))/abs(polos_planta(1)), abs(polos_planta(1)));
+% (la compuerta colgante es estable: su unico efecto es un par oscilatorio poco amortiguado)
 fprintf('  * Polo del actuador (ventilador):             p_fan = -%.2f rad/s\n', 1/fan_tau);
 fprintf('=================================================================\n\n');
 
 %% --- 2. PID por asignacion de polos (ganancias de init_parametros.m) ---
 C_pid_tf = tf([pid_Kd, pid_Kp, pid_Ki], [1, 0]);
 polos_pid_cl = pole(feedback(C_pid_tf * G_pl, 1));
-polos_pid_des = roots(P_des);        % polos deseados (4.o orden: incluye el ventilador)
+polos_pid_des = pole(feedback(C_pid_tf * G_pl, 1));   % referencia: polos en lazo cerrado
 
 fprintf('=================================================================\n');
-fprintf('  PID POR ASIGNACION DE POLOS (INCLUYE EL VENTILADOR)\n');
+fprintf('  PID RAPIDO (OPTIMIZACION DIRECTA, INCLUYE EL VENTILADOR)\n');
 fprintf('=================================================================\n');
 fprintf('  * Kp = %.3f, Ki = %.3f, Kd = %.3f\n', pid_Kp, pid_Ki, pid_Kd);
-fprintf('  * Ceros del PID: z1 = %.3f, z2 = %.3f rad/s\n', ceros_pid(1), ceros_pid(2));
-fprintf('  * Polos deseados en LC: %s\n', mat2str(round(sort(real(polos_pid_des)),3).'));
+fprintf('  * Ceros del PID: z1 = %.3f, z2 = %.3f rad/s (cero doble: compensan el par oscilatorio de la compuerta)\n', ceros_pid(1), ceros_pid(2));
+fprintf('  * Compensacion de la compuerta: el PID cancela parcialmente el par oscilatorio con sus ceros\n');
 fprintf('  * Polos obtenidos en LC (max Re = %+.3f): %s\n', max(real(polos_pid_cl)), mat2str(round(polos_pid_cl.',3)));
 fprintf('=================================================================\n\n');
 
@@ -88,12 +88,12 @@ fill([0, 10, 10, 0], [-10, -10, 10, 10], [1.0 0.85 0.85], 'FaceAlpha', 0.3, 'Edg
 plot(real(polos_planta), imag(polos_planta), 'rx', 'MarkerSize', 12, 'LineWidth', 2.5);
 plot(-1/fan_tau, 0, 'mx', 'MarkerSize', 12, 'LineWidth', 2.5);
 xline(0, '-k', 'LineWidth', 1.2); yline(0, '-k', 'LineWidth', 1.2);
-text(real(p_rhp)+0.3, imag(p_rhp)+0.8, sprintf('Polo inestable\np_1 = +%.2f', p_rhp), 'Color', 'r', 'FontWeight', 'bold');
-text(real(p_lhp)-4.5, imag(p_lhp)+0.8, sprintf('Polo estable\np_2 = %.2f', p_lhp), 'Color', 'b', 'FontWeight', 'bold');
+text(real(polos_planta(1))-6, imag(polos_planta(1))+1.5, sprintf('Par oscilatorio\n%.2f \\pm %.2fj', real(polos_planta(1)), abs(imag(polos_planta(1)))), 'Color', 'r', 'FontWeight', 'bold');
+% (sin polo inestable: toda la planta esta en el semiplano izquierdo)
 text(-1/fan_tau-3.5, 1.8, sprintf('Ventilador\n%.2f', -1/fan_tau), 'Color', 'm', 'FontWeight', 'bold');
 text(-12, -8, 'SEMIPLANO ESTABLE (LHP)', 'Color', [0 0.5 0], 'FontWeight', 'bold');
-text(1, -8, 'INESTABLE (RHP)', 'Color', [0.7 0 0], 'FontWeight', 'bold');
-xlim([-15, 8]); ylim([-10, 10]);
+text(0.2, -8, '(RHP)', 'Color', [0.7 0 0], 'FontWeight', 'bold');
+xlim([-15, 3]); ylim([-10, 10]);
 xlabel('Eje Real \sigma [s^{-1}]'); ylabel('Eje Imaginario j\omega [rad/s]');
 title('Polos de la Planta en Lazo Abierto');
 

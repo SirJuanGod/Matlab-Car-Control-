@@ -15,6 +15,8 @@
 La compuerta es la **planta física** del lazo de control angular:
 * **Sistema Pasivo / No Controlado Directamente:** Carece de servomotores o motores acoplados a su eje.
 * Su desplazamiento angular $\theta(t)$ resulta del equilibrio dinámico entre el **torque aerodinámico** transmitido por el chorro del ventilador, el **torque gravitacional restaurador** y las **fuerzas de amortiguamiento y fricción** en el soporte.
+* **Montaje mecánico:** la compuerta cuelga de un **soporte en L invertida** (poste vertical con un brazo horizontal); el pivote, con el potenciómetro, está en la punta del brazo, de modo que la compuerta queda **suspendida** sin tocar el suelo. El **ventilador va sobre el chasis del carro** y sopla horizontalmente hacia la compuerta.
+* **Convención de ángulo:** $\theta = 0^\circ$ es la compuerta **colgando en reposo** (vertical, sin aire). El aire la empuja alejándola del carro y la gravedad la devuelve hacia $\theta = 0^\circ$ (torque restaurador $\propto \sin\theta$): la planta es **estable**. El potenciómetro de 0–180° cubre desde el reposo colgante hasta la vertical hacia arriba.
 
 ---
 
@@ -35,9 +37,9 @@ Para simplificar el hardware y **eliminar por completo cualquier etapa de acondi
 ### 2.1 Calibración Tensión vs. Ángulo (0V a 3.3V)
 | Voltaje Potenciómetro ($V_{pot}$) | Ángulo Físico ($\theta$) | Equivalente en Radianes | Condición Mecánica |
 | :---: | :---: | :---: | :--- |
-| **$0.00\text{ V}$** | **$0^\circ$** | $0\text{ rad}$ | Compuerta en reposo horizontal |
-| **$1.65\text{ V}$** | **$90^\circ$** | $\frac{\pi}{2}\text{ rad}$ | Compuerta en posición vertical |
-| **$3.30\text{ V}$** | **$180^\circ$** | $\pi\text{ rad}$ | Compuerta en máxima apertura |
+| **$0.00\text{ V}$** | **$0^\circ$** | $0\text{ rad}$ | Compuerta colgando en reposo (vertical, sin aire) |
+| **$1.65\text{ V}$** | **$90^\circ$** | $\frac{\pi}{2}\text{ rad}$ | Compuerta horizontal |
+| **$3.30\text{ V}$** | **$180^\circ$** | $\pi\text{ rad}$ | Compuerta vertical hacia arriba (máxima apertura) |
 
 ### 2.2 Función de Transferencia Directa del Sensor
 Sensibilidad angular:
@@ -76,8 +78,10 @@ $$\theta[^\circ] = \left( \frac{\text{Lectura\_ADC}}{4095} \right) \times 180.0^
 
 ## 4. Ecuación Dinámica Pasiva de la Compuerta
 
-$$J_g \ddot{\theta}(t) + b_c \dot{\theta}(t) + m_g g \ell_c \cos(\theta(t)) + \tau_{fric}\text{sign}(\dot{\theta}) = \tau_{aero}(t)$$
+$$J_g \ddot{\theta}(t) + b_c \dot{\theta}(t) + m_g g \ell_c \sin(\theta(t)) + \tau_{fric}\text{sign}(\dot{\theta}) = \tau_{aero}(t)$$
 
 * $b_c \approx 0.001\text{ N}\cdot\text{m}\cdot\text{s/rad}$ (amortiguamiento viscoso del pivote).
 * $\tau_{fric} \approx 0.0001\text{ N}\cdot\text{m}$ (fricción mecánica y de escobilla del potenciómetro).
 * $\tau_{aero}(t) \approx k_m(d) \cdot u_{PWM}(t)$ (torque aerodinámico generado por el ventilador gobernado por el L298N).
+
+* **Equilibrio y planta linealizada:** con el aire, $\tau_{aero} = m_g g \ell_c \sin\theta_{eq}$. Linealizada en $35^\circ$: $G_p(s) = \dfrac{1.5}{s^2 + 5s + 60.3}$, con polos $-2.5 \pm 7.35j$ rad/s ($\zeta \approx 0.32$, $\omega_n \approx 7.8$ rad/s): **estable pero oscilatoria**; el controlador debe amortiguarla.

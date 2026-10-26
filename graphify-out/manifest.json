@@ -1,10 +1,4 @@
 {
-  ".claude/settings.json": {
-    "mtime": 1791698614.520176,
-    "seen": 1791702154.8592355,
-    "ast_hash": "14766313051c818c001f3eafead19b88",
-    "semantic_hash": ""
-  },
   "CLAUDE.md": {
     "mtime": 1791698614.5113733,
     "seen": 1791702154.8592465,
@@ -12,9 +6,9 @@
     "semantic_hash": ""
   },
   "arquitectura_sistema.md": {
-    "mtime": 1792122158.086061,
-    "seen": 1792290624.2976654,
-    "ast_hash": "678a6d17cf4c88df0a23d57025956a15",
+    "mtime": 1792813618.740592,
+    "seen": 1792845452.5200117,
+    "ast_hash": "9eb7e05e8d175ecc9a25333318df77db",
     "semantic_hash": ""
   },
   "especificaciones_carro.md": {
@@ -24,93 +18,99 @@
     "semantic_hash": ""
   },
   "especificaciones_compuerta.md": {
-    "mtime": 1792025684.1765494,
-    "seen": 1792025849.9303567,
-    "ast_hash": "f799d67c307cdf08302cbb042b0fdd8f",
+    "mtime": 1792813618.7376232,
+    "seen": 1792845452.5200117,
+    "ast_hash": "38c076ea407ef0f8f37b442d551fffde",
     "semantic_hash": ""
   },
   "especificaciones_ventilador.md": {
-    "mtime": 1792122168.6955423,
-    "seen": 1792290624.2976654,
-    "ast_hash": "f1ebe0c957bbd8c01a53f2831ccc1d73",
+    "mtime": 1792813618.7415936,
+    "seen": 1792845452.5200117,
+    "ast_hash": "7d9158c8ceeac7f8d0084930d9081d83",
     "semantic_hash": ""
   },
   "gui_simulacion.m": {
-    "mtime": 1792336267.0048342,
-    "seen": 1792336325.8895268,
-    "ast_hash": "3466b07bc57c47b1b2ccb865a805b463",
+    "mtime": 1792813332.3551967,
+    "seen": 1792845452.5200117,
+    "ast_hash": "016a0aca76a4d141ea709be56468d81b",
     "semantic_hash": ""
   },
   "init_parametros.m": {
-    "mtime": 1792336099.092801,
-    "seen": 1792336325.8895268,
-    "ast_hash": "3804cd2ae2b02d516435f38905531d97",
+    "mtime": 1792845409.1218176,
+    "seen": 1792845452.5200117,
+    "ast_hash": "a613ec97a5333a2511bc31531660cb2d",
     "semantic_hash": ""
   },
   "estrategias_control.md": {
-    "mtime": 1792336318.4362202,
-    "seen": 1792336325.8895268,
-    "ast_hash": "66bad3475532edb6a7ddc69582009d99",
-    "semantic_hash": ""
-  },
-  "simulacion_lqr.png": {
-    "mtime": 1792023306.4034355,
-    "seen": 1792024822.3120198,
-    "ast_hash": "dbb976891053a4a3b21cb491f665a58a",
-    "semantic_hash": ""
-  },
-  "simulacion_miso.png": {
-    "mtime": 1792023022.6205919,
-    "seen": 1792024822.3120198,
-    "ast_hash": "b95cd3b853c7b927ede6a6b2b1718ffe",
+    "mtime": 1792813684.1478128,
+    "seen": 1792845452.5200117,
+    "ast_hash": "458abf609c8a669d96b6f66643b6cc8f",
     "semantic_hash": ""
   },
   "diseno_polos_ceros.m": {
-    "mtime": 1792290439.6920893,
-    "seen": 1792290624.2976654,
-    "ast_hash": "14b75179a7f5d27ac4de43f95e24d3fe",
+    "mtime": 1792727389.2249646,
+    "seen": 1792845452.5200117,
+    "ast_hash": "6ba0d2db7efdcf06f4123da13e35435c",
     "semantic_hash": ""
   },
   "lqr_simo.m": {
-    "mtime": 1792258893.6109822,
-    "seen": 1792290624.2976654,
-    "ast_hash": "85857b307be7fd8f975be97286ad0bb4",
+    "mtime": 1792704720.4512472,
+    "seen": 1792845452.5200117,
+    "ast_hash": "3423c7c36666d279e8dadb6ea1d97c81",
     "semantic_hash": ""
   },
   "simular_sistema.m": {
-    "mtime": 1792258949.879746,
-    "seen": 1792290624.2976654,
-    "ast_hash": "693c51da70eff24fbe881a18822de91b",
+    "mtime": 1792726742.7740173,
+    "seen": 1792845452.5200117,
+    "ast_hash": "5fab25bb49c807dc071e8054594f1732",
     "semantic_hash": ""
   },
   "analisis_polos_ceros_rlocus.png": {
-    "mtime": 1792291811.2807136,
-    "seen": 1792291831.3259535,
-    "ast_hash": "bf22cb259d6be32a57c7c96465c26470",
+    "mtime": 1792727377.1312742,
+    "seen": 1792845452.5200117,
+    "ast_hash": "8318b786d5f32c4d0fe601582469163a",
     "semantic_hash": ""
   },
   "simulacion_comparativa.png": {
-    "mtime": 1792291799.0553255,
-    "seen": 1792291831.3259535,
-    "ast_hash": "9b426afed098ff8753ce7a7cf3bd432d",
+    "mtime": 1792966825.1202247,
+    "seen": 1793021803.9782734,
+    "ast_hash": "3f16ed588dff92b6b773fcc0e3680a54",
     "semantic_hash": ""
   },
   "simulacion_lqr_simo.png": {
-    "mtime": 1792122695.3131275,
-    "seen": 1792290624.2976654,
-    "ast_hash": "fcdba4fdcbe68924bcd0722f38f92043",
+    "mtime": 1792845431.4858868,
+    "seen": 1792845452.5200117,
+    "ast_hash": "3d87b3561eee0618959cf33482d97240",
     "semantic_hash": ""
   },
   "sintonizar_loop_shaping.m": {
-    "mtime": 1792291747.5686445,
-    "seen": 1792291831.3259535,
-    "ast_hash": "d64b726826b20251a0a317207f98c721",
+    "mtime": 1792727004.184564,
+    "seen": 1792845452.5200117,
+    "ast_hash": "08d8e40ae66c45a354b62fdb8bc90e5a",
     "semantic_hash": ""
   },
-  "comparacion_loop_shaping.png": {
-    "mtime": 1792291758.9122581,
-    "seen": 1792291831.3259535,
-    "ast_hash": "67b3a5de8725a07a1a8ca05e7cc96eb0",
+  "animar_sistema.m": {
+    "mtime": 1792813498.2748287,
+    "seen": 1792845452.5200117,
+    "ast_hash": "b80d648cf4f02d677acec63fcadf71b6",
+    "semantic_hash": ""
+  },
+  "animacion_carro_lejos.gif": {
+    "mtime": 1792813547.936465,
+    "seen": 1792845452.5200117,
+    "ast_hash": "77dfac33c5722e67334b665ab0afff91",
+    "semantic_hash": ""
+  },
+  "animacion_carro_lejos.mp4": {
+    "mtime": 1792813548.076288,
+    "seen": 1792845452.5200117,
+    "ast_hash": "72e7ff9f99bc89de5ebd221442809443",
+    "semantic_hash": ""
+  },
+  "Documentacion_Control_LQR.md": {
+    "mtime": 1792984356.0686224,
+    "seen": 1793021803.9782734,
+    "ast_hash": "7996209551116c251badeb2041261782",
     "semantic_hash": ""
   }
 }

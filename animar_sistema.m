@@ -22,7 +22,7 @@
 %   'carro_lejos'      (def) la compuerta arranca en 0 deg con el carro a 18 cm: el ventilador solo
 %                      no alcanza a levantarla y el carro se acerca primero
 %   'nominal'          arranca en 0 deg y sube a 35 deg con el carro a 10 cm (el carro casi no se mueve)
-%   'ventilador_debil' arranca en 0 deg; el ventilador pierde fuerza poco a poco (50 %) desde t = 8 s
+%   'angulo_bajo'      consigna de 8 deg: el minimo de PWM (10 %) ya empuja de mas y el carro se aleja
 %   'perturbacion'     arranca en 0 deg; pulso de torque externo de -5 mN*m sobre la compuerta
 % Otras opciones: ani.salida = 'mp4' | 'gif' | 'ambos' (def) | 'ninguna'; ani.fps (24);
 %   ani.velocidad (1 = tiempo real, 0.5 = camara lenta); ani.instantaneas = [s].
@@ -40,17 +40,17 @@ clear def fn_def i_a
 %% --- 1. Escenario y simulacion ---
 switch ani.escenario
     case 'carro_lejos'
-        ovr = struct('theta_ref_deg',35,'theta0_deg',0,'ref_rate_deg',10,'d_ini_cm',18,'t_sim',15);
+        ovr = struct('theta_ref_deg',35,'theta0_deg',0,'d_ini_cm',18,'t_sim',10);
         txt_esc = 'Carro lejos (18 cm): la compuerta arranca en 0 deg y el carro debe acercarse para levantarla';
     case {'nominal','desde_suelo'}
-        ovr = struct('theta_ref_deg',35,'theta0_deg',0,'ref_rate_deg',10,'t_sim',12);
+        ovr = struct('theta_ref_deg',35,'theta0_deg',0,'t_sim',8);
         txt_esc = 'Nominal: la compuerta arranca en 0 deg y sube a 35 deg con el carro a 10 cm';
-    case 'ventilador_debil'
-        ovr = struct('theta_ref_deg',35,'theta0_deg',0,'ref_rate_deg',10,'fan_fac',0.5,'fan_t0',8,'fan_dur',8,'t_sim',25);
-        txt_esc = 'Arranca en 0 deg; desde t = 8 s el ventilador pierde fuerza hasta 50 %';
+    case {'angulo_bajo','ventilador_debil'}
+        ovr = struct('theta_ref_deg',8,'theta0_deg',0,'t_sim',12);
+        txt_esc = 'Consigna baja (8 deg): el 10 % minimo de PWM empuja de mas y el carro se aleja';
     case 'perturbacion'
-        ovr = struct('theta_ref_deg',35,'theta0_deg',0,'ref_rate_deg',10,'pert_tau_mNm',-5,'pert_t_on',8,'pert_dur',3,'t_sim',16);
-        txt_esc = 'Arranca en 0 deg; pulso de torque externo de -5 mN*m (t = 8 a 11 s)';
+        ovr = struct('theta_ref_deg',35,'theta0_deg',0,'pert_tau_mNm',-5,'pert_t_on',5,'pert_dur',3,'t_sim',12);
+        txt_esc = 'Arranca en 0 deg; pulso de torque externo de -5 mN*m (t = 5 a 8 s)';
     otherwise
         error('Escenario desconocido: %s', ani.escenario);
 end
@@ -232,7 +232,7 @@ for k = 1:nF
     set(hDim,'XData',[0 xf]); set(hDimT,'Position',[xf/2 -1.8],'String',sprintf('d = %.1f cm',d));
     set(hDref,'XData',[dref dref]); set(hDest,'XData',dest); set(hDnom,'XData',dnom);
     % estado del carro / supervisor
-    if vdn(k) < -0.3, est_c = 'ACERCANDO (supervisor)'; elseif vdn(k) > 0.3, est_c = 'REGRESANDO'; else, est_c = 'manteniendo'; end
+    if vdn(k) < -0.3, est_c = 'ACERCANDO (supervisor)'; elseif vdn(k) > 0.3, est_c = 'ALEJANDO / REGRESANDO'; else, est_c = 'manteniendo'; end
     set(hInfo,'String',sprintf(['t = %5.2f s\n' ...
         'theta = %5.1f deg (ref %4.1f)   %s\n' ...
         'PWM = %5.1f %%   v_fan = %4.1f %%\n' ...

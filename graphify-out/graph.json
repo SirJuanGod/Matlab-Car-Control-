@@ -7,6 +7,66 @@
   },
   "nodes": [
     {
+      "id": "estrategias_control_1_1_funci\u00f3n_de_conversi\u00f3n_directa_del_potenci\u00f3metro",
+      "label": "1.1 Funci\u00f3n de Conversi\u00f3n Directa del Potenci\u00f3metro",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "1.1 funcion de conversion directa del potenciometro",
+      "source_file": "estrategias_control.md",
+      "source_location": "L18"
+    },
+    {
+      "id": "estrategias_control_1_2_ecuaci\u00f3n_din\u00e1mica_no_lineal",
+      "label": "1.2 Ecuaci\u00f3n Din\u00e1mica No Lineal",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "1.2 ecuacion dinamica no lineal",
+      "source_file": "estrategias_control.md",
+      "source_location": "L23"
+    },
+    {
+      "id": "estrategias_control_1_3_punto_de_operaci\u00f3n_y_equilibrio_theta_eq",
+      "label": "1.3 Punto de Operaci\u00f3n y Equilibrio ($\\theta_{eq}$)",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "1.3 punto de operacion y equilibrio ($\\theta_{eq}$)",
+      "source_file": "estrategias_control.md",
+      "source_location": "L35"
+    },
+    {
+      "id": "estrategias_control_1_4_modelo_linealizado_peque\u00f1a_se\u00f1al",
+      "label": "1.4 Modelo Linealizado (Peque\u00f1a Se\u00f1al)",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "1.4 modelo linealizado (pequena senal)",
+      "source_file": "estrategias_control.md",
+      "source_location": "L38"
+    },
+    {
+      "id": "estrategias_control_1_modelo_matem\u00e1tico_del_lazo_angular_de_la_compuerta_canal_pwm_\u03b8",
+      "label": "1. Modelo Matem\u00e1tico del Lazo Angular de la Compuerta (canal PWM \u2192 \u03b8)",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "1. modelo matematico del lazo angular de la compuerta (canal pwm \u2192 \u03b8)",
+      "source_file": "estrategias_control.md",
+      "source_location": "L14"
+    },
+    {
       "id": "estrategias_control_2_1_componentes_de_implementaci\u00f3n",
       "label": "2.1 Componentes de Implementaci\u00f3n",
       "_origin": "ast",
@@ -16,7 +76,7 @@
       "node_kind": "heading",
       "norm_label": "2.1 componentes de implementacion",
       "source_file": "estrategias_control.md",
-      "source_location": "L52"
+      "source_location": "L53"
     },
     {
       "id": "estrategias_control_2_estrategia_1_control_pid_de_la_compuerta_con_feedforward_y_anti_windup",
@@ -28,7 +88,7 @@
       "node_kind": "heading",
       "norm_label": "2. estrategia 1: control pid de la compuerta con feedforward y anti-windup",
       "source_file": "estrategias_control.md",
-      "source_location": "L45"
+      "source_location": "L46"
     },
     {
       "id": "estrategias_control_3_1_espacio_de_estados_aumentado",
@@ -40,7 +100,7 @@
       "node_kind": "heading",
       "norm_label": "3.1 espacio de estados aumentado",
       "source_file": "estrategias_control.md",
-      "source_location": "L68"
+      "source_location": "L69"
     },
     {
       "id": "estrategias_control_3_2_optimizaci\u00f3n_cuadr\u00e1tica",
@@ -52,7 +112,7 @@
       "node_kind": "heading",
       "norm_label": "3.2 optimizacion cuadratica",
       "source_file": "estrategias_control.md",
-      "source_location": "L73"
+      "source_location": "L74"
     },
     {
       "id": "estrategias_control_3_3_extensi\u00f3n_a_dos_salidas_del_controlador_simo_u_pwm_y_d_ref",
@@ -64,7 +124,7 @@
       "node_kind": "heading",
       "norm_label": "3.3 extension a dos salidas del controlador (simo: $u_{pwm}$ y $d_{ref}$)",
       "source_file": "estrategias_control.md",
-      "source_location": "L83"
+      "source_location": "L84"
     },
     {
       "id": "estrategias_control_3_estrategia_2_control_\u00f3ptimo_lqr_con_acci\u00f3n_integral_lqr_i",
@@ -76,7 +136,7 @@
       "node_kind": "heading",
       "norm_label": "3. estrategia 2: control optimo lqr con accion integral ($lqr+i$)",
       "source_file": "estrategias_control.md",
-      "source_location": "L66"
+      "source_location": "L67"
     },
     {
       "id": "estrategias_control_4_1_incertidumbre_param\u00e9trica_por_movimiento_del_carro",
@@ -88,7 +148,7 @@
       "node_kind": "heading",
       "norm_label": "4.1 incertidumbre parametrica por movimiento del carro",
       "source_file": "estrategias_control.md",
-      "source_location": "L105"
+      "source_location": "L106"
     },
     {
       "id": "estrategias_control_4_2_sensibilidad_mixta_s_ks_t",
@@ -100,7 +160,7 @@
       "node_kind": "heading",
       "norm_label": "4.2 sensibilidad mixta ($s/ks/t$)",
       "source_file": "estrategias_control.md",
-      "source_location": "L108"
+      "source_location": "L109"
     },
     {
       "id": "estrategias_control_4_estrategia_3_control_robusto_h_infty_h_infinita",
@@ -112,7 +172,7 @@
       "node_kind": "heading",
       "norm_label": "4. estrategia 3: control robusto $h_\\infty$ ($h$-infinita)",
       "source_file": "estrategias_control.md",
-      "source_location": "L103"
+      "source_location": "L104"
     },
     {
       "id": "estrategias_control_5_1_estimaci\u00f3n_de_distancia_por_imu",
@@ -124,7 +184,7 @@
       "node_kind": "heading",
       "norm_label": "5.1 estimacion de distancia por imu",
       "source_file": "estrategias_control.md",
-      "source_location": "L127"
+      "source_location": "L128"
     },
     {
       "id": "estrategias_control_5_2_control_pid_de_distancia_del_carro",
@@ -136,7 +196,7 @@
       "node_kind": "heading",
       "norm_label": "5.2 control pid de distancia del carro",
       "source_file": "estrategias_control.md",
-      "source_location": "L134"
+      "source_location": "L135"
     },
     {
       "id": "estrategias_control_5_control_del_carro_y_odometr\u00eda_por_imu_arranque_a_10_cm",
@@ -148,7 +208,7 @@
       "node_kind": "heading",
       "norm_label": "5. control del carro y odometria por imu (arranque a 10 cm)",
       "source_file": "estrategias_control.md",
-      "source_location": "L123"
+      "source_location": "L124"
     },
     {
       "id": "estrategias_control_6_monitoreo_en_la_interfaz_gr\u00e1fica_gui",
@@ -160,7 +220,7 @@
       "node_kind": "heading",
       "norm_label": "6. monitoreo en la interfaz grafica (gui)",
       "source_file": "estrategias_control.md",
-      "source_location": "L143"
+      "source_location": "L144"
     },
     {
       "id": "estrategias_control_enlaces_del_grafo",
@@ -199,64 +259,304 @@
       "source_location": "L9"
     },
     {
-      "id": "estrategias_control_1_1_funci\u00f3n_de_conversi\u00f3n_directa_del_potenci\u00f3metro",
-      "label": "1.1 Funci\u00f3n de Conversi\u00f3n Directa del Potenci\u00f3metro",
+      "id": "documentacion_control_lqr",
+      "label": "Documentacion_Control_LQR.md",
       "_origin": "ast",
       "community": 1,
-      "community_name": "1. Modelo Matem\u00e1tico del Lazo Angular de la Compuerta (canal PWM \u2192 \u03b8)",
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
       "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "1.1 funcion de conversion directa del potenciometro",
-      "source_file": "estrategias_control.md",
-      "source_location": "L18"
+      "node_kind": "page",
+      "norm_label": "documentacion_control_lqr.md",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L1"
     },
     {
-      "id": "estrategias_control_1_2_ecuaci\u00f3n_din\u00e1mica_no_lineal",
-      "label": "1.2 Ecuaci\u00f3n Din\u00e1mica No Lineal",
+      "id": "documentacion_control_lqr_1_1_montaje_f\u00edsico",
+      "label": "1.1 Montaje f\u00edsico",
       "_origin": "ast",
       "community": 1,
-      "community_name": "1. Modelo Matem\u00e1tico del Lazo Angular de la Compuerta (canal PWM \u2192 \u03b8)",
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "1.2 ecuacion dinamica no lineal",
-      "source_file": "estrategias_control.md",
-      "source_location": "L23"
+      "norm_label": "1.1 montaje fisico",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L21"
     },
     {
-      "id": "estrategias_control_1_3_punto_de_operaci\u00f3n_y_equilibrio_theta_eq",
-      "label": "1.3 Punto de Operaci\u00f3n y Equilibrio ($\\theta_{eq}$)",
+      "id": "documentacion_control_lqr_1_2_convenciones",
+      "label": "1.2 Convenciones",
       "_origin": "ast",
       "community": 1,
-      "community_name": "1. Modelo Matem\u00e1tico del Lazo Angular de la Compuerta (canal PWM \u2192 \u03b8)",
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "1.3 punto de operacion y equilibrio ($\\theta_{eq}$)",
-      "source_file": "estrategias_control.md",
-      "source_location": "L34"
+      "norm_label": "1.2 convenciones",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L27"
     },
     {
-      "id": "estrategias_control_1_4_modelo_linealizado_peque\u00f1a_se\u00f1al",
-      "label": "1.4 Modelo Linealizado (Peque\u00f1a Se\u00f1al)",
+      "id": "documentacion_control_lqr_1_3_par\u00e1metros_del_modelo",
+      "label": "1.3 Par\u00e1metros del modelo",
       "_origin": "ast",
       "community": 1,
-      "community_name": "1. Modelo Matem\u00e1tico del Lazo Angular de la Compuerta (canal PWM \u2192 \u03b8)",
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "1.4 modelo linealizado (pequena senal)",
-      "source_file": "estrategias_control.md",
+      "norm_label": "1.3 parametros del modelo",
+      "source_file": "Documentacion_Control_LQR.md",
       "source_location": "L37"
     },
     {
-      "id": "estrategias_control_1_modelo_matem\u00e1tico_del_lazo_angular_de_la_compuerta_canal_pwm_\u03b8",
-      "label": "1. Modelo Matem\u00e1tico del Lazo Angular de la Compuerta (canal PWM \u2192 \u03b8)",
+      "id": "documentacion_control_lqr_1_descripci\u00f3n_del_sistema_y_convenciones",
+      "label": "1. Descripci\u00f3n del sistema y convenciones",
       "_origin": "ast",
       "community": 1,
-      "community_name": "1. Modelo Matem\u00e1tico del Lazo Angular de la Compuerta (canal PWM \u2192 \u03b8)",
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "1. modelo matematico del lazo angular de la compuerta (canal pwm \u2192 \u03b8)",
-      "source_file": "estrategias_control.md",
-      "source_location": "L14"
+      "norm_label": "1. descripcion del sistema y convenciones",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L19"
+    },
+    {
+      "id": "documentacion_control_lqr_4_1_requisitos_que_deb\u00eda_cumplir_el_controlador",
+      "label": "4.1 Requisitos que deb\u00eda cumplir el controlador",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "4.1 requisitos que debia cumplir el controlador",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L189"
+    },
+    {
+      "id": "documentacion_control_lqr_4_2_estrategias_evaluadas",
+      "label": "4.2 Estrategias evaluadas",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "4.2 estrategias evaluadas",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L198"
+    },
+    {
+      "id": "documentacion_control_lqr_4_3_resultados_comparativos",
+      "label": "4.3 Resultados comparativos",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "4.3 resultados comparativos",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L208"
+    },
+    {
+      "id": "documentacion_control_lqr_4_4_por_qu\u00e9_el_lqr_result\u00f3_la_mejor_opci\u00f3n",
+      "label": "4.4 Por qu\u00e9 el LQR result\u00f3 la mejor opci\u00f3n",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "4.4 por que el lqr resulto la mejor opcion",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L241"
+    },
+    {
+      "id": "documentacion_control_lqr_4_5_\u00e1rbol_de_decisi\u00f3n",
+      "label": "4.5 \u00c1rbol de decisi\u00f3n",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "4.5 arbol de decision",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L252"
+    },
+    {
+      "id": "documentacion_control_lqr_4_c\u00f3mo_se_lleg\u00f3_al_lqr_como_mejor_opci\u00f3n",
+      "label": "4. C\u00f3mo se lleg\u00f3 al LQR como mejor opci\u00f3n",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "4. como se llego al lqr como mejor opcion",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L187"
+    },
+    {
+      "id": "documentacion_control_lqr_6_1_sistema_completo_lazo_cerrado",
+      "label": "6.1 Sistema completo (lazo cerrado)",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "6.1 sistema completo (lazo cerrado)",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L393"
+    },
+    {
+      "id": "documentacion_control_lqr_6_2_estructura_interna_del_controlador",
+      "label": "6.2 Estructura interna del controlador",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "6.2 estructura interna del controlador",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L424"
+    },
+    {
+      "id": "documentacion_control_lqr_6_3_planta_linealizada_con_funciones_de_transferencia_35_circ_10_cm",
+      "label": "6.3 Planta linealizada con funciones de transferencia ($35^\\circ$, 10 cm)",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "6.3 planta linealizada con funciones de transferencia ($35^\\circ$, 10 cm)",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L459"
+    },
+    {
+      "id": "documentacion_control_lqr_6_diagramas_de_bloques_mermaid",
+      "label": "6. Diagramas de bloques (Mermaid)",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "6. diagramas de bloques (mermaid)",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L391"
+    },
+    {
+      "id": "documentacion_control_lqr_7_verificaci\u00f3n_y_reproducibilidad",
+      "label": "7. Verificaci\u00f3n y reproducibilidad",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "7. verificacion y reproducibilidad",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L477"
+    },
+    {
+      "id": "documentacion_control_lqr_8_limitaciones_y_trabajo_futuro",
+      "label": "8. Limitaciones y trabajo futuro",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "8. limitaciones y trabajo futuro",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L501"
+    },
+    {
+      "id": "documentacion_control_lqr_contenido",
+      "label": "Contenido",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "contenido",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L6"
+    },
+    {
+      "id": "documentacion_control_lqr_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "label": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Documentaci\u00f3n t\u00e9cnica: modelado, funciones de transferencia y control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "documentacion tecnica: modelado, funciones de transferencia y control lqr",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "documentacion_control_lqr_3_1_punto_de_equilibrio",
+      "label": "3.1 Punto de equilibrio",
+      "_origin": "ast",
+      "community": 10,
+      "community_name": "3. Linealizaci\u00f3n y funciones de transferencia",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "3.1 punto de equilibrio",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L128"
+    },
+    {
+      "id": "documentacion_control_lqr_3_2_linealizaci\u00f3n",
+      "label": "3.2 Linealizaci\u00f3n",
+      "_origin": "ast",
+      "community": 10,
+      "community_name": "3. Linealizaci\u00f3n y funciones de transferencia",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "3.2 linealizacion",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L136"
+    },
+    {
+      "id": "documentacion_control_lqr_3_3_modelo_en_espacio_de_estados_5_estados_2_entradas",
+      "label": "3.3 Modelo en espacio de estados (5 estados, 2 entradas)",
+      "_origin": "ast",
+      "community": 10,
+      "community_name": "3. Linealizaci\u00f3n y funciones de transferencia",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "3.3 modelo en espacio de estados (5 estados, 2 entradas)",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L146"
+    },
+    {
+      "id": "documentacion_control_lqr_3_4_funciones_de_transferencia_de_cada_subsistema",
+      "label": "3.4 Funciones de transferencia de cada subsistema",
+      "_origin": "ast",
+      "community": 10,
+      "community_name": "3. Linealizaci\u00f3n y funciones de transferencia",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "3.4 funciones de transferencia de cada subsistema",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L158"
+    },
+    {
+      "id": "documentacion_control_lqr_3_5_planta_simo_completa_en_35_circ_y_10_text_cm",
+      "label": "3.5 Planta SIMO completa en $35^\\circ$ y $10\\text{ cm}$",
+      "_origin": "ast",
+      "community": 10,
+      "community_name": "3. Linealizaci\u00f3n y funciones de transferencia",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "3.5 planta simo completa en $35^\\circ$ y $10\\text{ cm}$",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L173"
+    },
+    {
+      "id": "documentacion_control_lqr_3_linealizaci\u00f3n_y_funciones_de_transferencia",
+      "label": "3. Linealizaci\u00f3n y funciones de transferencia",
+      "_origin": "ast",
+      "community": 10,
+      "community_name": "3. Linealizaci\u00f3n y funciones de transferencia",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "3. linealizacion y funciones de transferencia",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L126"
     },
     {
       "id": "claude",
@@ -281,6 +581,222 @@
       "norm_label": "graphify",
       "source_file": "CLAUDE.md",
       "source_location": "L1"
+    },
+    {
+      "id": "documentacion_control_lqr_5_10_resumen_de_par\u00e1metros_de_dise\u00f1o",
+      "label": "5.10 Resumen de par\u00e1metros de dise\u00f1o",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5.10 resumen de parametros de diseno",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L378"
+    },
+    {
+      "id": "documentacion_control_lqr_5_1_formulaci\u00f3n",
+      "label": "5.1 Formulaci\u00f3n",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5.1 formulacion",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L271"
+    },
+    {
+      "id": "documentacion_control_lqr_5_2_estados_y_entradas",
+      "label": "5.2 Estados y entradas",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5.2 estados y entradas",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L279"
+    },
+    {
+      "id": "documentacion_control_lqr_5_3_selecci\u00f3n_de_los_pesos_q_y_r",
+      "label": "5.3 Selecci\u00f3n de los pesos $Q$ y $R$",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5.3 seleccion de los pesos $q$ y $r$",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L287"
+    },
+    {
+      "id": "documentacion_control_lqr_5_4_gain_scheduling_en_theta_ref_d_nom",
+      "label": "5.4 *Gain scheduling* en $(\\theta_{ref}, d_{nom})$",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5.4 *gain scheduling* en $(\\theta_{ref}, d_{nom})$",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L312"
+    },
+    {
+      "id": "documentacion_control_lqr_5_5_ley_de_control_completa",
+      "label": "5.5 Ley de control completa",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5.5 ley de control completa",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L325"
+    },
+    {
+      "id": "documentacion_control_lqr_5_6_estimaci\u00f3n_de_los_estados_no_medidos",
+      "label": "5.6 Estimaci\u00f3n de los estados no medidos",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5.6 estimacion de los estados no medidos",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L335"
+    },
+    {
+      "id": "documentacion_control_lqr_5_7_saturaci\u00f3n_y_anti_windup",
+      "label": "5.7 Saturaci\u00f3n y anti-windup",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5.7 saturacion y anti-windup",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L343"
+    },
+    {
+      "id": "documentacion_control_lqr_5_8_supervisor_de_distancia_el_carro_se_mueve_solo_cuando_hace_falta",
+      "label": "5.8 Supervisor de distancia: el carro se mueve solo cuando hace falta",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5.8 supervisor de distancia: el carro se mueve solo cuando hace falta",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L352"
+    },
+    {
+      "id": "documentacion_control_lqr_5_9_prefiltro_de_referencia",
+      "label": "5.9 Prefiltro de referencia",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5.9 prefiltro de referencia",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L374"
+    },
+    {
+      "id": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "label": "5. Estrategia de control LQR",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5. estrategia de control lqr",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L269"
+    },
+    {
+      "id": "documentacion_control_lqr_2_1_compuerta_p\u00e9ndulo_colgante_derivaci\u00f3n_por_lagrange",
+      "label": "2.1 Compuerta (p\u00e9ndulo colgante): derivaci\u00f3n por Lagrange",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "2. Ecuaciones primitivas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.1 compuerta (pendulo colgante): derivacion por lagrange",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L56"
+    },
+    {
+      "id": "documentacion_control_lqr_2_2_torque_aerodin\u00e1mico",
+      "label": "2.2 Torque aerodin\u00e1mico",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "2. Ecuaciones primitivas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.2 torque aerodinamico",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L73"
+    },
+    {
+      "id": "documentacion_control_lqr_2_3_ventilador_y_saturaci\u00f3n",
+      "label": "2.3 Ventilador y saturaci\u00f3n",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "2. Ecuaciones primitivas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.3 ventilador y saturacion",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L85"
+    },
+    {
+      "id": "documentacion_control_lqr_2_4_carro",
+      "label": "2.4 Carro",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "2. Ecuaciones primitivas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.4 carro",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L89"
+    },
+    {
+      "id": "documentacion_control_lqr_2_5_sensores_y_estimadores",
+      "label": "2.5 Sensores y estimadores",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "2. Ecuaciones primitivas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.5 sensores y estimadores",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L99"
+    },
+    {
+      "id": "documentacion_control_lqr_2_6_sistema_no_lineal_completo",
+      "label": "2.6 Sistema no lineal completo",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "2. Ecuaciones primitivas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.6 sistema no lineal completo",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L115"
+    },
+    {
+      "id": "documentacion_control_lqr_2_ecuaciones_primitivas",
+      "label": "2. Ecuaciones primitivas",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "2. Ecuaciones primitivas",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2. ecuaciones primitivas",
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L54"
     },
     {
       "id": "especificaciones_carro_1_rol_en_el_proyecto_y_condiciones_iniciales",
@@ -436,7 +952,7 @@
       "node_kind": "heading",
       "norm_label": "2.1 calibracion tension vs. angulo (0v a 3.3v)",
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L35"
+      "source_location": "L37"
     },
     {
       "id": "especificaciones_compuerta_2_2_funci\u00f3n_de_transferencia_directa_del_sensor",
@@ -448,7 +964,7 @@
       "node_kind": "heading",
       "norm_label": "2.2 funcion de transferencia directa del sensor",
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L42"
+      "source_location": "L44"
     },
     {
       "id": "especificaciones_compuerta_2_3_adquisici\u00f3n_directa_con_adc_de_12_bits_del_esp32",
@@ -460,7 +976,7 @@
       "node_kind": "heading",
       "norm_label": "2.3 adquisicion directa con adc de 12 bits del esp32",
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L53"
+      "source_location": "L55"
     },
     {
       "id": "especificaciones_compuerta_2_sensor_de_salida_potenci\u00f3metro_directo_0v_3_3v_to_0_180",
@@ -472,7 +988,7 @@
       "node_kind": "heading",
       "norm_label": "2. sensor de salida: potenciometro directo (0v - 3.3v $\\to$ 0\u00b0 - 180\u00b0)",
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L21"
+      "source_location": "L23"
     },
     {
       "id": "especificaciones_compuerta_3_par\u00e1metros_f\u00edsicos_y_mec\u00e1nicos",
@@ -484,7 +1000,7 @@
       "node_kind": "heading",
       "norm_label": "3. parametros fisicos y mecanicos",
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L64"
+      "source_location": "L66"
     },
     {
       "id": "especificaciones_compuerta_4_ecuaci\u00f3n_din\u00e1mica_pasiva_de_la_compuerta",
@@ -496,7 +1012,7 @@
       "node_kind": "heading",
       "norm_label": "4. ecuacion dinamica pasiva de la compuerta",
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L77"
+      "source_location": "L79"
     },
     {
       "id": "especificaciones_compuerta_enlaces_del_grafo",
@@ -544,7 +1060,7 @@
       "node_kind": "heading",
       "norm_label": "formula de calculo directo en firmware (esp32 / c++)",
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L59"
+      "source_location": "L61"
     },
     {
       "id": "especificaciones_ventilador_1_rol_en_la_arquitectura_de_control",
@@ -901,6 +1417,468 @@
       "weight": 1.0
     },
     {
+      "source": "documentacion_control_lqr",
+      "target": "documentacion_control_lqr_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_1_descripci\u00f3n_del_sistema_y_convenciones",
+      "target": "documentacion_control_lqr_1_1_montaje_f\u00edsico",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_1_descripci\u00f3n_del_sistema_y_convenciones",
+      "target": "documentacion_control_lqr_1_2_convenciones",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_1_descripci\u00f3n_del_sistema_y_convenciones",
+      "target": "documentacion_control_lqr_1_3_par\u00e1metros_del_modelo",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_2_ecuaciones_primitivas",
+      "target": "documentacion_control_lqr_2_6_sistema_no_lineal_completo",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L115",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_2_ecuaciones_primitivas",
+      "target": "documentacion_control_lqr_2_1_compuerta_p\u00e9ndulo_colgante_derivaci\u00f3n_por_lagrange",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_2_ecuaciones_primitivas",
+      "target": "documentacion_control_lqr_2_2_torque_aerodin\u00e1mico",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_2_ecuaciones_primitivas",
+      "target": "documentacion_control_lqr_2_3_ventilador_y_saturaci\u00f3n",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_2_ecuaciones_primitivas",
+      "target": "documentacion_control_lqr_2_4_carro",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_2_ecuaciones_primitivas",
+      "target": "documentacion_control_lqr_2_5_sensores_y_estimadores",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L99",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_3_linealizaci\u00f3n_y_funciones_de_transferencia",
+      "target": "documentacion_control_lqr_3_1_punto_de_equilibrio",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L128",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_3_linealizaci\u00f3n_y_funciones_de_transferencia",
+      "target": "documentacion_control_lqr_3_2_linealizaci\u00f3n",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L136",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_3_linealizaci\u00f3n_y_funciones_de_transferencia",
+      "target": "documentacion_control_lqr_3_3_modelo_en_espacio_de_estados_5_estados_2_entradas",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L146",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_3_linealizaci\u00f3n_y_funciones_de_transferencia",
+      "target": "documentacion_control_lqr_3_4_funciones_de_transferencia_de_cada_subsistema",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L158",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_3_linealizaci\u00f3n_y_funciones_de_transferencia",
+      "target": "documentacion_control_lqr_3_5_planta_simo_completa_en_35_circ_y_10_text_cm",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L173",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_4_c\u00f3mo_se_lleg\u00f3_al_lqr_como_mejor_opci\u00f3n",
+      "target": "documentacion_control_lqr_4_1_requisitos_que_deb\u00eda_cumplir_el_controlador",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L189",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_4_c\u00f3mo_se_lleg\u00f3_al_lqr_como_mejor_opci\u00f3n",
+      "target": "documentacion_control_lqr_4_2_estrategias_evaluadas",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_4_c\u00f3mo_se_lleg\u00f3_al_lqr_como_mejor_opci\u00f3n",
+      "target": "documentacion_control_lqr_4_3_resultados_comparativos",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L208",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_4_c\u00f3mo_se_lleg\u00f3_al_lqr_como_mejor_opci\u00f3n",
+      "target": "documentacion_control_lqr_4_4_por_qu\u00e9_el_lqr_result\u00f3_la_mejor_opci\u00f3n",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L241",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_4_c\u00f3mo_se_lleg\u00f3_al_lqr_como_mejor_opci\u00f3n",
+      "target": "documentacion_control_lqr_4_5_\u00e1rbol_de_decisi\u00f3n",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L252",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "target": "documentacion_control_lqr_5_1_formulaci\u00f3n",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L271",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "target": "documentacion_control_lqr_5_2_estados_y_entradas",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L279",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "target": "documentacion_control_lqr_5_3_selecci\u00f3n_de_los_pesos_q_y_r",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L287",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "target": "documentacion_control_lqr_5_4_gain_scheduling_en_theta_ref_d_nom",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L312",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "target": "documentacion_control_lqr_5_5_ley_de_control_completa",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L325",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "target": "documentacion_control_lqr_5_6_estimaci\u00f3n_de_los_estados_no_medidos",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L335",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "target": "documentacion_control_lqr_5_7_saturaci\u00f3n_y_anti_windup",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L343",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "target": "documentacion_control_lqr_5_8_supervisor_de_distancia_el_carro_se_mueve_solo_cuando_hace_falta",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L352",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "target": "documentacion_control_lqr_5_9_prefiltro_de_referencia",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L374",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "target": "documentacion_control_lqr_5_10_resumen_de_par\u00e1metros_de_dise\u00f1o",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L378",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_6_diagramas_de_bloques_mermaid",
+      "target": "documentacion_control_lqr_6_1_sistema_completo_lazo_cerrado",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L393",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_6_diagramas_de_bloques_mermaid",
+      "target": "documentacion_control_lqr_6_2_estructura_interna_del_controlador",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L424",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_6_diagramas_de_bloques_mermaid",
+      "target": "documentacion_control_lqr_6_3_planta_linealizada_con_funciones_de_transferencia_35_circ_10_cm",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L459",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "documentacion_control_lqr_3_linealizaci\u00f3n_y_funciones_de_transferencia",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L126",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "documentacion_control_lqr_4_c\u00f3mo_se_lleg\u00f3_al_lqr_como_mejor_opci\u00f3n",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L187",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "documentacion_control_lqr_1_descripci\u00f3n_del_sistema_y_convenciones",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "documentacion_control_lqr_5_estrategia_de_control_lqr",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L269",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "documentacion_control_lqr_6_diagramas_de_bloques_mermaid",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L391",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "documentacion_control_lqr_7_verificaci\u00f3n_y_reproducibilidad",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L477",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "documentacion_control_lqr_8_limitaciones_y_trabajo_futuro",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L501",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "documentacion_control_lqr_2_ecuaciones_primitivas",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "documentacion_control_lqr_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "documentacion_control_lqr_contenido",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "Documentacion_Control_LQR.md",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
       "source": "especificaciones_carro",
       "target": "especificaciones_carro_especificaciones_del_carro_plataforma_m\u00f3vil_con_imu_y_control_independiente",
       "relation": "contains",
@@ -1040,7 +2018,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L59",
+      "source_location": "L61",
       "weight": 1.0
     },
     {
@@ -1051,7 +2029,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L35",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -1062,7 +2040,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L42",
+      "source_location": "L44",
       "weight": 1.0
     },
     {
@@ -1073,7 +2051,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L53",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -1095,7 +2073,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L21",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -1117,7 +2095,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L64",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -1128,7 +2106,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones_compuerta.md",
-      "source_location": "L77",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -1293,7 +2271,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L34",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -1304,7 +2282,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L37",
+      "source_location": "L38",
       "weight": 1.0
     },
     {
@@ -1315,7 +2293,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L52",
+      "source_location": "L53",
       "weight": 1.0
     },
     {
@@ -1326,7 +2304,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L68",
+      "source_location": "L69",
       "weight": 1.0
     },
     {
@@ -1337,7 +2315,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L73",
+      "source_location": "L74",
       "weight": 1.0
     },
     {
@@ -1348,7 +2326,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L83",
+      "source_location": "L84",
       "weight": 1.0
     },
     {
@@ -1359,7 +2337,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L105",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -1370,7 +2348,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L108",
+      "source_location": "L109",
       "weight": 1.0
     },
     {
@@ -1381,7 +2359,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L127",
+      "source_location": "L128",
       "weight": 1.0
     },
     {
@@ -1392,7 +2370,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L134",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
@@ -1403,7 +2381,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L103",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -1414,7 +2392,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L123",
+      "source_location": "L124",
       "weight": 1.0
     },
     {
@@ -1436,7 +2414,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L143",
+      "source_location": "L144",
       "weight": 1.0
     },
     {
@@ -1458,7 +2436,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -1469,7 +2447,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "estrategias_control.md",
-      "source_location": "L66",
+      "source_location": "L67",
       "weight": 1.0
     },
     {
@@ -1594,5 +2572,6 @@
       "weight": 1.0
     }
   ],
-  "hyperedges": []
+  "hyperedges": [],
+  "built_at_commit": "045ad3a97ca1136e452f6aa86b4ea59c2f1fb248"
 }

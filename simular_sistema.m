@@ -118,7 +118,7 @@ for m = 1:3
         err = th_ref_k - theta_meas;
         
         % Feedforward gravitacional base a d0:
-        u_ff = (m_g * g * l_c * cos(th_ref_k)) / k_m;
+        u_ff = (m_g * g * l_c * sin(th_ref_k)) / k_m;      % gravedad ~ sin(theta): compuerta colgante
         
         if m == 1
             % MODO 1: PID derivado analiticamente por LGR
@@ -127,7 +127,7 @@ for m = 1:3
             
             u_pid = kp_p * err + ki_p * integ_err - kd_p * omega;
             u_raw = u_ff + u_pid;
-            u_cmd = min(max(u_raw, 0.0), 100.0);
+            u_cmd = min(max(u_raw, pwm_min), pwm_max);
             
         elseif m == 2
             % MODO 2: LQR con Accion Integral por Ecuacion de Riccati
@@ -136,7 +136,7 @@ for m = 1:3
             
             u_lqr = -K_lqr(1)*(theta_meas - th_ref_k) - K_lqr(2)*omega - K_lqr(3)*integ_err;
             u_raw = u_ff + u_lqr;
-            u_cmd = min(max(u_raw, 0.0), 100.0);
+            u_cmd = min(max(u_raw, pwm_min), pwm_max);
             
         else
             % MODO 3: Control Robusto H-infinita por Loop Shaping (Tustin)
@@ -145,7 +145,7 @@ for m = 1:3
             u_buf = [u_filt; u_buf(1:end-1)];
             
             u_raw = u_ff + u_filt;
-            u_cmd = min(max(u_raw, 0.0), 100.0);
+            u_cmd = min(max(u_raw, pwm_min), pwm_max);
         end
         
         % Dinamica del ventilador:
@@ -157,7 +157,7 @@ for m = 1:3
         tau_aero = k_m * vfan * dist_factor;
         
         % Dinamica de la compuerta pasiva:
-        tau_grav = m_g * g * l_c * cos(theta);
+        tau_grav = m_g * g * l_c * sin(theta);
         tau_fricc = b_c * omega + tau_f * tanh(50.0 * omega);
         alpha = (tau_aero - tau_grav - tau_fricc) / J_g;
         

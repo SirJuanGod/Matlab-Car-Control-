@@ -83,7 +83,7 @@ La respuesta del flujo frente al ciclo de trabajo del PWM se modela como un sist
 $$\tau_{fan} \frac{d v_{aire}(t)}{dt} + v_{aire}(t) = K_v \cdot u_{PWM}(t)$$
 
 * $\tau_{fan} \approx 0.15 - 0.20\text{ s}$ (inercia del rodete y respuesta eléctrica).
-* $u_{PWM} \in [0\%, 100\%]$ (gobernado por el controlador PID, LQR o $H_\infty$).
+* $u_{PWM} \in [10\%, 90\%]$ (límites de saturación: la orden nunca baja del 10 % ni sube del 90 %; el ventilador arranca apagado y su estado sigue a la orden con $\tau_{fan} = 0.15\text{ s}$). Lo gobierna el controlador SIMO, PID, LQR o $H_\infty$.
 * Fuerza aerodinámica neta a distancia $d$:
   $$F_{aero}(u, d) = \frac{1}{2} \rho_{aire} A_{eff} C_d v_{aire}^2 \approx k_m(d) \cdot u_{PWM}(t)$$
   con $k_m(d) \approx k_0 \left(\frac{d_0}{d}\right)^2$.
