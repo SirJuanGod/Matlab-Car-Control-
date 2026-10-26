@@ -55,3 +55,5 @@ build-*/
 Thumbs.db
 desktop.ini
 .DS_Store
+# Binario de pruebas en PC
+code/C/test_control

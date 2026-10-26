@@ -74,6 +74,10 @@ static void car_control_task(void *pvParameters) {
         // 3. Actualizar Observador de Estados Kalman (estimacion de distancia y velocidad)
         kalman_state_t k_state = kalman_observer_update(current_ax, last_u_motor, dt_s);
 
+        // Motores solo con IMU operativa: sin ella el observador estima a ciegas
+        bool motors_on = (active_cmd.enable_motors != 0) && mpu6050_is_ready();
+        bool fan_on = (active_cmd.enable_fan != 0);
+
         // 4. Calcular Bloque de Control (PID de Carro + Lazo Ventilador)
         controller_output_t ctrl_out = car_controller_step(
             k_state.d_est_cm,
@@ -86,11 +90,15 @@ static void car_control_task(void *pvParameters) {
             dt_s
         );
 
-        last_u_motor = ctrl_out.u_car_percent;
+        // Sin acumular error mientras el actuador esta apagado (evita el salto al re-habilitar)
+        car_controller_reset_integrators(!motors_on, !fan_on);
+
+        // El observador debe ver el esfuerzo realmente aplicado, no el calculado
+        last_u_motor = motors_on ? ctrl_out.u_car_percent : 0.0f;
 
         // 5. Aplicar senales fisicas a los actuadores
-        fan_set_pwm_percent(ctrl_out.u_fan_percent, active_cmd.enable_fan != 0);
-        car_set_motors(ctrl_out.u_car_percent, active_cmd.enable_motors != 0);
+        fan_set_pwm_percent(ctrl_out.u_fan_percent, fan_on);
+        car_set_motors(ctrl_out.u_car_percent, motors_on);
 
         // 6. Preparar paquete de telemetria para el enlace ESP-NOW
         car_to_base_packet_t tel_pkt = {
@@ -152,7 +160,8 @@ void app_main(void) {
     car_controller_init();
 
     // 3. Inicializar ESP-NOW
-    ESP_ERROR_CHECK(espnow_car_init(s_rx_cmd_queue, NULL)); // Broadcast MAC
+    static const uint8_t peer_mac[6] = BASE_MAC_ADDR;
+    ESP_ERROR_CHECK(espnow_car_init(s_rx_cmd_queue, peer_mac));
 
     // 4. Crear tareas FreeRTOS
     // Tarea de control a 100 Hz en Nucleo 1

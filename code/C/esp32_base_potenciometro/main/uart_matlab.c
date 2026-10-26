@@ -4,6 +4,7 @@
 #include "freertos/task.h"
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 
 static const char *TAG = "UART_MATLAB";
 
@@ -37,15 +38,17 @@ static void uart_event_task(void *pvParameters) {
                                 if (strncmp(line_buffer, "$CMD,", 5) == 0) {
                                     int parsed = sscanf(line_buffer + 5, "%f,%f,%f,%d,%d,%d",
                                                         &th_ref, &d_ref, &pwm_feed, &mode, &en_m, &en_f);
-                                    if (parsed >= 2) {
+                                    // Trama completa obligatoria: campos faltantes no deben re-habilitar actuadores.
+                                    // isfinite: un "nan" dejaria los integradores del carro en NaN para siempre.
+                                    if (parsed == 6 && isfinite(th_ref) && isfinite(d_ref) && isfinite(pwm_feed)) {
                                         base_to_car_packet_t cmd;
                                         memset(&cmd, 0, sizeof(cmd));
                                         cmd.theta_ref_deg = th_ref;
                                         cmd.d_ref_cm = d_ref;
-                                        cmd.matlab_pwm_feed = (parsed >= 3) ? pwm_feed : 0.0f;
-                                        cmd.control_mode = (parsed >= 4) ? (uint8_t)mode : 0;
-                                        cmd.enable_motors = (parsed >= 5) ? (uint8_t)en_m : 1;
-                                        cmd.enable_fan = (parsed >= 6) ? (uint8_t)en_f : 1;
+                                        cmd.matlab_pwm_feed = pwm_feed;
+                                        cmd.control_mode = (uint8_t)mode;
+                                        cmd.enable_motors = (uint8_t)en_m;
+                                        cmd.enable_fan = (uint8_t)en_f;
 
                                         if (s_cmd_out_queue != NULL) {
                                             xQueueOverwrite(s_cmd_out_queue, &cmd);
@@ -127,6 +130,8 @@ void uart_matlab_send_telemetry(const car_to_base_packet_t *telemetry, float the
                        theta_meas);
     }
 
+    // snprintf devuelve el largo sin truncar: no leer mas alla de tx_buf
+    if (len >= (int)sizeof(tx_buf)) len = sizeof(tx_buf) - 1;
     if (len > 0) {
         uart_write_bytes(UART_MATLAB_PORT, tx_buf, len);
     }

@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "esp_err.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/queue.h"
 
 #define POT_ADC_CHANNEL        ADC_CHANNEL_6 // GPIO34 en ESP32 ADC1
 #define ADC_MAX_COUNTS         4095.0f
@@ -14,11 +12,11 @@
 
 /**
  * @brief Inicializa el periferico ADC1 en GPIO34 y configura el muestreo periodico no bloqueante.
+ *        La lectura filtrada se consulta con adc_reader_get_last_angle().
  * 
- * @param out_queue Cola FreeRTOS donde se depositaran las lecturas de angulo (float).
  * @return esp_err_t ESP_OK si la inicializacion fue exitosa.
  */
-esp_err_t adc_reader_init(QueueHandle_t out_queue);
+esp_err_t adc_reader_init(void);
 
 /**
  * @brief Inicia el temporizador de muestreo no bloqueante del ADC.
