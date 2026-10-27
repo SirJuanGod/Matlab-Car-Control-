@@ -31,8 +31,8 @@
 | $\theta$ | Ángulo de la compuerta | $0^\circ$ = colgando en reposo; el aire la empuja alejándola del carro; $180^\circ$ = vertical hacia arriba |
 | $d$ | Distancia carro–compuerta | Medida desde la posición de reposo de la compuerta hasta la salida del ventilador; $d \in [5, 25]\text{ cm}$ |
 | $x$ | Avance del carro | Positivo = hacia la compuerta; $d = d_{ini} - x$ |
-| $u_{PWM}$ | Orden de ciclo de trabajo | Saturada en $[10\%, 90\%]$ |
-| $v_{fan}$ | Estado del ventilador | Sigue a $u_{PWM}$ con constante $\tau_{fan}$; $\in [0, 90]\%$ |
+| $u_{PWM}$ | Orden de ciclo de trabajo | Saturada en $`[10\%, 90\%]`$ |
+| $v_{fan}$ | Estado del ventilador | Sigue a $u_{PWM}$ con constante $\tau_{fan}$; $`\in [0, 90]\%`$ |
 
 ### 1.3 Parámetros del modelo
 
@@ -43,7 +43,7 @@
 | Inercia $J = \tfrac13 m_g L^2$ | $2\times10^{-4}\text{ kg·m}^2$ | Calculada (varilla uniforme respecto de un extremo) |
 | Amortiguamiento viscoso $b_c$ | $10^{-3}\text{ N·m·s/rad}$ | Supuesto |
 | Fricción de Coulomb $\tau_f$ | $10^{-4}\text{ N·m}$ | Supuesto |
-| Constante aerodinámica $k_m$ | $3\times10^{-4}\text{ N·m/\%}$ a $d_0 = 10\text{ cm}$ | **Supuesto: calibrar con el ventilador real** |
+| Constante aerodinámica $k_m$ | $`3\times10^{-4}\text{ N·m/\%}`$ a $d_0 = 10\text{ cm}$ | **Supuesto: calibrar con el ventilador real** |
 | Constante de tiempo del ventilador $\tau_{fan}$ | $0.15\text{ s}$ | Supuesto |
 | Masa del carro $m$ / fricción $b$ / empuje máx. $F_{max}$ | $0.421\text{ kg}$ / $3.5\text{ N·s/m}$ / $3.0\text{ N}$ | Hoja de datos de los motorreductores |
 | IMU: sesgo / densidad de ruido / periodo | $0.02\text{ m/s}^2$ / $10^{-5}\text{ (m/s}^2)^2\text{·s}$ / $10\text{ ms}$ | Supuesto (MPU6050) |
@@ -57,69 +57,93 @@
 
 Coordenada generalizada: $\theta$ (desvío desde el reposo colgante). Con el pivote a una altura $H$, el centro de masa está en
 
-$$x_{cm} = -\ell_c \sin\theta, \qquad y_{cm} = H - \ell_c\cos\theta$$
+```math
+x_{cm} = -\ell_c \sin\theta, \qquad y_{cm} = H - \ell_c\cos\theta
+```
 
 Energía cinética y potencial:
 
-$$T = \tfrac12 J\dot\theta^2, \qquad U = m_g g\, y_{cm} = -m_g g \ell_c \cos\theta + \text{cte}$$
+```math
+T = \tfrac12 J\dot\theta^2, \qquad U = m_g g\, y_{cm} = -m_g g \ell_c \cos\theta + \text{cte}
+```
 
 La ecuación de Lagrange $\dfrac{d}{dt}\dfrac{\partial T}{\partial\dot\theta} - \dfrac{\partial T}{\partial\theta} + \dfrac{\partial U}{\partial\theta} = Q_{nc}$ con las fuerzas no conservativas (aire, fricción viscosa, fricción seca y perturbación externa) da:
 
-$$\boxed{\,J\ddot\theta + m_g g \ell_c \sin\theta = \tau_{aero} - b_c\dot\theta - \tau_f\,\mathrm{sgn}(\dot\theta) + \tau_{ext}\,}$$
+```math
+\boxed{\,J\ddot\theta + m_g g \ell_c \sin\theta = \tau_{aero} - b_c\dot\theta - \tau_f\,\mathrm{sgn}(\dot\theta) + \tau_{ext}\,}
+```
 
 * El término $m_g g \ell_c \sin\theta$ es **restaurador**: la gravedad devuelve la compuerta a $\theta = 0$. Por eso la planta es **estable** (en una versión anterior se había modelado con $\cos\theta$ y daba una planta inestable; la convención colgante lo corrigió).
-* En simulación $\mathrm{sgn}(\dot\theta)$ se suaviza como $\tanh(50\,\dot\theta)$, y hay topes inelásticos en $0^\circ$ y $90^\circ$ (`theta_max` $= \pi/2$): $\ddot\theta_{ef} = \max(\ddot\theta,\,-\dot\theta/\tau_{stop})$ en el tope inferior.
+* En simulación $\mathrm{sgn}(\dot\theta)$ se suaviza como $`\tanh(50\,\dot\theta)`$, y hay topes inelásticos en $0^\circ$ y $90^\circ$ (`theta_max` $= \pi/2$): $`\ddot\theta_{ef} = \max(\ddot\theta,\,-\dot\theta/\tau_{stop})`$ en el tope inferior.
 
 ### 2.2 Torque aerodinámico
 
-El ventilador genera un chorro de velocidad axial $v_0$ en su salida. A una distancia $d$ el chorro libre turbulento se ensancha y su velocidad en el eje decae aproximadamente como $v_j(d) \approx v_0\, d_0/d$. La compuerta, más pequeña que la sección del chorro, recibe una fuerza de impulso
+El ventilador genera un chorro de velocidad axial $v_0$ en su salida. A una distancia $d$ el chorro libre turbulento se ensancha y su velocidad en el eje decae aproximadamente como $`v_j(d) \approx v_0\, d_0/d`$. La compuerta, más pequeña que la sección del chorro, recibe una fuerza de impulso
 
-$$F = \tfrac12\rho\, C_d\, A_g\, v_j(d)^2 = F_0\left(\frac{d_0}{d}\right)^2, \qquad \tau_{aero} = F\,\ell_a$$
+```math
+F = \tfrac12\rho\, C_d\, A_g\, v_j(d)^2 = F_0\left(\frac{d_0}{d}\right)^2, \qquad \tau_{aero} = F\,\ell_a
+```
 
 con $\ell_a$ el brazo de aplicación de la fuerza. **Simplificación adoptada:** se agrupan $\tfrac12\rho C_d A_g \ell_a$ y la relación velocidad–PWM del ventilador en una sola constante $k_m$, lineal en el estado del ventilador:
 
-$$\boxed{\,\tau_{aero} = k_m\, v_{fan}\left(\frac{d_0}{d}\right)^2\,}$$
+```math
+\boxed{\,\tau_{aero} = k_m\, v_{fan}\left(\frac{d_0}{d}\right)^2\,}
+```
 
 Esta forma es una aproximación (la física real es cuadrática en la velocidad del chorro). La dependencia $1/d^2$ es la que hace que mover el carro sirva como segundo actuador: acercarlo multiplica el torque disponible por $(d_0/d)^2$. $k_m$ debe calibrarse experimentalmente.
 
 ### 2.3 Ventilador y saturación
 
-$$\tau_{fan}\,\dot v_{fan} + v_{fan} = \mathrm{sat}_{[10,\,90]}(u_{PWM})$$
+```math
+\tau_{fan}\,\dot v_{fan} + v_{fan} = \mathrm{sat}_{[10,\,90]}(u_{PWM})
+```
 
 ### 2.4 Carro
 
 Segunda ley de Newton con fricción lineal, con $x$ positivo hacia la compuerta:
 
-$$m\,\ddot x = F - b\,\dot x, \qquad F = \frac{u_{car}}{100}\,F_{max}, \qquad d = d_{ini} - x$$
+```math
+m\,\ddot x = F - b\,\dot x, \qquad F = \frac{u_{car}}{100}\,F_{max}, \qquad d = d_{ini} - x
+```
 
 El lazo de posición del carro es un PID con **banda muerta de $\pm 5\text{ mm}$** sobre el error $e_a = \hat d - d_{ref}$ (positivo = hay que avanzar), con la derivada tomada sobre la velocidad estimada:
 
-$$u_{car} = \mathrm{sat}_{[-100,100]}\!\left(K_{p}\,e_a + K_{i}\!\int e_a\,dt - K_{d}\,\hat v\right), \quad K_p = 130\,\tfrac{\%}{\text{m}},\ K_i = 10,\ K_d = 5$$
+```math
+u_{car} = \mathrm{sat}_{[-100,100]}\!\left(K_{p}\,e_a + K_{i}\!\int e_a\,dt - K_{d}\,\hat v\right), \quad K_p = 130\,\tfrac{\%}{\text{m}},\ K_i = 10,\ K_d = 5
+```
 
 ### 2.5 Sensores y estimadores
 
-**Ángulo.** El potenciómetro entrega $V = K_{pot}\,\theta^\circ$ (saturado en $[0, 3.3]\text{ V}$) y el ADC de 12 bits lo cuantiza con paso $q = 3.3/4095$; el ángulo medido es $\theta_{meas} = \mathrm{round}(V/q)\,q/K_{pot}$ (resolución $0.044^\circ$).
+**Ángulo.** El potenciómetro entrega $`V = K_{pot}\,\theta^\circ`$ (saturado en $[0, 3.3]\text{ V}$) y el ADC de 12 bits lo cuantiza con paso $q = 3.3/4095$; el ángulo medido es $`\theta_{meas} = \mathrm{round}(V/q)\,q/K_{pot}`$ (resolución $0.044^\circ$).
 
 **Velocidad angular.** No se mide; se estima con una derivada filtrada de la medida del ADC:
 
-$$\hat\omega(s) = \frac{s}{\tau_w s + 1}\,\theta_{meas}(s), \qquad \tau_w = 0.04\text{ s}$$
+```math
+\hat\omega(s) = \frac{s}{\tau_w s + 1}\,\theta_{meas}(s), \qquad \tau_w = 0.04\text{ s}
+```
 
 **Distancia (IMU + Kalman).** La IMU mide $a_{meas} = \ddot x + b_a + n_a$ (aceleración + sesgo + ruido). Con el estado $\xi = [v,\ b_a]^T$ y la fuerza de tracción $F$ como entrada conocida:
 
-$$\dot\xi = \underbrace{\begin{bmatrix}-b/m & 0\\ 0 & 0\end{bmatrix}}_{A_o}\xi + \underbrace{\begin{bmatrix}1/m\\ 0\end{bmatrix}}_{B_o}F, \qquad a_{meas} = \underbrace{\begin{bmatrix}-b/m & 1\end{bmatrix}}_{C_o}\xi + \underbrace{\tfrac1m}_{D_o}F$$
+```math
+\dot\xi = \underbrace{\begin{bmatrix}-b/m & 0\\ 0 & 0\end{bmatrix}}_{A_o}\xi + \underbrace{\begin{bmatrix}1/m\\ 0\end{bmatrix}}_{B_o}F, \qquad a_{meas} = \underbrace{\begin{bmatrix}-b/m & 1\end{bmatrix}}_{C_o}\xi + \underbrace{\tfrac1m}_{D_o}F
+```
 
-$$\dot{\hat\xi} = A_o\hat\xi + B_oF + L\,\big(a_{meas} - C_o\hat\xi - D_oF\big), \qquad \hat d = d_{ini} - \int \hat v\,dt$$
+```math
+\dot{\hat\xi} = A_o\hat\xi + B_oF + L\,\big(a_{meas} - C_o\hat\xi - D_oF\big), \qquad \hat d = d_{ini} - \int \hat v\,dt
+```
 
 La ganancia $L = [-18.07,\ 31.62]^T$ sale de `lqe` con covarianzas $Q_n = \mathrm{diag}(0.5,\ 1)$ y $R = 10^{-3}$; los polos del observador son $-188.7$ y $-1.39$ rad/s. **Limitación:** sin una medición de posición, el error de $\hat d$ no se anula, solo queda acotado (un offset constante del orden de 1–2 mm).
 
 ### 2.6 Sistema no lineal completo
 
-$$\begin{aligned}
+```math
+\begin{aligned}
 J\ddot\theta &= k_m\, v_{fan}\left(\tfrac{d_0}{d}\right)^2 - m_g g\ell_c\sin\theta - b_c\dot\theta - \tau_f\tanh(50\dot\theta) + \tau_{ext}\\
 \tau_{fan}\dot v_{fan} &= \mathrm{sat}_{[10,90]}(u_{PWM}) - v_{fan}\\
 m\ddot x &= \tfrac{u_{car}}{100}F_{max} - b\dot x, \qquad d = d_{ini} - x\\
 \theta_{meas} &= Q_{ADC}\big(K_{pot}\theta\big)/K_{pot}
-\end{aligned}$$
+\end{aligned}
+```
 
 ---
 
@@ -129,31 +153,43 @@ m\ddot x &= \tfrac{u_{car}}{100}F_{max} - b\dot x, \qquad d = d_{ini} - x\\
 
 En equilibrio ($\dot\theta = \ddot\theta = 0$) el torque del aire iguala al de la gravedad, lo que fija el PWM necesario para sostener un ángulo $\theta_{eq}$ a una distancia $d_{eq}$:
 
-$$v_{eq} = \frac{m_g g \ell_c \sin\theta_{eq}}{k_m\,(d_0/d_{eq})^2}$$
+```math
+v_{eq} = \frac{m_g g \ell_c \sin\theta_{eq}}{k_m\,(d_0/d_{eq})^2}
+```
 
-Para $\theta_{eq} = 35^\circ$ y $d_{eq} = 10\text{ cm}$: $v_{eq} = 28.1\,\%$. Con el PWM mínimo de $10\,\%$ el ventilador ya empuja de más por debajo de $\theta \approx 11.8^\circ$ a $10\text{ cm}$ ($\sin\theta_{min} = 10\,k_m/(m_g g\ell_c)$); para ángulos menores hay que **alejar** el carro. Y si $v_{eq}$ superaría el $90\,\%$ (carro demasiado lejos) hay que **acercarlo**: es el papel del supervisor (§5.8).
+Para $\theta_{eq} = 35^\circ$ y $d_{eq} = 10\text{ cm}$: $`v_{eq} = 28.1\,\%`$. Con el PWM mínimo de $`10\,\%`$ el ventilador ya empuja de más por debajo de $\theta \approx 11.8^\circ$ a $10\text{ cm}$ ($`\sin\theta_{min} = 10\,k_m/(m_g g\ell_c)`$); para ángulos menores hay que **alejar** el carro. Y si $v_{eq}$ superaría el $`90\,\%`$ (carro demasiado lejos) hay que **acercarlo**: es el papel del supervisor (§5.8).
 
 ### 3.2 Linealización
 
 Con $\theta = \theta_{eq} + \delta\theta$, $d = d_{eq} + \delta d$ y $v_{fan} = v_{eq} + \delta v$:
 
-$$\sin(\theta_{eq}+\delta\theta)\approx\sin\theta_{eq}+\cos\theta_{eq}\,\delta\theta, \qquad \left(\tfrac{d_0}{d}\right)^2\approx\left(\tfrac{d_0}{d_{eq}}\right)^2-\frac{2d_0^2}{d_{eq}^3}\,\delta d$$
+```math
+\sin(\theta_{eq}+\delta\theta)\approx\sin\theta_{eq}+\cos\theta_{eq}\,\delta\theta, \qquad \left(\tfrac{d_0}{d}\right)^2\approx\left(\tfrac{d_0}{d_{eq}}\right)^2-\frac{2d_0^2}{d_{eq}^3}\,\delta d
+```
 
-$$\boxed{\,J\,\delta\ddot\theta = -m_g g\ell_c\cos\theta_{eq}\,\delta\theta - b_c\,\delta\dot\theta + k_v\,\delta v + g_d\,\delta d\,}, \qquad k_v = k_m\!\left(\tfrac{d_0}{d_{eq}}\right)^2,\quad g_d = -\frac{2\,k_m\,v_{eq}\,d_0^2}{d_{eq}^3}$$
+```math
+\boxed{\,J\,\delta\ddot\theta = -m_g g\ell_c\cos\theta_{eq}\,\delta\theta - b_c\,\delta\dot\theta + k_v\,\delta v + g_d\,\delta d\,}, \qquad k_v = k_m\!\left(\tfrac{d_0}{d_{eq}}\right)^2,\quad g_d = -\frac{2\,k_m\,v_{eq}\,d_0^2}{d_{eq}^3}
+```
 
 El signo de $g_d$ es negativo: aumentar $d$ (alejar el carro) reduce el torque. El término gravitacional $-m_g g\ell_c\cos\theta_{eq}/J$ es una **rigidez restauradora** (autovalores con parte real negativa).
 
 ### 3.3 Modelo en espacio de estados (5 estados, 2 entradas)
 
-$$x = \begin{bmatrix}\delta\theta\\ \delta\omega\\ \delta v\\ \delta d\\ x_i\end{bmatrix},\qquad u = \begin{bmatrix}\delta u_{PWM}\\ \delta d_{ref}\end{bmatrix},\qquad \dot x_i = \delta\theta$$
+```math
+x = \begin{bmatrix}\delta\theta\\ \delta\omega\\ \delta v\\ \delta d\\ x_i\end{bmatrix},\qquad u = \begin{bmatrix}\delta u_{PWM}\\ \delta d_{ref}\end{bmatrix},\qquad \dot x_i = \delta\theta
+```
 
-El lazo interno del carro se modela como un primer orden $\delta\dot d = (\delta d_{ref} - \delta d)/\tau_{car}$ con $\tau_{car} = 0.8\text{ s}$ (el lazo real responde con $\tau_{63\%} \approx 0.94\text{ s}$ y sobrepico de 0.2 %). Con $\delta d$ en **cm**:
+El lazo interno del carro se modela como un primer orden $\delta\dot d = (\delta d_{ref} - \delta d)/\tau_{car}$ con $\tau_{car} = 0.8\text{ s}$ (el lazo real responde con $`\tau_{63\%} \approx 0.94\text{ s}`$ y sobrepico de 0.2 %). Con $\delta d$ en **cm**:
 
-$$\dot x = A x + B u,\quad A = \begin{bmatrix}0&1&0&0&0\\ -\frac{m_g g\ell_c\cos\theta_{eq}}{J} & -\frac{b_c}{J} & \frac{k_v}{J} & \frac{g_d}{100\,J} & 0\\ 0&0&-\frac{1}{\tau_{fan}}&0&0\\ 0&0&0&-\frac{1}{\tau_{car}}&0\\ 1&0&0&0&0\end{bmatrix},\quad B = \begin{bmatrix}0&0\\0&0\\ \frac{1}{\tau_{fan}}&0\\ 0&\frac{1}{\tau_{car}}\\0&0\end{bmatrix}$$
+```math
+\dot x = A x + B u,\quad A = \begin{bmatrix}0&1&0&0&0\\ -\frac{m_g g\ell_c\cos\theta_{eq}}{J} & -\frac{b_c}{J} & \frac{k_v}{J} & \frac{g_d}{100\,J} & 0\\ 0&0&-\frac{1}{\tau_{fan}}&0&0\\ 0&0&0&-\frac{1}{\tau_{car}}&0\\ 1&0&0&0&0\end{bmatrix},\quad B = \begin{bmatrix}0&0\\0&0\\ \frac{1}{\tau_{fan}}&0\\ 0&\frac{1}{\tau_{car}}\\0&0\end{bmatrix}
+```
 
 Valores numéricos en $\theta_{eq} = 35^\circ$, $d_{eq} = 10\text{ cm}$:
 
-$$A = \begin{bmatrix}0&1&0&0&0\\ -60.27&-5&1.5&-8.44&0\\ 0&0&-6.667&0&0\\ 0&0&0&-1.25&0\\ 1&0&0&0&0\end{bmatrix},\qquad B = \begin{bmatrix}0&0\\0&0\\6.667&0\\0&1.25\\0&0\end{bmatrix}$$
+```math
+A = \begin{bmatrix}0&1&0&0&0\\ -60.27&-5&1.5&-8.44&0\\ 0&0&-6.667&0&0\\ 0&0&0&-1.25&0\\ 1&0&0&0&0\end{bmatrix},\qquad B = \begin{bmatrix}0&0\\0&0\\6.667&0\\0&1.25\\0&0\end{bmatrix}
+```
 
 ### 3.4 Funciones de transferencia de cada subsistema
 
@@ -164,7 +200,7 @@ $$A = \begin{bmatrix}0&1&0&0&0\\ -60.27&-5&1.5&-8.44&0\\ 0&0&-6.667&0&0\\ 0&0&0&
 | Compuerta | $d\to\theta$ (por cm) | $\dfrac{g_d/100J}{s^2+\frac{b_c}{J}s+\frac{m_g g\ell_c\cos\theta_{eq}}{J}}$ | $\dfrac{-8.44}{s^2+5s+60.27}$ |
 | Ventilador | $u_{PWM}\to v_{fan}$ | $\dfrac{1}{\tau_{fan}s+1}$ | $\dfrac{6.667}{s+6.667}$ |
 | Carro (mecánica) | $F\to\dot x$ | $\dfrac{1}{m s + b}$ | $\dfrac{1}{0.421 s + 3.5}$, $\tau = m/b = 0.12\text{ s}$ |
-| Carro (posición) | $F\to x$ | $\dfrac{1}{s\,(m s + b)}$ | $\dfrac{1}{s\,(0.421 s + 3.5)}$ |
+| Carro (posición) | $F\to x$ | $`\dfrac{1}{s\,(m s + b)}`$ | $`\dfrac{1}{s\,(0.421 s + 3.5)}`$ |
 | Carro con PID | $d_{ref}\to d$ | $\dfrac{k_p s + k_i}{m s^3 + (b+k_d)s^2 + k_p s + k_i}$, con $k_\ast = K_\ast F_{max}/100$ (la derivada actúa sobre $\hat v$, no sobre el error, así que $k_d$ no aparece en el numerador) | polos $-7.44,\ -1.15,\ -0.083$ (el lento casi lo cancela el cero en $-k_i/k_p = -0.077$); equivale a $\approx \dfrac{1}{0.8s+1}$ |
 | Sensor de ángulo | $\theta\to\theta_{meas}$ | $K_{pot}$ + cuantización | $0.01833\text{ V/}^\circ$; $0.044^\circ$/LSB |
 | Estimador de $\omega$ | $\theta_{meas}\to\hat\omega$ | $\dfrac{s}{\tau_w s + 1}$ | $\dfrac{s}{0.04 s + 1}$ |
@@ -174,9 +210,11 @@ $$A = \begin{bmatrix}0&1&0&0&0\\ -60.27&-5&1.5&-8.44&0\\ 0&0&-6.667&0&0\\ 0&0&0&
 
 Combinando la compuerta, el ventilador y el lazo del carro, las funciones de transferencia desde cada entrada hasta el ángulo son:
 
-$$G_{\theta u}(s) = \frac{\delta\theta}{\delta u_{PWM}} = \frac{10}{(s+6.667)\,(s^2+5s+60.27)}, \qquad G_{\theta d}(s) = \frac{\delta\theta}{\delta d_{ref}} = \frac{-10.55}{(s+1.25)\,(s^2+5s+60.27)}$$
+```math
+G_{\theta u}(s) = \frac{\delta\theta}{\delta u_{PWM}} = \frac{10}{(s+6.667)\,(s^2+5s+60.27)}, \qquad G_{\theta d}(s) = \frac{\delta\theta}{\delta d_{ref}} = \frac{-10.55}{(s+1.25)\,(s^2+5s+60.27)}
+```
 
-* Ganancia estática de $G_{\theta u}$: $0.0249\text{ rad/\%} = 1.43^\circ/\%$.
+* Ganancia estática de $G_{\theta u}$: $`0.0249\text{ rad/\%} = 1.43^\circ/\%`$.
 * Ganancia estática de $G_{\theta d}$: $-0.14\text{ rad/cm} = -8.0^\circ/\text{cm}$ (acercar el carro 1 cm sube la compuerta unos $8^\circ$ a PWM constante).
 * Ninguna de las dos tiene ceros finitos.
 
@@ -190,7 +228,7 @@ $$G_{\theta u}(s) = \frac{\delta\theta}{\delta u_{PWM}} = \frac{10}{(s+6.667)\,(
 
 1. **Dos actuadores coordinados** (PWM y posición del carro) a partir de una sola medición.
 2. **Respuesta rápida y bien amortiguada** pese a que la compuerta es oscilatoria ($\zeta \approx 0.32$) y el ventilador añade un retardo de $0.15\text{ s}$.
-3. **Respetar la saturación** del PWM ($10$–$90\,\%$) y los límites del carro ($5$–$25\text{ cm}$).
+3. **Respetar la saturación** del PWM ($10$–$`90\,\%`$) y los límites del carro ($5$–$25\text{ cm}$).
 4. **Rechazar la perturbación que introduce el movimiento del carro**, porque cambiar $d$ cambia la ganancia del ventilador como $(d_0/d)^2$.
 5. **Mover el carro solo cuando haga falta.**
 6. Ser implementable con un solo $\theta$ medido (ruido de cuantización del ADC) y estimadores.
@@ -200,7 +238,7 @@ $$G_{\theta u}(s) = \frac{\delta\theta}{\delta u_{PWM}} = \frac{10}{(s+6.667)\,(
 | # | Estrategia | Cómo se diseñó | Resultado |
 |---|---|---|---|
 | 1 | **PID** (solo ventilador) | Primero por asignación de polos; luego optimización directa de ITAE sobre el lazo lineal con el ventilador | La asignación de polos dio ganancias **negativas** con la planta estable; el PID optimizado funciona bien pero es SISO |
-| 2 | **Loop shaping / robusto** | `systune`, luego optimización directa de $M_s + 2\,\text{ITAE}$ | `systune` sin meta de desempeño converge a un integrador casi puro (sobrepico 25 %); la optimización directa degenera en un PI filtrado; más lento que el PID |
+| 2 | **Loop shaping / robusto** | `systune`, luego optimización directa de $`M_s + 2\,\text{ITAE}`$ | `systune` sin meta de desempeño converge a un integrador casi puro (sobrepico 25 %); la optimización directa degenera en un PI filtrado; más lento que el PID |
 | 3 | **$H_\infty$ de sensibilidad mixta** | `mixsyn` / `hinfsyn` | **No disponible**: requiere Robust Control Toolbox |
 | 4 | **LQR+I de 3 estados** (solo ventilador, sin el actuador en el modelo) | Riccati sobre $[\theta, \omega, x_i]$ | Márgenes ideales excelentes, pero se degradan al incluir el retardo del ventilador |
 | 5 | **LQR+I SIMO de 5 estados** | Riccati sobre $[\theta, \omega, v_{fan}, d, x_i]$ con dos entradas | **Elegido** |
@@ -274,13 +312,17 @@ flowchart TD
 
 Para el sistema linealizado $\dot x = Ax + Bu$ se busca la ley $u = -Kx$ que minimiza
 
-$$J = \int_0^\infty \big(x^T Q\, x + u^T R\, u\big)\,dt, \qquad K = R^{-1}B^TP, \qquad A^TP + PA - PBR^{-1}B^TP + Q = 0$$
+```math
+J = \int_0^\infty \big(x^T Q\, x + u^T R\, u\big)\,dt, \qquad K = R^{-1}B^TP, \qquad A^TP + PA - PBR^{-1}B^TP + Q = 0
+```
 
 $Q \succeq 0$ penaliza el error de los estados y $R \succ 0$ el esfuerzo de cada actuador. Con realimentación de estado completo y $R$ diagonal, el lazo roto en la entrada de la planta garantiza $PM \ge 60^\circ$ y margen de ganancia $\in [\tfrac12, \infty)$. En el diseño de este proyecto el canal PWM del LQR de 5 estados mide $PM = 67.2^\circ$ con ganancia infinita (el lazo de $d$ cerrado).
 
 ### 5.2 Estados y entradas
 
-$$x = \begin{bmatrix} e_\theta = \theta_{meas} - \theta_{ref}\\ \hat\omega\\ \hat v_{fan} - v_{eq}\\ 100\,(\hat d - d_{nom})\ [\text{cm}]\\ x_i = \int e_\theta\,dt\end{bmatrix},\qquad u = \begin{bmatrix}\delta u_{PWM}\ [\%]\\ \delta d_{ref}\ [\text{cm}]\end{bmatrix}$$
+```math
+x = \begin{bmatrix} e_\theta = \theta_{meas} - \theta_{ref}\\ \hat\omega\\ \hat v_{fan} - v_{eq}\\ 100\,(\hat d - d_{nom})\ [\text{cm}]\\ x_i = \int e_\theta\,dt\end{bmatrix},\qquad u = \begin{bmatrix}\delta u_{PWM}\ [\%]\\ \delta d_{ref}\ [\text{cm}]\end{bmatrix}
+```
 
 * $d_{nom}$ es el **punto de operación de distancia**: no es fijo, lo mueve el supervisor (§5.8).
 * La acción integral $x_i$ elimina el error en régimen permanente ante errores de modelo (por ejemplo, un $k_m$ distinto del supuesto).
@@ -297,7 +339,7 @@ Se aplicó la **regla de Bryson**: $Q_{ii} = 1/(x_{i,max})^2$ y $R_{jj} = 1/(u_{
 | $\hat v_{fan} - v_{eq}$ | $0$ | – | El ventilador se regula a través de $u_{PWM}$ |
 | $\hat d - d_{nom}$ | $q_d = 0.5$ | $1.4\text{ cm}$ | Desviación aceptable de la distancia |
 | $x_i$ | $q_{xi} = 10^4$ | $0.01\text{ rad·s}$ | Velocidad de la acción integral |
-| $u_{PWM}$ | $r_{pwm} = 0.02$ | $7\,\%$ | Esfuerzo del ventilador |
+| $u_{PWM}$ | $r_{pwm} = 0.02$ | $`7\,\%`$ | Esfuerzo del ventilador |
 | $u_{d}$ | $r_d = 1$ | $1\text{ cm}$ | Costo de mover el carro (alto: el carro actúa poco mientras el ventilador alcance) |
 
 **Cómo se llegó a estos valores** (escalón $0^\circ\to35^\circ$ en el modelo no lineal):
@@ -317,7 +359,9 @@ La dinámica depende del punto de operación a través de $\cos\theta_{eq}$, $k_
 
 Ganancia en el punto nominal ($35^\circ$, 10 cm):
 
-$$K = \begin{bmatrix} 561.05 & 73.08 & 4.76 & -30.73 & 697.42\\ -11.97 & -1.61 & -0.12 & 1.09 & -16.50\end{bmatrix}$$
+```math
+K = \begin{bmatrix} 561.05 & 73.08 & 4.76 & -30.73 & 697.42\\ -11.97 & -1.61 & -0.12 & 1.09 & -16.50\end{bmatrix}
+```
 
 * Fila 1 (PWM), en %/rad, %/(rad/s), %/%, %/cm, %/(rad·s). Fila 2 ($d_{ref}$), en cm por las mismas unidades.
 * $K_{14} = -30.73$: si la distancia real excede a $d_{nom}$, el PWM sube automáticamente para compensar la pérdida de torque (coherente con $g_d < 0$).
@@ -326,11 +370,13 @@ $$K = \begin{bmatrix} 561.05 & 73.08 & 4.76 & -30.73 & 697.42\\ -11.97 & -1.61 &
 
 ### 5.5 Ley de control completa
 
-$$\begin{aligned}
+```math
+\begin{aligned}
 p_{raw} &= v_{eq}(\theta_{ref},\,d_{nom}) \;-\; K_1(\theta_{ref},\,d_{nom})\,x\\
 u_{PWM} &= \mathrm{sat}_{[10,\,90]}\big(p_{raw}\big)\\
 d_{ref} &= \mathrm{sat}_{[0.05,\,0.25]\,\text{m}}\!\Big(d_{nom} \;-\; \tfrac{1}{100}\,K_2(\theta_{ref},\,d_{nom})\,x\Big)
-\end{aligned}$$
+\end{aligned}
+```
 
 Aquí $d_{nom}$ y $d_{ref}$ están en metros y $K_2 x$ en cm (de ahí el factor $1/100$).
 
@@ -359,9 +405,9 @@ El punto de operación $d_{nom}$ es la salida de un integrador (inicial $d_{ini}
 
 | Condición | Acción sobre $d_{nom}$ | Velocidad |
 |---|---|---|
-| $p_{raw} > 70\,\%$ (el ventilador no alcanza / sin margen) | **Acerca** | hasta $5\text{ cm/s}$, proporcional al exceso (máxima con 20 puntos de exceso) |
-| $p_{raw} < 7\,\%$ (el mínimo de 10 % ya empuja de más) | **Aleja** | hasta $5\text{ cm/s}$ |
-| $p_{raw} < 20\,\%$ y $d_{nom} < d_{ini}$ | **Regresa** hacia $d_{ini}$ | $1\text{ cm/s}$ |
+| $`p_{raw} \gt  70\,\%`$ (el ventilador no alcanza / sin margen) | **Acerca** | hasta $5\text{ cm/s}$, proporcional al exceso (máxima con 20 puntos de exceso) |
+| $`p_{raw} \lt  7\,\%`$ (el mínimo de 10 % ya empuja de más) | **Aleja** | hasta $5\text{ cm/s}$ |
+| $`p_{raw} \lt  20\,\%`$ y $d_{nom} < d_{ini}$ | **Regresa** hacia $d_{ini}$ | $1\text{ cm/s}$ |
 | Otro caso | Mantiene | – |
 
 ```mermaid
@@ -377,7 +423,7 @@ stateDiagram-v2
 
 ### 5.9 Prefiltro de referencia
 
-La consigna pasa por un filtro de primer orden con $\tau_{ref} = 0.15\text{ s}$ y límite de rampa de $200^\circ$/s antes de entrar al LQR: suaviza el escalón para que no sature el PWM ni excite la oscilación de la compuerta. Existe además un gobernador de referencia ($\theta_{ref} \le \theta_{meas} + \texttt{gov\_deg}$) que con la planta estable se dejó **desactivado** (`gov_deg` $= 90^\circ$: con $\theta \in [0^\circ, 90^\circ]$ nunca limita).
+La consigna pasa por un filtro de primer orden con $\tau_{ref} = 0.15\text{ s}$ y límite de rampa de $200^\circ$/s antes de entrar al LQR: suaviza el escalón para que no sature el PWM ni excite la oscilación de la compuerta. Existe además un gobernador de referencia ($`\theta_{ref} \le \theta_{meas} + \texttt{gov\_deg}`$) que con la planta estable se dejó **desactivado** (`gov_deg` $= 90^\circ$: con $\theta \in [0^\circ, 90^\circ]$ nunca limita).
 
 ### 5.10 Resumen de parámetros de diseño
 
@@ -387,7 +433,7 @@ La consigna pasa por un filtro de primer orden con $\tau_{ref} = 0.15\text{ s}$ 
 | Estimadores | $\tau_w=0.04\text{ s}$; Kalman con $Q_n=\mathrm{diag}(0.5,1)$, $R=10^{-3}$ |
 | Anti-windup | $x_i\in[-2,2]$; banda $5^\circ$ |
 | Supervisor | umbrales 70 / 7 / 20 %; velocidades 5 y 1 cm/s |
-| Saturaciones | PWM $[10, 90]\,\%$; $d \in [5, 25]\text{ cm}$ |
+| Saturaciones | PWM $`[10, 90]\,\%`$; $d \in [5, 25]\text{ cm}$ |
 | Referencia | $\tau_{ref}=0.15\text{ s}$; rampa $200^\circ$/s |
 
 ---
@@ -508,7 +554,7 @@ ani.escenario = 'carro_lejos'; animar_sistema   % animación del sistema
 1. **$k_m$ es un supuesto.** El torque aerodinámico real es cuadrático en la velocidad del chorro; el modelo lo aproxima como lineal en $v_{fan}$. Falta calibrar $k_m$ (y su dependencia con el PWM) con el ventilador real.
 2. **Ventilador mucho más débil que el supuesto:** con una caída del 70 % el supervisor acerca el carro a 8 cm y el ángulo se recupera 1 s después de terminar la caída; no se probaron caídas mayores, en las que el carro llegaría al tope de 5 cm. Mientras el error supera $5^\circ$ la integral no actúa, así que la recuperación depende del supervisor. Un estimador en línea de $k_m$ lo haría más robusto.
 3. **Error de $\hat d$.** La IMU sin medición de posición deja un offset constante en $\hat d$ del orden de 1–2 mm.
-4. **Lazo del carro.** El diseño usa $\tau_{car} = 0.8\text{ s}$; el lazo real tiene $\tau_{63\%} \approx 0.94\text{ s}$ y la banda muerta de $\pm5\text{ mm}$ no está en el modelo lineal.
+4. **Lazo del carro.** El diseño usa $\tau_{car} = 0.8\text{ s}$; el lazo real tiene $`\tau_{63\%} \approx 0.94\text{ s}`$ y la banda muerta de $\pm5\text{ mm}$ no está en el modelo lineal.
 5. **Aire a lo largo del ángulo.** El modelo no incluye la variación del torque con $\theta$ (área expuesta e incidencia del chorro).
 6. **Solo simulación.** Falta discretizar para el ESP32 y validar con el carro, la IMU y el ventilador reales.
 7. **Comparativa de solo ventilador.** `simular_sistema.m` conserva el LQR+I de 3 estados por razones de comparación; su margen real con el actuador es bajo (§4.3) y no debe usarse como diseño final.
