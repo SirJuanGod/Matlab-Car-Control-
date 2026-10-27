@@ -1,13 +1,16 @@
 {
-  "0": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
-  "1": "Documentación técnica: modelado, funciones de transferencia y control LQR",
+  "0": "mpu6050.c",
+  "1": "5. Estrategia de control LQR",
   "2": "CLAUDE.md",
-  "3": "5. Estrategia de control LQR",
-  "4": "2. Ecuaciones primitivas",
-  "5": "Especificaciones del Carro (Plataforma Móvil con IMU y Control Independiente)",
-  "6": "Especificaciones de la Compuerta (Planta Pasiva y Sensor Directo 0-3.3V con ESP32)",
-  "7": "Especificaciones del Ventilador y Etapa de Potencia L298N (24V)",
-  "8": "Arquitectura del Sistema de Control Angular y Plataforma Móvil",
-  "9": "arquitectura_sistema.md",
-  "10": "3. Linealización y funciones de transferencia"
+  "3": "espnow_base.c",
+  "4": "esp32_carro_control/main/main.c",
+  "5": "Especificaciones del Ventilador y Etapa de Potencia L298N (24V)",
+  "6": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+  "7": "adc_reader.c",
+  "8": "Firmware ESP32 en C / ESP-IDF con FreeRTOS (Control Carro & Compuerta)",
+  "9": "Especificaciones del Carro (Plataforma Móvil con IMU y Control Independiente)",
+  "10": "Especificaciones de la Compuerta (Planta Pasiva y Sensor Directo 0-3.3V con ESP32)",
+  "11": "espnow_car_send_telemetry",
+  "12": "2. Ecuaciones primitivas",
+  "13": "4. Cómo se llegó al LQR como mejor opción"
 }
