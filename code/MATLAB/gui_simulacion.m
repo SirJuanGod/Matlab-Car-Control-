@@ -1,4 +1,8 @@
 function gui_simulacion()
+<<<<<<< HEAD:gui_simulacion.m
+%GUI_SIMULACION Interfaz para variar parametros y simular modelo_miso_compuerta.slx
+=======
+>>>>>>> refs/remotes/origin/main:code/MATLAB/gui_simulacion.m
 mdl    = 'modelo_miso_compuerta';
 folder = fileparts(mfilename('fullpath'));
 addpath(folder);

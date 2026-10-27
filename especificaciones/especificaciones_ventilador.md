@@ -1,24 +1,23 @@
 # Especificaciones del Ventilador y Etapa de Potencia L298N (24V)
 
 ## Enlaces del Grafo
+
 * **Subsistema Padre:** [[arquitectura_sistema]]
 * **Montado sobre plataforma física:** [[especificaciones_carro]]
 * **Genera torque aerodinámico sobre:** [[especificaciones_compuerta]]
 * **Estrategias de Control:** [[estrategias_control]]
 
-## Etiquetas
-#actuador #ventilador #l298n #24vdc #pwm #esp32 #etapa-potencia #sanyo-denki #aerodinamica
-
----
-
 ## 1. Rol en la Arquitectura de Control
+
 El ventilador es el **actuador rápido** del lazo de control angular de la compuerta; el carro, a través de la distancia $d$, es el actuador lento (ver [[arquitectura_sistema]], sección 1.1).
+
 * El microcontrolador ESP32 genera una señal PWM (utilizando su periférico hardware LEDC) que modula la velocidad del flujo de aire.
 * Dicha señal se amplifica en tensión y corriente a través de un **módulo puente H L298N alimentado con una fuente de 24 VDC**.
 
 ---
 
 ## 2. Parámetros de Identificación del Ventilador
+
 * **Fabricante:** Sanyo Denki Co., Ltd.
 * **Línea:** San Ace 40
 * **Modelo:** 109P0424G302 (Doble rodamiento de bolas)
@@ -28,6 +27,7 @@ El ventilador es el **actuador rápido** del lazo de control angular de la compu
 ---
 
 ## 3. Parámetros Eléctricos y Desempeño
+
 * **Voltaje Nominal:** 24 VDC
 * **Rango de Tensión de Operación:** 12.0 VDC a 26.4 VDC
 * **Corriente Nominal:** 0.19 A (Típica) / 0.22 A (Máxima)
@@ -42,20 +42,39 @@ El ventilador es el **actuador rápido** del lazo de control angular de la compu
 
 El accionamiento del ventilador se realiza a través de un canal del módulo L298N (dual full-bridge driver).
 
-```
-   Fuente 24VDC
-   (+) -------> [ VMS / 12V ]  Módulo L298N
-   (-) -------> [ GND       ]  (Jumper 5V RETIRADO)
-                      |
-   ESP32 (3.3V)       |
-   GPIO PWM --> [ ENA       ]  (O control por IN1)
-   GPIO Dir --> [ IN1 / IN2 ]
-   GND -------> [ GND       ]  (GND común unificado)
-                      |
-                [ OUT1, OUT2] ========> Ventilador San Ace 40 (24VDC)
-```
+graph LR
+    %% Fuentes y Controladores
+    PSU[Fuente 24VDC]
+    ESP[ESP32 <br> Lógica 3.3V]
+
+    %% Driver L298N con estilo de advertencia
+    L298N[Módulo L298N <br> ⚠️ JUMPER 5V RETIRADO]
+    classDef driver fill:#f9d0c4,stroke:#333,stroke-width:2px;
+    class L298N driver;
+
+    %% Actuador
+    Fan((Ventilador <br> San Ace 40 24VDC))
+
+    %% Circuito de Potencia
+    PSU -- "(+) 24V" -->|Pin VMS/12V| L298N
+    PSU -- "(-) GND" -->|Pin GND| L298N
+
+    %% Circuito de Control Lógico
+    ESP -- "GPIO PWM" -->|Pin ENA <br> o IN1| L298N
+    ESP -- "GPIO Dir" -->|Pines IN1 / IN2| L298N
+    ESP -- "GND" -->|Pin GND| L298N
+    
+    %% Nodo virtual para el GND común
+    GND_Comun((GND Común))
+    PSU -.-> GND_Comun
+    ESP -.-> GND_Comun
+    GND_Comun -.-> L298N
+
+    %% Conexión de Salida
+    L298N == "OUT1, OUT2" ===> Fan
 
 ### 4.1 Configuración de Hardware Crítica del L298N
+
 1. **Retiro del Jumper de 5V (OBLIGATORIO):**
    * El módulo L298N incluye un regulador lineal 78M05 integrado. Cuando la tensión de alimentación del motor ($V_s$) es mayor a $12\text{ V}$ (en este caso **$24\text{ VDC}$**), **se debe retirar el jumper de 5V** para evitar sobrecalentar y quemar el regulador interno.
    * La lógica interna del L298N debe alimentarse conectando $5.0\text{ V}$ externos al borne de $+5\text{V}$ del módulo (provenientes de un convertidor DC-DC buck step-down o fuente auxiliar de 5V).
@@ -65,6 +84,7 @@ El accionamiento del ventilador se realiza a través de un canal del módulo L29
    * Las placas comerciales L298N integran 8 diodos de conmutación rápida (tipo 1N4007 o Schottky) que protegen los transistores del puente contra las sobretensiones inductivas generadas por el motor del ventilador durante el corte del PWM.
 
 ### 4.2 Lógica de Control desde el ESP32
+
 * **Conexión:**
   * Terminal `OUT1` $\to$ Cable positivo (+24V) del ventilador.
   * Terminal `OUT2` $\to$ Cable negativo (GND) del ventilador.
@@ -78,6 +98,7 @@ El accionamiento del ventilador se realiza a través de un canal del módulo L29
 ---
 
 ## 5. Dinámica del Actuador Aerodinámico
+
 La respuesta del flujo frente al ciclo de trabajo del PWM se modela como un sistema de primer orden:
 
 $$\tau_{fan} \frac{d v_{aire}(t)}{dt} + v_{aire}(t) = K_v \cdot u_{PWM}(t)$$

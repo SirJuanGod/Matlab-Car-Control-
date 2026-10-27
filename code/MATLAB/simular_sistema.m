@@ -1,8 +1,4 @@
-%% simular_sistema.m
-% =========================================================================
-% SIMULACION COMPARATIVA FORMAL: PID (LGR) vs LQR+I (RICCATI) vs H-INFINITA
-% Basado en analisis de Polos y Ceros y Lugar Geometrico de las Raices
-% =========================================================================
+%% simular_sistema.m — Comparativa: PID (LGR) vs LQR+I vs Loop Shaping.
 
 clear; clc; close all;
 
@@ -10,10 +6,6 @@ clear; clc; close all;
 run('init_parametros.m');
 
 %% --- 2. Perfil de Simulacion y Perturbacion ---
-% Escenario de prueba:
-%  t = 0 a 3.5s: Arranque desde reposo (theta0 = 0 deg) hacia theta_ref = 35 deg.
-%  t = 3.5s a 8.0s: El carro movil retrocede (distancia cambia de 10 cm a 14 cm),
-%                   reduciendo la fuerza aerodinamica en un (10/14)^2 = 51%.
 dt = 0.002; % 500 Hz
 tspan = 0:dt:t_sim;
 Nt = numel(tspan);
@@ -38,7 +30,6 @@ for k = 1:Nt
     end
 end
 
-% Simulacion de la IMU y Observador de Kalman:
 v_car_real = [0; diff(d_real)/dt];
 a_car_real = [0; diff(v_car_real)/dt];
 rng(42);
@@ -68,15 +59,10 @@ end
 modos = {'PID (Diseno por LGR)', 'LQR+I (Ecuacion de Riccati)', 'Control Robusto H_\infty (Loop Shaping)'};
 colores = {'#D9531F', '#0072BD', '#2CA02C'}; % Naranja, Azul, Verde
 
-% 1) PID por LGR:
-% Usamos Kp, Ki analiticos y Kd amortiguado sobre medicion:
 kp_p = pid_Kp;
 ki_p = pid_Ki;
 kd_p = pid_Kd;  % derivada sobre omega; diseno de init_parametros.m (incluye el lag del ventilador)
 
-% 2) LQR+I por Riccati: K_lqr = [K1, K2, K3]
-
-% 3) H-infinito por Loop Shaping discretizado por Tustin:
 G_hinf_d = c2d(G_hinf, dt, 'tustin');
 [b_hinf, a_hinf] = tfdata(G_hinf_d, 'v');
 
@@ -121,7 +107,6 @@ for m = 1:3
         u_ff = (m_g * g * l_c * sin(th_ref_k)) / k_m;      % gravedad ~ sin(theta): compuerta colgante
         
         if m == 1
-            % MODO 1: PID derivado analiticamente por LGR
             integ_err = integ_err + dt * err;
             integ_err = min(max(integ_err, -0.6), 0.6);
             
@@ -130,7 +115,6 @@ for m = 1:3
             u_cmd = min(max(u_raw, pwm_min), pwm_max);
             
         elseif m == 2
-            % MODO 2: LQR con Accion Integral por Ecuacion de Riccati
             integ_err = integ_err + dt * (theta_meas - th_ref_k);
             integ_err = min(max(integ_err, -0.6), 0.6);
             
@@ -139,7 +123,6 @@ for m = 1:3
             u_cmd = min(max(u_raw, pwm_min), pwm_max);
             
         else
-            % MODO 3: Control Robusto H-infinita por Loop Shaping (Tustin)
             e_buf = [err; e_buf(1:end-1)];
             u_filt = (b_hinf * e_buf - a_hinf(2:end) * u_buf(1:end-1)) / a_hinf(1);
             u_buf = [u_filt; u_buf(1:end-1)];
@@ -275,5 +258,7 @@ text(0.02, 0.16, '* PID (LGR): Asignacion analitica de polos (\zeta=0.85, \omega
 text(0.02, 0.09, '* LQR+I (Riccati): Solucion formal de Riccati con estabilidad KYP garantizada.', 'FontSize', 8.5);
 text(0.02, 0.02, '* H_\infty (Loop Shaping): Margen de fase robusto y maxima rapidez ante alejamiento del carro.', 'FontSize', 8.5);
 
-saveas(fig, 'simulacion_comparativa.png');
-fprintf('\nGrafica formal guardada exitosamente en: simulacion_comparativa.png\n');
+out_dir = fullfile(fileparts(mfilename('fullpath')), 'outputs');
+if ~exist(out_dir, 'dir'), mkdir(out_dir); end
+saveas(fig, fullfile(out_dir, 'simulacion_comparativa.png'));
+fprintf('\nGrafica formal guardada exitosamente en: outputs/simulacion_comparativa.png\n');

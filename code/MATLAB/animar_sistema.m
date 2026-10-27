@@ -1,3 +1,10 @@
+<<<<<<< HEAD:animar_sistema.m
+%% animar_sistema.m — Animacion cinematica del sistema (vista lateral).
+% Uso: >> animar_sistema                   (escenario por defecto: 'carro_lejos')
+%      >> ani.escenario = 'nominal'; animar_sistema
+%      >> ani.salida = 'ninguna'; animar_sistema   (solo pantalla)
+% Escenarios: 'carro_lejos' | 'nominal' | 'ventilador_debil' | 'perturbacion'
+=======
 %% animar_sistema.m
 % =========================================================================
 % CINEMATICA ANIMADA DEL SISTEMA (vista lateral)
@@ -28,6 +35,7 @@
 % d = distancia entre la cara frontal del carro (salida del ventilador) y la posicion
 % de reposo de la compuerta (x = 0).
 % =========================================================================
+>>>>>>> refs/remotes/origin/main:code/MATLAB/animar_sistema.m
 if ~exist('ani','var') || ~isstruct(ani), ani = struct(); end
 def = struct('escenario','carro_lejos','salida','ambos','fps',24,'velocidad',1,'instantaneas',[]);
 fn_def = fieldnames(def);
@@ -166,7 +174,9 @@ mk(2) = plot(ax2,0,Sf.pwm(1),'o','MarkerFaceColor',[0.1 0.4 0.8],'MarkerEdgeColo
 mk(3) = plot(ax3,0,Sf.d(1),'o','MarkerFaceColor','k','MarkerEdgeColor','w');
 
 %% --- 4. Salidas ---
-base_nom = sprintf('animacion_%s', ani.escenario);
+out_dir = fullfile(fileparts(mfilename('fullpath')), 'outputs');
+if ~exist(out_dir, 'dir'), mkdir(out_dir); end
+base_nom = fullfile(out_dir, sprintf('animacion_%s', ani.escenario));
 use_mp4 = any(strcmp(ani.salida,{'mp4','ambos'}));
 use_gif = any(strcmp(ani.salida,{'gif','ambos'}));
 if use_mp4, vw = VideoWriter([base_nom '.mp4'],'MPEG-4'); vw.FrameRate = ani.fps; vw.Quality = 90; open(vw); end
@@ -194,7 +204,7 @@ for k = 1:nF
     set(hMnt,'XData',[xf xf+6 xf+6 xf]);
     set(hFanB,'XData',[xf xf+fan_t xf+fan_t xf]);
     set(hImu,'XData',[xf+9 xf+13 xf+13 xf+9]); set(hImuT,'Position',[xf+11 y_top+0.8]);
-    wheel_ang = (d_ini_cm - d)/wheel_r;                          % las ruedas giran al avanzar (rad)
+    wheel_ang = (d_ini_cm - d)/wheel_r;
     for kw = 1:2
         xw = xf + (4.5 + 7*(kw-1));
         set(hW(kw),'XData',xw + wheel_r*cos(ang_c),'YData',wheel_r + wheel_r*sin(ang_c));
@@ -203,8 +213,8 @@ for k = 1:nF
             set(hSp(kw,ks),'XData',xw + wheel_r*[-cos(a) cos(a)],'YData',wheel_r + wheel_r*[-sin(a) sin(a)]);
         end
     end
-    % ventilador: aspas y flujo (la velocidad visual satura para no hacer aliasing)
-    phi = phi + 38*(vf/100);                                      % deg por cuadro
+    % ventilador: aspas y flujo
+    phi = phi + 38*(vf/100);
     hb = 1.9*abs(cosd(phi));
     set(hBlad,'XData',[xf+fan_t/2 xf+fan_t/2],'YData',[y_fan-hb y_fan+hb]);
     for kb = 1:nB
@@ -212,7 +222,7 @@ for k = 1:nF
         set(hB(kb),'XData',[0 cosd(a0)*1.0 cosd(a0+22)*0.95],'YData',[0 sind(a0)*1.0 sind(a0+22)*0.95]);
     end
     set(hFT,'String',sprintf('PWM %.0f %%   v_{fan} %.0f %%',pwm,vf));
-    % flujo de aire: viaja hacia la compuerta; se detiene donde la golpea
+    % flujo de aire
     ph_air = mod(ph_air + 0.03 + 0.05*(vf/100), 1);
     xo = xf - 0.3; ax_ = []; ay_ = [];
     if vf > 3
@@ -226,7 +236,7 @@ for k = 1:nF
     end
     set(hAir,'XData',ax_,'YData',ay_,'MarkerSize',6 + 8*(vf/100));
     % aceleracion de la IMU (visualizada)
-    set(hAcc,'XData',xf+11,'UData',-max(min(Sf.a(k),4),-4)*3);    % avanzar = hacia la compuerta (izquierda)
+    set(hAcc,'XData',xf+11,'UData',-max(min(Sf.a(k),4),-4)*3);
     % distancias
     set(hDim,'XData',[0 xf]); set(hDimT,'Position',[xf/2 -1.8],'String',sprintf('d = %.1f cm',d));
     set(hDref,'XData',[dref dref]); set(hDest,'XData',dest); set(hDnom,'XData',dnom);
@@ -242,7 +252,7 @@ for k = 1:nF
     if use_mp4 || use_gif || ~isempty(ani.instantaneas)
         fr = getframe(fig);
         if ~exist('fsz','var'), fsz = size(fr.cdata); end
-        if ~isequal(size(fr.cdata), fsz)                          % normaliza el tamano (recorta o rellena en blanco)
+        if ~isequal(size(fr.cdata), fsz)
             cv = uint8(255*ones(fsz)); hh = min(fsz(1),size(fr.cdata,1)); ww = min(fsz(2),size(fr.cdata,2));
             cv(1:hh,1:ww,:) = fr.cdata(1:hh,1:ww,:); fr.cdata = cv;
         end
