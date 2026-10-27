@@ -80,10 +80,10 @@ gov_deg       = 90.0;     % [deg] gobernador de referencia: theta_ref <= theta_m
                          %       (levanta la compuerta suave desde el suelo; 90 = desactivado)
 
 % Supervisor de distancia:
-sup_v_hi = 90;           % [%]    si el PWM demandado supera este umbral, el carro AVANZA
-sup_v_lo = 10;           % [%]    si queda por debajo, el carro vuelve hacia d_ini
+sup_v_hi = 70;           % [%]    si el PWM demandado supera este umbral, el carro AVANZA
+sup_v_lo = 20;           % [%]    si queda por debajo, el carro vuelve hacia d_ini
 sup_adv  = 5;            % [cm/s] velocidad maxima del punto de operacion al acercarse
-sup_ret  = 2;            % [cm/s] velocidad de regreso hacia d_ini
+sup_ret  = 1;            % [cm/s] velocidad de regreso hacia d_ini
 xi_lim   = 2.0;          % [rad*s] limite de la integral del error (autoridad ~ |K15|*xi_lim en % de PWM);
                          %         la integral se congela si el PWM satura empujando en la misma direccion
 xi_band_deg = 5.0;      % [deg]  la integral del error solo acumula con |error| < xi_band_deg (evita sobrepico en la subida)
