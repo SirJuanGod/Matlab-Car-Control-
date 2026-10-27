@@ -1,54 +1,3 @@
-<<<<<<< HEAD:init_parametros.m
-%% init_parametros.m — Parametros del sistema: compuerta, ventilador, carro, controladores.
-
-%% --- 1. Constantes Generales ---
-g       = 9.81;          % [m/s^2]
-rho_air = 1.225;         % [kg/m^3]
-
-%% --- 2. Compuerta Fisica (Planta: Pendulo Invertido) ---
-gate_t      = 0.0015;    % [m]
-gate_W      = 0.15;      % [m]
-gate_L      = 0.20;      % [m]
-gate_A      = gate_W * gate_L; % [m^2]
-m_g         = 0.015;     % [kg]
-l_c         = 0.10;      % [m]
-J_g         = 0.0002;    % [kg*m^2]
-b_c         = 0.0010;    % [N*m*s/rad]
-tau_f       = 0.0001;    % [N*m]
-theta_min   = 0.0;       % [rad]
-theta_max   = pi;        % [rad]
-tau_stop    = 0.005;     % [s]
-
-%% --- 3. Sensor de Angulo (Potenciometro 0 - 3.3 V, ADC 12 bits del ESP32) ---
-V_pot_min   = 0.0;       % [V]
-V_pot_mid   = 1.65;      % [V]
-V_pot_max   = 3.3;       % [V]
-K_pot_deg   = V_pot_max / 180.0;   % [V/deg]
-K_pot_rad   = V_pot_max / pi;      % [V/rad]
-
-adc_bits    = 12;                  % [-]
-adc_counts  = 2^adc_bits - 1;
-adc_Vref    = V_pot_max;           % [V]
-adc_res_deg = 180.0 / adc_counts;  % [deg/LSB]
-
-%% --- 4. Ventilador (Actuador Aerodinamico: Sanyo Denki San Ace 40) ---
-fan_Vnom    = 24.0;      % [V]
-fan_tau     = 0.15;      % [s]
-pwm_min     = 10.0;      % [%]
-pwm_max     = 90.0;      % [%]
-
-% d0 = distancia de REFERENCIA aerodinamica (donde k_m fue definido); no cambia.
-d0          = 0.10;      % [m]
-k_m         = 0.00030;   % [N*m/%] calibrar experimentalmente
-
-%% --- 5. Carro Movil (Plataforma Independiente con IMU) ---
-m_car        = 0.421;    % [kg]
-car_b        = 3.5;      % [N*s/m]
-car_F_max    = 3.0;      % [N]
-d_ini_cm     = 10.0;     % [cm]
-d_min        = 0.05;     % [m]
-d_max        = 0.25;     % [m]
-=======
 % Nota: no se hace 'clear' aqui para preservar variables del llamador
 % (ani, txt_esc, ovr, etc.). Todas las variables de este script se
 % asignan explicitamente, por lo que no quedan valores residuales.
@@ -101,7 +50,6 @@ car_F_max    = 3.0;      % [N] empuje maximo de traccion (2 motorreductores TGP0
 d_ini_cm     = 10.0;     % [cm] distancia inicial de arranque (10 cm)
 d_min        = 0.05;     % [m] distancia minima permitida (5 cm)
 d_max        = 0.25;     % [m] distancia maxima permitida (25 cm)
->>>>>>> refs/remotes/origin/main:code/MATLAB/init_parametros.m
 car_deadband = 0.005;    % [m] banda muerta del lazo de posicion (+/-5 mm)
 
 % PID de posicion del carro (u_car en % de empuje maximo; positivo = avanzar):
@@ -118,35 +66,15 @@ imu_Ts        = 0.01;    % [s]
 obs_qv        = 0.5;     % covarianza de proceso para velocidad
 obs_qb        = 1.0;     % covarianza de proceso para sesgo
 
-<<<<<<< HEAD:init_parametros.m
-%% --- 6. Condiciones Iniciales, Referencia y Parametros del Controlador SIMO ---
-theta_ref_deg = 35.0;    % [deg]
-theta0_deg    = 0.0;     % [deg]
-t_sim         = 8.0;     % [s]
-tau_ref       = 0.15;    % [s]
-ref_rate_deg  = 200.0;    % [deg/s]
-=======
 %% Condiciones Iniciales, Referencia y Parametros del Controlador SIMO
 theta_ref_deg = 35.0;    % [deg] angulo de consigna deseado
 theta0_deg    = 0.0;     % [deg] angulo inicial 
 t_sim         = 10.0;     % [s] tiempo de simulacion
 tau_ref       = 0.15;    % [s] filtro de primer orden de la referencia
 ref_rate_deg  = 200.0;    % [deg/s] velocidad maxima de la referencia
->>>>>>> refs/remotes/origin/main:code/MATLAB/init_parametros.m
 usar_imu      = 1;       % 1: el controlador usa d estimada (IMU+Kalman); 0: d real (ideal)
 fan_fac       = 1.0;     % [-] 1 = sin degradacion; 0.4 = pierde 60 %. Solo afecta a la planta
 fan_t0        = 3.0;     % [s] inicio de la degradacion del ventilador
-<<<<<<< HEAD:init_parametros.m
-fan_dur       = 10.0;    % [s] duracion de la rampa de degradacion
-gov_deg       = 180.0;     % [deg] gobernador: theta_ref <= theta_medida + gov_deg (180 = desactivado)
-
-% Supervisor de distancia (acerca el carro cuando el ventilador no alcanza):
-sup_v_hi = 70;           % [%]
-sup_v_lo = 20;           % [%]
-sup_adv  = 5;            % [cm/s]
-sup_ret  = 1;            % [cm/s]
-xi_lim   = 2.0;          % [rad*s] la integral se congela si el PWM satura empujando en la misma direccion
-=======
 fan_dur       = 12.0;    % [s] duracion de la rampa de degradacion
 gov_deg       = 90.0;     % [deg] gobernador de referencia: theta_ref <= theta_medida + gov_deg
                          %       (levanta la compuerta suave desde el suelo; 90 = desactivado)
@@ -158,7 +86,6 @@ sup_adv  = 5;            % [cm/s] velocidad maxima del punto de operacion al ace
 sup_ret  = 2;            % [cm/s] velocidad de regreso hacia d_ini
 xi_lim   = 2.0;          % [rad*s] limite de la integral del error (autoridad ~ |K15|*xi_lim en % de PWM);
                          %         la integral se congela si el PWM satura empujando en la misma direccion
->>>>>>> refs/remotes/origin/main:code/MATLAB/init_parametros.m
 xi_band_deg = 5.0;      % [deg]  la integral del error solo acumula con |error| < xi_band_deg (evita sobrepico en la subida)
 
 % LQR+I SIMO: x = [d_theta; omega; d_v_fan; d_d(cm); x_i], u = [d_u_PWM; d_d_ref(cm)]
@@ -173,15 +100,9 @@ r_d       = 1.0;        % peso de d_d_ref   [1/cm^2] (r_d alto => carro casi ina
 tau_w     = 0.04;        % [s] filtro de la derivada que estima omega a partir del ADC
 
 % Perturbacion externa de torque sobre la compuerta (pulso rectangular):
-<<<<<<< HEAD:init_parametros.m
-pert_tau_mNm = 0.0;      % [mN*m] amplitud (0 = sin perturbacion)
-pert_t_on    = 4.0;      % [s]
-pert_dur     = 1.0;      % [s]
-=======
 pert_tau_mNm = 0.5;      % [mN*m] amplitud (0 = sin perturbacion)
 pert_t_on    = 4.0;      % [s] instante de inicio
 pert_dur     = 2.0;      % [s] duracion
->>>>>>> refs/remotes/origin/main:code/MATLAB/init_parametros.m
 
 %% Geometria visual del montaje (para animacion cinematica)
 % Estas constantes describen las dimensiones fisicas reales del montaje [cm]
@@ -238,9 +159,11 @@ B_p = [0; b2];
 C_p = [1, 0];
 D_p = 0;
 
-%% LQR+I SIMO: tablas de ganancias programadas (para el .slx) ---
+%% Diseno Analitico del PID por Lugar Geometrico de las Raices (LGR)
+zeta_des = 0.85;
+wn_des   = 3.2;
+p_int    = 1.0;
 
-<<<<<<< HEAD:init_parametros.m
 % El diseno INCLUYE el polo del ventilador (tau_fan): lazo de 4.o orden
 p4_des = (-a22*fan_tau + 1)/fan_tau - 2*zeta_des*wn_des - p_int;
 P_des  = fan_tau * conv(conv([1, 2*zeta_des*wn_des, wn_des^2], [1, p_int]), [1, p4_des]);  % [s^4 ... s^0]
@@ -290,8 +213,6 @@ G_hinf = tf(num_hinf, den_hinf);
 
 %% --- 12. LQR+I SIMO: tablas de ganancias programadas (para el .slx) ---
 % fila (j-1)*nGs+i <-> (theta_i, d_j); reshape(K(2x5),1,10)
-=======
->>>>>>> refs/remotes/origin/main:code/MATLAB/init_parametros.m
 thg_simo = 10:5:80;                         % [deg] rejilla de scheduling en theta
 dg_simo  = linspace(d_min, d_max, 9)*100;   % [cm]  rejilla de scheduling en d (5:2.5:25 cm)
 nGs      = numel(thg_simo);   nDs = numel(dg_simo);

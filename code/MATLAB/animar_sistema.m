@@ -1,10 +1,3 @@
-<<<<<<< HEAD:animar_sistema.m
-%% animar_sistema.m — Animacion cinematica del sistema (vista lateral).
-% Uso: >> animar_sistema                   (escenario por defecto: 'carro_lejos')
-%      >> ani.escenario = 'nominal'; animar_sistema
-%      >> ani.salida = 'ninguna'; animar_sistema   (solo pantalla)
-% Escenarios: 'carro_lejos' | 'nominal' | 'ventilador_debil' | 'perturbacion'
-=======
 %% animar_sistema.m
 % =========================================================================
 % CINEMATICA ANIMADA DEL SISTEMA (vista lateral)
@@ -35,7 +28,6 @@
 % d = distancia entre la cara frontal del carro (salida del ventilador) y la posicion
 % de reposo de la compuerta (x = 0).
 % =========================================================================
->>>>>>> refs/remotes/origin/main:code/MATLAB/animar_sistema.m
 if ~exist('ani','var') || ~isstruct(ani), ani = struct(); end
 def = struct('escenario','carro_lejos','salida','ambos','fps',24,'velocidad',1,'instantaneas',[]);
 fn_def = fieldnames(def);
