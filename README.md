@@ -12,7 +12,8 @@
 5. [Estrategia de control LQR](#5-estrategia-de-control-lqr)
 6. [Diagramas de bloques (Mermaid)](#6-diagramas-de-bloques-mermaid)
 7. [Verificación y reproducibilidad](#7-verificación-y-reproducibilidad)
-8. [Limitaciones y trabajo futuro](#8-limitaciones-y-trabajo-futuro)
+8. [Puesta en marcha de los ESP32](#8-puesta-en-marcha-de-los-esp32)
+9. [Limitaciones y trabajo futuro](#9-limitaciones-y-trabajo-futuro)
 
 ---
 
@@ -752,7 +753,195 @@ ani.escenario = 'carro_lejos'; animar_sistema   % animación del sistema
 
 ---
 
-## 8. Limitaciones y trabajo futuro
+## 8. Puesta en marcha de los ESP32
+
+Hay dos placas ESP32 (ESP32-WROOM DevKit), cada una con su propio firmware en `code/C`:
+
+| Placa | Proyecto | Qué hace |
+|---|---|---|
+| **Estación base** | `code/C/esp32_base_potenciometro` | Lee el potenciómetro (ángulo), habla con MATLAB por USB y con el carro por ESP-NOW |
+| **Carro** | `code/C/esp32_carro_control` | Lee la IMU, estima la distancia, ejecuta los controladores y mueve ventilador y motores |
+
+Cada bloque de comandos de esta sección tiene un botón de copiar en GitHub (esquina superior derecha del bloque). Los comandos son para **PowerShell en Windows**.
+
+### 8.1 Qué se necesita
+
+* 2 placas ESP32 DevKit y 2 cables USB **de datos** (algunos cables solo cargan).
+* Windows con **ESP-IDF v6.1** (versión con la que se compiló y probó este firmware).
+* MATLAB con la función `serialport` (incluida desde R2019b) para la interfaz `gui_esp32`.
+
+### 8.2 Conexiones
+
+**Estación base:**
+
+| Elemento | Pin del ESP32 | Nota |
+|---|---|---|
+| Potenciómetro (cursor) | `GPIO34` (ADC1_CH6) | Conexión directa, sin divisor |
+| Potenciómetro (extremos) | `3V3` y `GND` | Alimentación de 3.3 V del ESP32 |
+| USB | — | Alimenta la placa y es el enlace con MATLAB (UART0, 115200 baudios) |
+
+**Carro:**
+
+| Elemento | Pin del ESP32 | Nota |
+|---|---|---|
+| MPU6050 SDA | `GPIO21` | I2C a 400 kHz |
+| MPU6050 SCL | `GPIO22` | |
+| Ventilador PWM (ENA del L298N de 24 V) | `GPIO18` | PWM 5 kHz, 10 bits |
+| Ventilador dirección (IN1) | `GPIO19` | IN2 a `GND` |
+| Motor izquierdo PWM (ENA) | `GPIO25` | L298N de los motores (7.4 V) |
+| Motor izquierdo IN1 / IN2 | `GPIO27` / `GPIO14` | |
+| Motor derecho PWM (ENB) | `GPIO26` | |
+| Motor derecho IN3 / IN4 | `GPIO32` / `GPIO33` | |
+
+Une las tierras (`GND`) del ESP32 y de los dos L298N.
+
+### 8.3 Configuración del ESP32
+
+No hay que tocar nada: la configuración ya está en el `sdkconfig.defaults` de cada proyecto y se aplica sola al compilar.
+
+| Parámetro | Valor | Por qué |
+|---|---|---|
+| Chip | `esp32` | Ya fijado en el `sdkconfig`; **no hace falta** `idf.py set-target` |
+| CPU | 240 MHz | Máxima velocidad para el lazo de control |
+| Tick de FreeRTOS | 1000 Hz | Permite periodos exactos de 10 ms (control) y 20 ms (telemetría) |
+| Wi-Fi | Búferes reducidos, sin AMPDU | Menos memoria y menos latencia para ESP-NOW |
+| ESP-NOW | Canal 1, broadcast | Base y carro se encuentran sin configurar direcciones MAC |
+| UART0 de la base | 115200 baudios | El mismo puerto USB sirve para cargar el programa y para MATLAB |
+
+Para ver o cambiar la configuración con menús (opcional):
+
+```powershell
+idf.py menuconfig
+```
+
+### 8.4 Instalar ESP-IDF (una sola vez)
+
+Instala el gestor de instalaciones de Espressif (EIM):
+
+```powershell
+winget install Espressif.EIM-CLI
+```
+
+Cierra y vuelve a abrir PowerShell. Después instala ESP-IDF v6.1 y los drivers USB de las placas:
+
+```powershell
+eim install -i v6.1
+```
+
+```powershell
+eim install-drivers
+```
+
+Comprueba que quedó instalado:
+
+```powershell
+eim list
+```
+
+### 8.5 Activar ESP-IDF (cada vez que abras PowerShell)
+
+```powershell
+. C:\Espressif\tools\Microsoft.v6.1.PowerShell_profile.ps1
+```
+
+Ese es el script de la instalación por defecto; si instalaste en otra carpeta, `eim list` muestra la ruta. Comprueba que funciona:
+
+```powershell
+idf.py --version
+```
+
+Debe responder `ESP-IDF v6.1`.
+
+### 8.6 Encontrar el puerto COM de cada placa
+
+Conecta **una sola placa** y lista los puertos:
+
+```powershell
+[System.IO.Ports.SerialPort]::GetPortNames()
+```
+
+Anota el puerto (por ejemplo `COM5`), desconéctala y repite con la otra placa. En los comandos siguientes cambia `COM5` y `COM6` por los tuyos.
+
+### 8.7 Compilar y cargar el carro
+
+Desde la carpeta raíz del repositorio:
+
+```powershell
+cd code\C\esp32_carro_control
+```
+
+```powershell
+idf.py build
+```
+
+```powershell
+idf.py -p COM5 flash monitor
+```
+
+* La primera compilación tarda varios minutos; las siguientes, segundos.
+* `monitor` muestra los mensajes de la placa. Deja el carro **quieto** al encenderlo: los primeros segundos calibra el sesgo de la IMU.
+* Para salir del monitor: `Ctrl + ]`.
+
+### 8.8 Compilar y cargar la estación base
+
+Desde la carpeta raíz del repositorio:
+
+```powershell
+cd code\C\esp32_base_potenciometro
+```
+
+```powershell
+idf.py build
+```
+
+```powershell
+idf.py -p COM6 flash monitor
+```
+
+Sal del monitor con `Ctrl + ]` antes de abrir MATLAB: el puerto COM no se puede compartir.
+
+### 8.9 Usar el sistema desde MATLAB
+
+1. Enciende el carro y no lo muevas durante la calibración de la IMU.
+2. Conecta la estación base al PC por USB.
+3. En MATLAB, abre la interfaz:
+
+   ```matlab
+   cd code/MATLAB
+   gui_esp32
+   ```
+
+4. Elige el puerto de la base y pulsa **Conectar**.
+5. Comprueba que el panel diga **Carro: enlazado** y que lleguen tramas.
+6. Activa **Ventilador** y **Motores del carro**. El botón **PARADA** los apaga de inmediato.
+7. Al cerrar la ventana los actuadores se apagan y los datos quedan en la variable `datos_esp32`.
+
+Para probar la interfaz sin hardware:
+
+```matlab
+runtests('test_gui_esp32')
+```
+
+### 8.10 Problemas comunes
+
+| Síntoma | Solución |
+|---|---|
+| `Failed to connect to ESP32` o `Wrong boot mode` al cargar | Mantén pulsado el botón **BOOT** de la placa hasta que empiece a escribir |
+| No aparece ningún puerto COM | Cable de solo carga, o faltan drivers: `eim install-drivers` |
+| `Could not open COM5, the port is busy or doesn't exist` | Puerto equivocado (§8.6), o está abierto en el `monitor` (`Ctrl + ]`) o en MATLAB (desconecta) |
+| `idf.py` no se reconoce | No activaste ESP-IDF en esa ventana (§8.5) |
+| La GUI dice **Carro: sin enlace ESP-NOW** | El carro está apagado, sin firmware o lejos; revisa su `monitor` |
+| Comportamiento raro tras cambiar de firmware | Borra la memoria y vuelve a cargar (abajo) |
+
+Borrar toda la memoria flash de una placa:
+
+```powershell
+idf.py -p COM5 erase-flash
+```
+
+---
+
+## 9. Limitaciones y trabajo futuro
 
 1. **$k_m$ es un supuesto.** El torque aerodinámico real es cuadrático en la velocidad del chorro; el modelo lo aproxima como lineal en $v_{fan}$. Falta calibrar $k_m$ (y su dependencia con el PWM) con el ventilador real.
 2. **Ventilador mucho más débil que el supuesto:** con una caída del 70 % el supervisor acerca el carro a 8 cm y el ángulo se recupera 1 s después de terminar la caída; no se probaron caídas mayores, en las que el carro llegaría al tope de 5 cm. Mientras el error supera $5^\circ$ la integral no actúa, así que la recuperación depende del supervisor. Un estimador en línea de $k_m$ lo haría más robusto.
