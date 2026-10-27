@@ -106,6 +106,8 @@ flowchart LR
   * `en_motors`: `1` para habilitar motores, `0` para detenerlos.
   * `en_fan`: `1` para habilitar ventilador, `0` para apagarlo.
 
+* **Interfaz MATLAB:** `>> gui_esp32` (en `code/MATLAB`) abre el puerto, envía `$CMD` (motores y ventilador arrancan apagados), grafica θ, el PWM enviado (con mín/máx y aviso de saturación), la distancia de la IMU y el esfuerzo del carro, y al cerrar apaga los actuadores y deja los datos en `datos_esp32`. Pruebas sin hardware: `runtests('test_gui_esp32')`.
+
 ---
 
 ## 3. Instrucciones de Compilación y Flasheo con ESP-IDF
