@@ -68,7 +68,7 @@ La ecuación de Lagrange $\dfrac{d}{dt}\dfrac{\partial T}{\partial\dot\theta} - 
 $$\boxed{\,J\ddot\theta + m_g g \ell_c \sin\theta = \tau_{aero} - b_c\dot\theta - \tau_f\,\mathrm{sgn}(\dot\theta) + \tau_{ext}\,}$$
 
 * El término $m_g g \ell_c \sin\theta$ es **restaurador**: la gravedad devuelve la compuerta a $\theta = 0$. Por eso la planta es **estable** (en una versión anterior se había modelado con $\cos\theta$ y daba una planta inestable; la convención colgante lo corrigió).
-* En simulación $\mathrm{sgn}(\dot\theta)$ se suaviza como $\tanh(50\,\dot\theta)$, y hay topes inelásticos en $0^\circ$ y $180^\circ$: $\ddot\theta_{ef} = \max(\ddot\theta,\,-\dot\theta/\tau_{stop})$ en el tope inferior.
+* En simulación $\mathrm{sgn}(\dot\theta)$ se suaviza como $\tanh(50\,\dot\theta)$, y hay topes inelásticos en $0^\circ$ y $90^\circ$ (`theta_max` $= \pi/2$): $\ddot\theta_{ef} = \max(\ddot\theta,\,-\dot\theta/\tau_{stop})$ en el tope inferior.
 
 ### 2.2 Torque aerodinámico
 
@@ -165,7 +165,7 @@ $$A = \begin{bmatrix}0&1&0&0&0\\ -60.27&-5&1.5&-8.44&0\\ 0&0&-6.667&0&0\\ 0&0&0&
 | Ventilador | $u_{PWM}\to v_{fan}$ | $\dfrac{1}{\tau_{fan}s+1}$ | $\dfrac{6.667}{s+6.667}$ |
 | Carro (mecánica) | $F\to\dot x$ | $\dfrac{1}{m s + b}$ | $\dfrac{1}{0.421 s + 3.5}$, $\tau = m/b = 0.12\text{ s}$ |
 | Carro (posición) | $F\to x$ | $\dfrac{1}{s\,(m s + b)}$ | $\dfrac{1}{s\,(0.421 s + 3.5)}$ |
-| Carro con PID | $d_{ref}\to d$ | $\dfrac{k_d s^2 + k_p s + k_i}{m s^3 + (b+k_d)s^2 + k_p s + k_i}$, con $k_\ast = K_\ast F_{max}/100$ | polos $-7.44,\ -1.15,\ -0.083$ (el lento lo cancela el cero del PID); equivale a $\approx \dfrac{1}{0.8s+1}$ |
+| Carro con PID | $d_{ref}\to d$ | $\dfrac{k_p s + k_i}{m s^3 + (b+k_d)s^2 + k_p s + k_i}$, con $k_\ast = K_\ast F_{max}/100$ (la derivada actúa sobre $\hat v$, no sobre el error, así que $k_d$ no aparece en el numerador) | polos $-7.44,\ -1.15,\ -0.083$ (el lento casi lo cancela el cero en $-k_i/k_p = -0.077$); equivale a $\approx \dfrac{1}{0.8s+1}$ |
 | Sensor de ángulo | $\theta\to\theta_{meas}$ | $K_{pot}$ + cuantización | $0.01833\text{ V/}^\circ$; $0.044^\circ$/LSB |
 | Estimador de $\omega$ | $\theta_{meas}\to\hat\omega$ | $\dfrac{s}{\tau_w s + 1}$ | $\dfrac{s}{0.04 s + 1}$ |
 | Prefiltro de referencia | $\theta_{cmd}\to\theta_{ref}$ | $\dfrac{1}{\tau_{ref}s+1}$ | $\dfrac{1}{0.15 s + 1}$ (con límite de rampa de $200^\circ$/s) |
@@ -222,9 +222,11 @@ La fila 3 es clave: el LQR de 3 estados parece perfecto ($PM = 85.5^\circ$) mien
 
 | Controlador | $t_s$ ($\pm1^\circ$) | Sobrepico | Caída al retroceder el carro | Ángulo final |
 |---|---|---|---|---|
-| PID rápido | 0.84 s | $0.44^\circ$ | $12.9^\circ$ | $35.07^\circ$ |
-| LQR+I (3 estados) | 1.51 s | $0.23^\circ$ | $1.1^\circ$ | $34.96^\circ$ |
-| Loop shaping | 2.12 s | $1.17^\circ$ | $15.3^\circ$ | $34.85^\circ$ |
+| PID rápido | 0.84 s | $0.44^\circ$ | $12.9^\circ$ | $34.97^\circ$ |
+| LQR+I (3 estados) | 1.51 s | $0.23^\circ$ | $1.1^\circ$ | $34.99^\circ$ |
+| Loop shaping | 2.12 s | $1.17^\circ$ | $15.3^\circ$ | $35.05^\circ$ |
+
+Ángulo final medido en $t = 10\text{ s}$ (`t_sim`).
 
 **(c) LQR SIMO de 5 estados con supervisor, en el modelo `modelo_miso_compuerta.slx`** (no lineal, con ADC, IMU, Kalman, banda muerta del carro y saturaciones):
 
@@ -232,11 +234,11 @@ La fila 3 es clave: el LQR de 3 estados parece perfecto ($PM = 85.5^\circ$) mien
 |---|---|
 | $0^\circ\to35^\circ$, carro a 10 cm | Subida 0.41 s, sobrepico $0.9^\circ$, $t_s = 0.59\text{ s}$ ($\pm1^\circ$), error final $0.01^\circ$, PWM máximo 65 % |
 | Carro arranca a 18 cm (el ventilador solo no alcanza) | Llega a $35^\circ$ (error $0.00^\circ$); el carro se acerca a 14.6 cm; PWM llega a 90 % |
-| Consigna de $8^\circ$ (por debajo de lo que alcanza el 10 % mínimo) | Llega a $8^\circ$ (error $0.02^\circ$); el carro se aleja a 13.9 cm; PWM 10–15 % |
-| Pulso de torque $-5\text{ mN·m}$, 3 s | Error final $0.01^\circ$; desviación máxima $1.7^\circ$ |
-| Pulso de torque $+5\text{ mN·m}$, 3 s | Error final $0.01^\circ$; desviación máxima $12.7^\circ$ |
-| Ventilador pierde 50 % de fuerza | Error final $0.02^\circ$ |
-| Ventilador pierde 70 % de fuerza | Se recupera en unos 27 s (el supervisor acerca el carro a 8.5 cm) |
+| Consigna de $8^\circ$ (por debajo de lo que alcanza el 10 % mínimo) | Llega a $8^\circ$ (error $0.00^\circ$); el carro se aleja a 13.9 cm; PWM 10–15 % |
+| Pulso de torque $-5\text{ mN·m}$, 3 s | Error final $0.02^\circ$; la compuerta cae hasta $7.6^\circ$ durante el pulso y sube $7.1^\circ$ al soltarlo (PWM máx. 81 %) |
+| Pulso de torque $+5\text{ mN·m}$, 3 s | Error final $0.04^\circ$; desviación máxima $12.6^\circ$ |
+| Ventilador pierde 50 % de fuerza (rampa de 3 a 15 s) | Error final $0.03^\circ$; desviación máxima $1.8^\circ$ |
+| Ventilador pierde 70 % de fuerza (rampa de 3 a 15 s) | Se recupera en $t = 16\text{ s}$, 1 s después de terminar la caída; el supervisor acerca el carro a 8.0 cm |
 
 ### 4.4 Por qué el LQR resultó la mejor opción
 
@@ -327,8 +329,10 @@ $$K = \begin{bmatrix} 561.05 & 73.08 & 4.76 & -30.73 & 697.42\\ -11.97 & -1.61 &
 $$\begin{aligned}
 p_{raw} &= v_{eq}(\theta_{ref},\,d_{nom}) \;-\; K_1(\theta_{ref},\,d_{nom})\,x\\
 u_{PWM} &= \mathrm{sat}_{[10,\,90]}\big(p_{raw}\big)\\
-d_{ref} &= \mathrm{sat}_{[5,\,25]}\!\Big(d_{nom} \;-\; \tfrac{1}{100}\,K_2(\theta_{ref},\,d_{nom})\,x\Big)
+d_{ref} &= \mathrm{sat}_{[0.05,\,0.25]\,\text{m}}\!\Big(d_{nom} \;-\; \tfrac{1}{100}\,K_2(\theta_{ref},\,d_{nom})\,x\Big)
 \end{aligned}$$
+
+Aquí $d_{nom}$ y $d_{ref}$ están en metros y $K_2 x$ en cm (de ahí el factor $1/100$).
 
 El término $v_{eq}$ es la acción *feedforward* de equilibrio (§3.1) y $-Kx$ la corrección. $p_{raw}$ (el PWM pedido **antes** de saturar) alimenta tanto al anti-windup como al supervisor.
 
@@ -373,7 +377,7 @@ stateDiagram-v2
 
 ### 5.9 Prefiltro de referencia
 
-La consigna pasa por un filtro de primer orden con $\tau_{ref} = 0.15\text{ s}$ y límite de rampa de $200^\circ$/s antes de entrar al LQR: suaviza el escalón para que no sature el PWM ni excite la oscilación de la compuerta. Existe además un gobernador de referencia ($\theta_{ref} \le \theta_{meas} + \texttt{gov\_deg}$) que con la planta estable se dejó **desactivado** ($180^\circ$).
+La consigna pasa por un filtro de primer orden con $\tau_{ref} = 0.15\text{ s}$ y límite de rampa de $200^\circ$/s antes de entrar al LQR: suaviza el escalón para que no sature el PWM ni excite la oscilación de la compuerta. Existe además un gobernador de referencia ($\theta_{ref} \le \theta_{meas} + \texttt{gov\_deg}$) que con la planta estable se dejó **desactivado** (`gov_deg` $= 90^\circ$: con $\theta \in [0^\circ, 90^\circ]$ nunca limita).
 
 ### 5.10 Resumen de parámetros de diseño
 
@@ -453,7 +457,7 @@ flowchart TB
     LAW --> DREF["d_ref = d_nom + u2/100"]
     DNOM --> DREF
     DREF --> SATD["Saturación 5–25 cm"]
-    AW -. "p_raw (anti-windup)" .- SUMP
+    SUMP -. "p_raw (anti-windup)" .-> AW
 ```
 
 ### 6.3 Planta linealizada con funciones de transferencia ($35^\circ$, 10 cm)
@@ -485,6 +489,7 @@ flowchart LR
 | `sintonizar_loop_shaping.m` | Sintonía reproducible del PID y del compensador robusto |
 | `diseno_polos_ceros.m` | Polos, ceros y márgenes de los tres controladores de solo ventilador |
 | `gui_simulacion.m` | Interfaz gráfica para cambiar parámetros y simular el modelo |
+| `gui_esp32.m` | Interfaz en tiempo real con el hardware (Estación Base ESP32 por UART) |
 | `animar_sistema.m` | Cinemática animada del sistema (mp4, gif y PNG) |
 
 ```matlab
@@ -501,7 +506,7 @@ ani.escenario = 'carro_lejos'; animar_sistema   % animación del sistema
 ## 8. Limitaciones y trabajo futuro
 
 1. **$k_m$ es un supuesto.** El torque aerodinámico real es cuadrático en la velocidad del chorro; el modelo lo aproxima como lineal en $v_{fan}$. Falta calibrar $k_m$ (y su dependencia con el PWM) con el ventilador real.
-2. **Ventilador mucho más débil que el supuesto** ($\le 40\,\%$): la recuperación tarda decenas de segundos, porque la integral no actúa con errores mayores de $5^\circ$ y el supervisor solo avanza cuando el PWM pedido pasa del 70 %. Un estimador en línea de $k_m$ lo resolvería.
+2. **Ventilador mucho más débil que el supuesto:** con una caída del 70 % el supervisor acerca el carro a 8 cm y el ángulo se recupera 1 s después de terminar la caída; no se probaron caídas mayores, en las que el carro llegaría al tope de 5 cm. Mientras el error supera $5^\circ$ la integral no actúa, así que la recuperación depende del supervisor. Un estimador en línea de $k_m$ lo haría más robusto.
 3. **Error de $\hat d$.** La IMU sin medición de posición deja un offset constante en $\hat d$ del orden de 1–2 mm.
 4. **Lazo del carro.** El diseño usa $\tau_{car} = 0.8\text{ s}$; el lazo real tiene $\tau_{63\%} \approx 0.94\text{ s}$ y la banda muerta de $\pm5\text{ mm}$ no está en el modelo lineal.
 5. **Aire a lo largo del ángulo.** El modelo no incluye la variación del torque con $\theta$ (área expuesta e incidencia del chorro).

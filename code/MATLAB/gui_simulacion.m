@@ -149,8 +149,10 @@ nCurvas = 0;
 
     function resumen = resumir(out,ov)
         th = rad2deg(out.theta_out.Data);
-        resumen = sprintf('theta final = %.2f deg (ref %.1f) | min/max = %.1f/%.1f deg | d final = %.2f cm | PWM %.0f/%.0f %%', ...
-            th(end),ov.theta_ref_deg,min(th),max(th),out.d_out.Data(end)*100,min(out.pwm_out.Data),max(out.pwm_out.Data));
+        t = out.theta_out.Time;
+        ess = ov.theta_ref_deg - mean(th(t >= t(end) - 1)); % promedio del ultimo segundo
+        resumen = sprintf('theta final = %.2f deg (ref %.1f) | error estacionario = %.3f deg | min/max = %.1f/%.1f deg | d final = %.2f cm | PWM %.0f/%.0f %%', ...
+            th(end),ov.theta_ref_deg,ess,min(th),max(th),out.d_out.Data(end)*100,min(out.pwm_out.Data),max(out.pwm_out.Data));
     end
 
     function marcarRef(ov)

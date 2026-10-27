@@ -9,11 +9,13 @@ p = cargar_parametros(fileparts(mfilename('fullpath')));
 
 T_VENTANA = 30;    % [s] historial visible en las graficas
 T_SIN_DATOS = 0.5; % [s] sin tramas -> base desconectada
+T_ASIENTO = 2.0;   % [s] espera tras cambiar la consigna antes de medir el error estacionario
+T_PROMEDIO = 1.0;  % [s] ventana del promedio del error estacionario
 
 sp = [];
 M = nan(3000, 9);  % [t theta d v ax u_fan u_car e_d status]
 n = 0;
-t0 = tic; t_ultima = -inf;
+t0 = tic; t_ultima = -inf; t_consigna = 0;
 
 fig = uifigure('Name','ESP32: compuerta + ventilador + carro (hardware)','Position',[60 60 1250 720], ...
     'CloseRequestFcn', @(~,~) cerrar());
@@ -34,12 +36,12 @@ btnCon = uibutton(pg,'Text','Conectar','FontWeight','bold','ButtonPushedFcn',@(~
 btnCon.Layout.Column = [1 2];
 
 uilabel(pg,'Text','Angulo ref. [deg]');
-efTh = uieditfield(pg,'numeric','Value',p.theta_ref_deg,'Limits',[0 90],'ValueChangedFcn',@(~,~) enviarCmd());
+efTh = uieditfield(pg,'numeric','Value',p.theta_ref_deg,'Limits',[0 90],'ValueChangedFcn',@(~,~) onConsigna());
 uilabel(pg,'Text','Distancia ref. [cm]');
-efD = uieditfield(pg,'numeric','Value',p.d_ini_cm,'Limits',[p.d_min p.d_max]*100,'ValueChangedFcn',@(~,~) enviarCmd());
-chkMot = uicheckbox(pg,'Text','Motores del carro','Value',false,'ValueChangedFcn',@(~,~) enviarCmd());
+efD = uieditfield(pg,'numeric','Value',p.d_ini_cm,'Limits',[p.d_min p.d_max]*100,'ValueChangedFcn',@(~,~) onConsigna());
+chkMot = uicheckbox(pg,'Text','Motores del carro','Value',false,'ValueChangedFcn',@(~,~) onConsigna());
 chkMot.Layout.Column = [1 2];
-chkFan = uicheckbox(pg,'Text','Ventilador','Value',false,'ValueChangedFcn',@(~,~) enviarCmd());
+chkFan = uicheckbox(pg,'Text','Ventilador','Value',false,'ValueChangedFcn',@(~,~) onConsigna());
 chkFan.Layout.Column = [1 2];
 btnStop = uibutton(pg,'Text','PARADA','FontWeight','bold','FontColor','w','BackgroundColor',[0.8 0.1 0.1], ...
     'ButtonPushedFcn',@(~,~) onParada());
@@ -57,6 +59,9 @@ lblD = uilabel(pg,'Text','d (IMU) = -- cm | v = -- m/s');
 lblD.Layout.Column = [1 2];
 lblCar = uilabel(pg,'Text','Carro: --','WordWrap','on');
 lblCar.Layout.Column = [1 2];
+lblEE = uilabel(pg,'Text','Error estacionario: --','FontWeight','bold','WordWrap','on');
+lblEE.Layout.Column = [1 2];
+pg.RowHeight{15} = 40; % el texto ocupa dos lineas
 
 % ---- Graficas ----
 ag = uigridlayout(gl,[2 2]);
@@ -113,6 +118,11 @@ fig.UserData.lineaCmd = @lineaCmd;
 
     function onParada()
         chkMot.Value = false; chkFan.Value = false;
+        onConsigna();
+    end
+
+    function onConsigna()
+        t_consigna = toc(t0); % el error estacionario se vuelve a medir desde aqui
         enviarCmd();
     end
 
@@ -163,6 +173,14 @@ fig.UserData.lineaCmd = @lineaCmd;
             lblCar.Text = 'Carro: sin enlace ESP-NOW.'; lblCar.FontColor = [0.8 0.1 0.1];
         else
             lblCar.Text = sprintf('Carro: enlazado (modo %d).', v(8)); lblCar.FontColor = [0 0.5 0];
+        end
+        % Error estacionario: promedio de la ultima ventana, solo cuando la consigna lleva T_ASIENTO quieta
+        if t - t_consigna >= T_ASIENTO
+            w = M(1:n,1) >= t - T_PROMEDIO;
+            lblEE.Text = sprintf('Error estacionario (prom. %.0f s): theta %.3f deg | d %.2f cm', ...
+                T_PROMEDIO, efTh.Value - mean(M(w,2)), mean(M(w,8)));
+        else
+            lblEE.Text = sprintf('Error estacionario: esperando %.1f s a que se asiente.', T_ASIENTO - (t - t_consigna));
         end
         lblCon.Text = sprintf('Recibiendo: %d tramas.', n); lblCon.FontColor = [0 0 0];
         drawnow limitrate;

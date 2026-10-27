@@ -44,6 +44,16 @@ function testComandoArrancaSeguroYCumpleProtocolo(tc)
 tc.verifyEqual(tc.TestData.fig.UserData.lineaCmd(), "$CMD,35.00,10.00,0.00,0,0,0");
 end
 
+function testErrorEstacionarioEsperaYPromedia(tc)
+tc.TestData.procesar("$TEL,30.00,10.00,0.000,0.000,30.00,0.00,0.40,0");
+tc.verifySubstring(etiqueta(tc, 'Error estacionario'), 'esperando');
+pause(2.2); % la consigna (35 deg) lleva quieta mas de T_ASIENTO
+tc.TestData.procesar("$TEL,34.40,10.20,0.000,0.000,30.00,0.00,0.20,0");
+tc.TestData.procesar("$TEL,34.60,10.20,0.000,0.000,30.00,0.00,0.20,0");
+% Promedio de la ultima ventana de 1 s: theta 34.5 -> 0.5 deg; e_d 0.20 cm
+tc.verifySubstring(etiqueta(tc, 'Error estacionario'), 'theta 0.500 deg | d 0.20 cm');
+end
+
 function testCerrarGuardaDatos(tc)
 tc.TestData.procesar("$TEL,34.50,10.20,0.010,0.050,40.00,-3.00,0.20,0");
 tc.TestData.procesar("$TEL,34.60,10.10,0.010,0.050,41.00,-2.00,0.10,0");

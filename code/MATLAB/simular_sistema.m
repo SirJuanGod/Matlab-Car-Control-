@@ -56,7 +56,7 @@ for k = 1:Nt
 end
 
 %% --- 3. Preparacion de los Controladores Analiticos ---
-modos = {'PID (Diseno por LGR)', 'LQR+I (Ecuacion de Riccati)', 'Control Robusto H_\infty (Loop Shaping)'};
+modos = {'PID rapido (ITAE)', 'LQR+I (Ecuacion de Riccati)', 'Control Robusto H_\infty (Loop Shaping)'};
 colores = {'#D9531F', '#0072BD', '#2CA02C'}; % Naranja, Azul, Verde
 
 kp_p = pid_Kp;
