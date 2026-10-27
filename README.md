@@ -348,7 +348,7 @@ Se aplicó la **regla de Bryson**: $Q_{ii} = 1/(x_{i,max})^2$ y $R_{jj} = 1/(u_{
 |---|---|---|---|---|
 | 1 | Pesos iniciales ($Q=\mathrm{diag}(60,3,0,0.5,120)$, $R=\mathrm{diag}(0.05,0.05)$, $\tau_{ref}=0.45\text{ s}$) | 0.78 s | $3.2^\circ$ | 3.40 s |
 | 2 | Subir $q_\theta,\ q_\omega,\ q_{xi}$ sin proteger la integral | 0.25–0.31 s | $4.9$–$6.4^\circ$ | 1.6–2.2 s |
-| 3 | Integrar solo con $\lvert e\rvert < 5^\circ$ y con el PWM sin saturar; pesos de la tabla | 0.41–0.50 s | $0.8$–$1.2^\circ$ | 0.68–1.8 s |
+| 3 | Integrar solo con $\lvert e\rvert \lt  5^\circ$ y con el PWM sin saturar; pesos de la tabla | 0.41–0.50 s | $0.8$–$1.2^\circ$ | 0.68–1.8 s |
 | 4 | $\tau_w$ de 0.02 a 0.04 s y $q_\omega$ de 100 a 60 (baja el rizado del PWM de 7.9 % a 3.7 % pico a pico) | **0.41 s** | **$0.9^\circ$** | **0.59 s** |
 
 La lección del paso 2: con pesos altos y una subida rápida, la integral acumula durante el transitorio y causa sobrepico; la solución no fue bajar los pesos sino **condicionar la integración** (§5.7).
@@ -364,7 +364,7 @@ K = \begin{bmatrix} 561.05 & 73.08 & 4.76 & -30.73 & 697.42\\ -11.97 & -1.61 & -
 ```
 
 * Fila 1 (PWM), en %/rad, %/(rad/s), %/%, %/cm, %/(rad·s). Fila 2 ($d_{ref}$), en cm por las mismas unidades.
-* $K_{14} = -30.73$: si la distancia real excede a $d_{nom}$, el PWM sube automáticamente para compensar la pérdida de torque (coherente con $g_d < 0$).
+* $K_{14} = -30.73$: si la distancia real excede a $d_{nom}$, el PWM sube automáticamente para compensar la pérdida de torque (coherente con $g_d \lt  0$).
 * **Polos en lazo cerrado** en el punto nominal: $-15.47\pm18.48j,\ -12.3,\ -1.8,\ -1$ (frente a $0,\ -2.5\pm7.35j,\ -6.67,\ -1.25$ en lazo abierto): la oscilación de la compuerta pasa de $\zeta = 0.32$ a $\zeta = 0.64$ y se acelera.
 * El lazo cerrado es estable en **toda la rejilla**: el polo más lento en las 135 combinaciones tiene $\mathrm{Re} = -0.94$.
 
@@ -394,8 +394,8 @@ El término $v_{eq}$ es la acción *feedforward* de equilibrio (§3.1) y $-Kx$ l
 
 La integral del error solo acumula si se cumplen **ambas** condiciones:
 
-1. $|e_\theta| < 5^\circ$ (evita acumular durante la subida rápida).
-2. El PWM pedido no está saturado empujando en la misma dirección ($p_{raw} \ge 90$ con $e<0$, o $p_{raw} \le 10$ con $e>0$ detienen la integración).
+1. $|e_\theta| \lt  5^\circ$ (evita acumular durante la subida rápida).
+2. El PWM pedido no está saturado empujando en la misma dirección ($p_{raw} \ge 90$ con $e\lt 0$, o $p_{raw} \le 10$ con $e\gt 0$ detienen la integración).
 
 Además $x_i$ se limita a $\pm 2\text{ rad·s}$.
 
@@ -407,7 +407,7 @@ El punto de operación $d_{nom}$ es la salida de un integrador (inicial $d_{ini}
 |---|---|---|
 | $`p_{raw} \gt  70\,\%`$ (el ventilador no alcanza / sin margen) | **Acerca** | hasta $5\text{ cm/s}$, proporcional al exceso (máxima con 20 puntos de exceso) |
 | $`p_{raw} \lt  7\,\%`$ (el mínimo de 10 % ya empuja de más) | **Aleja** | hasta $5\text{ cm/s}$ |
-| $`p_{raw} \lt  20\,\%`$ y $d_{nom} < d_{ini}$ | **Regresa** hacia $d_{ini}$ | $1\text{ cm/s}$ |
+| $`p_{raw} \lt  20\,\%`$ y $d_{nom} \lt  d_{ini}$ | **Regresa** hacia $d_{ini}$ | $1\text{ cm/s}$ |
 | Otro caso | Mantiene | – |
 
 ```mermaid
