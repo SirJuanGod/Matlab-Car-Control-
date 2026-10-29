@@ -94,6 +94,8 @@ flowchart LR
   * `u_car`: Esfuerzo de los motores de tracción [-100.0 a +100.0 %].
   * `error_dist`: Error de distancia instantáneo $e_d = d_{est} - d_{ref}$ [cm].
   * `status`: Modo de control activo (0: autónomo, 1: feedback MATLAB).
+  * Si la base no recibe telemetría del carro durante más de 500 ms, los campos del carro se envían en `0`.
+  * Tras el arranque la base silencia sus logs (UART0 es compartido con MATLAB); igual conviene ignorar en MATLAB toda línea que no empiece con `$TEL,` (p. ej. el texto del bootloader).
 
 * **Comando enviado por MATLAB a la Base:**
   ```
@@ -105,6 +107,19 @@ flowchart LR
   * `mode`: `0` para control local en el carro, `1` para feedback desde MATLAB.
   * `en_motors`: `1` para habilitar motores, `0` para detenerlos.
   * `en_fan`: `1` para habilitar ventilador, `0` para apagarlo.
+  * Los 6 campos son obligatorios y deben ser números finitos; si no, la trama se descarta.
+
+* **Lectura desde MATLAB:** `code/MATLAB/uart_esp32.m` abre el puerto, envía la consigna, grafica θ y d en vivo y devuelve los datos; al terminar (o con Ctrl+C) apaga motores y ventilador.
+  ```matlab
+  datos = uart_esp32("COM5", 30, 35, 10);   % puerto, duracion [s], theta_ref [deg], d_ref [cm]
+  plot(datos.t, datos.theta_deg)
+  ```
+
+### 2.2 Emparejamiento ESP-NOW (Base $\leftrightarrow$ Carro)
+
+Por defecto ambos nodos usan broadcast y aceptan paquetes de **cualquier** ESP32 en el canal 1. Para que dos montajes del laboratorio no se crucen:
+1. Flashea ambos y lee en `idf.py monitor` la línea `MAC propia (...)` de cada uno.
+2. En `main/protocol_defs.h` de **ambos** proyectos pon `BASE_MAC_ADDR` y `CAR_MAC_ADDR` con esas MAC y vuelve a flashear. Cada nodo descarta lo que no venga de su par.
 
 * **Interfaz MATLAB:** `>> gui_esp32` (en `code/MATLAB`) abre el puerto, envía `$CMD` (motores y ventilador arrancan apagados), grafica θ, el PWM enviado (con mín/máx y aviso de saturación), la distancia de la IMU y el esfuerzo del carro, y al cerrar apaga los actuadores y deja los datos en `datos_esp32`. Pruebas sin hardware: `runtests('test_gui_esp32')`.
 
@@ -129,4 +144,10 @@ idf.py set-target esp32
 idf.py build
 idf.py -p COM_PUERTO_CARRO flash monitor
 ```
-*(Nota: `idf.py monitor` y MATLAB usan el mismo puerto COM de la base; cierra el monitor antes de conectar MATLAB. Al encender el carro, manténlo inmóvil durante los primeros 2 segundos mientras se ejecuta la calibración automática del sesgo en reposo del MPU6050).*
+*(Nota: `idf.py monitor` y MATLAB usan el mismo puerto COM de la base; cierra el monitor antes de conectar MATLAB. Al encender el carro, manténlo inmóvil durante los primeros 2 segundos mientras se ejecuta la calibración automática del sesgo en reposo del MPU6050. Si el MPU6050 no responde, los motores quedan deshabilitados).*
+
+### Pruebas en PC (controlador y observador del carro, sin ESP-IDF)
+```bash
+cd code/C
+gcc -I esp32_carro_control/main test/test_control.c esp32_carro_control/main/car_controller.c esp32_carro_control/main/kalman_observer.c -lm -o test_control && ./test_control
+```

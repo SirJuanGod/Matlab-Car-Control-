@@ -28,9 +28,12 @@ typedef struct {
 void car_controller_init(void);
 
 /**
- * @brief Reinicia los integradores anti-windup.
+ * @brief Reinicia los integradores anti-windup (llamar mientras el actuador este deshabilitado).
+ *
+ * @param reset_dist Reinicia el integrador del lazo de distancia (motores).
+ * @param reset_theta Reinicia el integrador del lazo angular (ventilador).
  */
-void car_controller_reset_integrators(void);
+void car_controller_reset_integrators(bool reset_dist, bool reset_theta);
 
 /**
  * @brief Ejecuta el ciclo de control periódico del carro y del ventilador.

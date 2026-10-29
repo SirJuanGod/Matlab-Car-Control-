@@ -15,7 +15,6 @@ static const char *TAG = "MAIN_BASE";
 
 #define LOOP_PERIOD_MS 20 // 50 Hz tasa de transmision hacia Carro y MATLAB
 
-static QueueHandle_t s_adc_angle_queue = NULL;
 static QueueHandle_t s_car_telemetry_queue = NULL;
 static QueueHandle_t s_matlab_cmd_queue = NULL;
 
@@ -24,9 +23,9 @@ static void base_hub_task(void *pvParameters) {
     const TickType_t xFrequency = pdMS_TO_TICKS(LOOP_PERIOD_MS);
 
     uint32_t seq_count = 0;
-    float current_theta = 0.0f;
     car_to_base_packet_t last_car_tel;
     bool has_car_tel = false;
+    uint32_t tel_age = 0; // ciclos sin telemetria nueva del carro
 
     // Valores por defecto de consigna
     base_to_car_packet_t cmd_to_car = {
@@ -48,11 +47,7 @@ static void base_hub_task(void *pvParameters) {
         vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
         // 1. Obtener la medicion angular mas reciente del ADC
-        if (xQueueReceive(s_adc_angle_queue, &current_theta, 0) == pdTRUE) {
-            cmd_to_car.theta_meas_deg = current_theta;
-        } else {
-            cmd_to_car.theta_meas_deg = adc_reader_get_last_angle();
-        }
+        cmd_to_car.theta_meas_deg = adc_reader_get_last_angle();
 
         // 2. Verificar si llegaron comandos nuevos desde MATLAB
         base_to_car_packet_t new_cmd;
@@ -66,8 +61,12 @@ static void base_hub_task(void *pvParameters) {
         }
 
         // 3. Verificar si llego telemetria nueva del Carro por ESP-NOW
+        // Si el carro calla > 500 ms se envian ceros: MATLAB no debe ver datos congelados
         if (xQueueReceive(s_car_telemetry_queue, &last_car_tel, 0) == pdTRUE) {
             has_car_tel = true;
+            tel_age = 0;
+        } else if (++tel_age > 25) {
+            has_car_tel = false;
         }
 
         // 4. Enviar datos formateados hacia la interfaz de MATLAB por Serial
@@ -83,18 +82,17 @@ void app_main(void) {
     ESP_LOGI(TAG, "=== Iniciando ESP32 Estacion Base (ADC + MATLAB + ESP-NOW) ===");
 
     // 1. Crear colas de comunicacion entre tareas (no bloqueantes)
-    s_adc_angle_queue = xQueueCreate(1, sizeof(float));
     s_car_telemetry_queue = xQueueCreate(1, sizeof(car_to_base_packet_t));
     s_matlab_cmd_queue = xQueueCreate(1, sizeof(base_to_car_packet_t));
 
-    configASSERT(s_adc_angle_queue);
     configASSERT(s_car_telemetry_queue);
     configASSERT(s_matlab_cmd_queue);
 
     // 2. Inicializar subsistemas
-    ESP_ERROR_CHECK(adc_reader_init(s_adc_angle_queue));
+    ESP_ERROR_CHECK(adc_reader_init());
     ESP_ERROR_CHECK(uart_matlab_init(s_matlab_cmd_queue));
-    ESP_ERROR_CHECK(espnow_base_init(s_car_telemetry_queue, NULL)); // Broadcast MAC
+    static const uint8_t peer_mac[6] = CAR_MAC_ADDR;
+    ESP_ERROR_CHECK(espnow_base_init(s_car_telemetry_queue, peer_mac));
 
     // 3. Iniciar temporizador no bloqueante de muestreo ADC
     ESP_ERROR_CHECK(adc_reader_start());
@@ -103,4 +101,7 @@ void app_main(void) {
     xTaskCreatePinnedToCore(base_hub_task, "base_hub_task", 4096, NULL, 5, NULL, 0);
 
     ESP_LOGI(TAG, "Sistema de Estacion Base operativo al 100%%.");
+
+    // UART0 es tambien el canal de MATLAB: silenciar logs para no cortar las tramas $TEL
+    esp_log_level_set("*", ESP_LOG_NONE);
 }

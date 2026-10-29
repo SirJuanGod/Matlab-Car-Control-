@@ -2,13 +2,13 @@
 #include "esp_log.h"
 #include "esp_timer.h"
 #include "esp_system.h"
+#include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
 #include "esp_adc/adc_oneshot.h"
 
 static const char *TAG = "ADC_READER";
 
-static QueueHandle_t s_adc_queue = NULL;
 static esp_timer_handle_t s_adc_timer = NULL;
 static float s_last_angle_deg = 0.0f;
 static TaskHandle_t s_adc_task_handle = NULL;
@@ -45,9 +45,6 @@ static void adc_sample_task(void *pvParameters) {
             }
 
             s_last_angle_deg = s_filtered_angle;
-            if (s_adc_queue != NULL) {
-                xQueueOverwrite(s_adc_queue, &s_filtered_angle);
-            }
         }
     }
 }
@@ -59,9 +56,7 @@ static void adc_timer_callback(void *arg) {
     }
 }
 
-esp_err_t adc_reader_init(QueueHandle_t out_queue) {
-    s_adc_queue = out_queue;
-
+esp_err_t adc_reader_init(void) {
     adc_oneshot_unit_init_cfg_t init_config = {
         .unit_id = ADC_UNIT_1,
         .ulp_mode = ADC_ULP_MODE_DISABLE,

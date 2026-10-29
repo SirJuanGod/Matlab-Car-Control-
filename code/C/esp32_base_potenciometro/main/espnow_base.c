@@ -12,13 +12,14 @@ static const char *TAG = "ESPNOW_BASE";
 
 static QueueHandle_t s_rx_telemetry_queue = NULL;
 static uint8_t s_peer_mac[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+static bool s_filter_peer = false;
 
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
 static void espnow_recv_cb(const esp_now_recv_info_t *recv_info, const uint8_t *data, int len)
-#else
-static void espnow_recv_cb(const uint8_t *mac_addr, const uint8_t *data, int len)
-#endif
 {
+    // Con MAC configurada solo se aceptan paquetes del par (evita cruces entre montajes del laboratorio)
+    if (s_filter_peer && memcmp(recv_info->src_addr, s_peer_mac, 6) != 0) {
+        return;
+    }
     if (len != sizeof(car_to_base_packet_t)) {
         return;
     }
@@ -53,6 +54,8 @@ esp_err_t espnow_base_init(QueueHandle_t rx_telemetry_queue, const uint8_t *targ
     if (target_peer_mac != NULL) {
         memcpy(s_peer_mac, target_peer_mac, 6);
     }
+    static const uint8_t broadcast[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+    s_filter_peer = memcmp(s_peer_mac, broadcast, 6) != 0;
 
     // Inicializar NVS si no esta inicializado
     esp_err_t ret = nvs_flash_init();
@@ -71,6 +74,14 @@ esp_err_t espnow_base_init(QueueHandle_t rx_telemetry_queue, const uint8_t *targ
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_start());
     ESP_ERROR_CHECK(esp_wifi_set_channel(ESPNOW_WIFI_CHANNEL, WIFI_SECOND_CHAN_NONE));
+
+    uint8_t own_mac[6];
+    ESP_ERROR_CHECK(esp_wifi_get_mac(WIFI_IF_STA, own_mac));
+    ESP_LOGI(TAG, "MAC propia (copiar en protocol_defs.h del otro nodo): %02X:%02X:%02X:%02X:%02X:%02X",
+             own_mac[0], own_mac[1], own_mac[2], own_mac[3], own_mac[4], own_mac[5]);
+    if (!s_filter_peer) {
+        ESP_LOGW(TAG, "MAC del par sin configurar: broadcast sin filtro de origen");
+    }
 
     ESP_ERROR_CHECK(esp_now_init());
     ESP_ERROR_CHECK(esp_now_register_send_cb(espnow_send_cb));

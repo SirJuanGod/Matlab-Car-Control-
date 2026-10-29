@@ -26,13 +26,13 @@ static float s_int_error_theta = 0.0f;
 static float s_last_theta_meas = 0.0f;
 
 void car_controller_init(void) {
-    car_controller_reset_integrators();
+    car_controller_reset_integrators(true, true);
+    s_last_theta_meas = 0.0f;
 }
 
-void car_controller_reset_integrators(void) {
-    s_int_error_dist = 0.0f;
-    s_int_error_theta = 0.0f;
-    s_last_theta_meas = 0.0f;
+void car_controller_reset_integrators(bool reset_dist, bool reset_theta) {
+    if (reset_dist) s_int_error_dist = 0.0f;
+    if (reset_theta) s_int_error_theta = 0.0f;
 }
 
 controller_output_t car_controller_step(float d_est_cm,
