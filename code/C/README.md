@@ -144,3 +144,8 @@ idf.py -p COM_PUERTO_CARRO flash monitor
 cd code/C
 gcc -I esp32_carro_control/main test/test_control.c esp32_carro_control/main/car_controller.c esp32_carro_control/main/lqr_simo.c esp32_carro_control/main/kalman_observer.c -lm -o test_control && ./test_control
 ```
+
+Sin `gcc`, la misma prueba corre en un ESP32 emulado con QEMU (una sola vez: `python $env:IDF_PATH\tools\idf_tools.py install qemu-xtensa`, y agregar su carpeta `bin` al `PATH`). Termina imprimiendo `OK: test_control`; se sale con `Ctrl + ]`:
+```powershell
+idf.py -C code\C\test qemu monitor
+```

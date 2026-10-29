@@ -57,3 +57,5 @@ desktop.ini
 .DS_Store
 # Binario de pruebas en PC
 code/C/test_control
+# sdkconfig generado al compilar el runner de pruebas (usa los valores por defecto)
+code/C/test/sdkconfig

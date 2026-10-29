@@ -86,3 +86,8 @@ int main(void) {
     puts("OK: test_control");
     return 0;
 }
+
+#ifdef ESP_PLATFORM
+// Sin gcc para PC: idf.py -C code/C/test qemu (o flash en un ESP32) ejecuta la misma prueba
+void app_main(void) { main(); }
+#endif
