@@ -30,30 +30,25 @@ static void uart_event_task(void *pvParameters) {
                                 line_buffer[line_idx] = '\0';
                                 line_idx = 0;
 
-                                // Parsear comando de MATLAB:
-                                // $CMD,<theta_ref>,<d_ref>,<matlab_pwm>,<mode>,<en_motors>,<en_fan>
-                                float th_ref = 35.0f, d_ref = 10.0f, pwm_feed = 0.0f;
-                                int mode = 0, en_m = 1, en_f = 1;
+                                // Parsear comando de MATLAB: $CMD,<theta_ref>,<en_motors>,<en_fan>
+                                float th_ref = 0.0f;
+                                int en_m = 0, en_f = 0;
 
                                 if (strncmp(line_buffer, "$CMD,", 5) == 0) {
-                                    int parsed = sscanf(line_buffer + 5, "%f,%f,%f,%d,%d,%d",
-                                                        &th_ref, &d_ref, &pwm_feed, &mode, &en_m, &en_f);
+                                    int parsed = sscanf(line_buffer + 5, "%f,%d,%d", &th_ref, &en_m, &en_f);
                                     // Trama completa obligatoria: campos faltantes no deben re-habilitar actuadores.
-                                    // isfinite: un "nan" dejaria los integradores del carro en NaN para siempre.
-                                    if (parsed == 6 && isfinite(th_ref) && isfinite(d_ref) && isfinite(pwm_feed)) {
+                                    // Consigna dentro del rango mecanico [0, 90] deg (isfinite descarta "nan").
+                                    if (parsed == 3 && isfinite(th_ref) && th_ref >= 0.0f && th_ref <= 90.0f) {
                                         base_to_car_packet_t cmd;
                                         memset(&cmd, 0, sizeof(cmd));
                                         cmd.theta_ref_deg = th_ref;
-                                        cmd.d_ref_cm = d_ref;
-                                        cmd.matlab_pwm_feed = pwm_feed;
-                                        cmd.control_mode = (uint8_t)mode;
-                                        cmd.enable_motors = (uint8_t)en_m;
-                                        cmd.enable_fan = (uint8_t)en_f;
+                                        cmd.enable_motors = (uint8_t)(en_m != 0);
+                                        cmd.enable_fan = (uint8_t)(en_f != 0);
 
                                         if (s_cmd_out_queue != NULL) {
                                             xQueueOverwrite(s_cmd_out_queue, &cmd);
                                         }
-                                        ESP_LOGD(TAG, "CMD recibido: th_ref=%.1f, d_ref=%.1f, mode=%d", th_ref, d_ref, mode);
+                                        ESP_LOGD(TAG, "CMD recibido: th_ref=%.1f, motores=%d, ventilador=%d", th_ref, en_m, en_f);
                                     }
                                 }
                             }

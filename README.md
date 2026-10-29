@@ -740,6 +740,7 @@ flowchart LR
 | `diseno_polos_ceros.m` | Polos, ceros y márgenes de los tres controladores de solo ventilador |
 | `gui_simulacion.m` | Interfaz gráfica para cambiar parámetros y simular el modelo |
 | `gui_esp32.m` | Interfaz en tiempo real con el hardware (Estación Base ESP32 por UART) |
+| `exportar_lqr_c.m` | Genera `lqr_tablas.h` (las 135 ganancias $K$ y los parámetros del controlador) para el firmware del carro |
 | `animar_sistema.m` | Cinemática animada del sistema (mp4, gif y PNG) |
 
 ```matlab
@@ -759,8 +760,17 @@ Hay dos placas ESP32 (ESP32-WROOM DevKit), cada una con su propio firmware en `c
 
 | Placa | Proyecto | Qué hace |
 |---|---|---|
-| **Estación base** | `code/C/esp32_base_potenciometro` | Lee el potenciómetro (ángulo), habla con MATLAB por USB y con el carro por ESP-NOW |
-| **Carro** | `code/C/esp32_carro_control` | Lee la IMU, estima la distancia, ejecuta los controladores y mueve ventilador y motores |
+| **Estación base** | `code/C/esp32_base_potenciometro` | Lee el potenciómetro (ángulo) a 100 Hz y lo envía al carro por ESP-NOW; pasa la telemetría a MATLAB por USB |
+| **Carro** | `code/C/esp32_carro_control` | Ejecuta el **LQR+I SIMO** (§5) a 100 Hz, estima la distancia con la IMU y mueve ventilador y motores |
+
+El control corre completo en el carro: MATLAB no calcula nada en tiempo real. La interfaz `gui_esp32` solo lee la telemetría y envía la consigna de ángulo y el encendido de los actuadores, y el sistema sigue funcionando aunque se cierre.
+
+Si cambias pesos o parámetros en `init_parametros.m`, regenera las ganancias del firmware y vuelve a cargar el carro:
+
+```matlab
+cd code/MATLAB
+exportar_lqr_c
+```
 
 Cada bloque de comandos de esta sección tiene un botón de copiar en GitHub (esquina superior derecha del bloque). Los comandos son para **PowerShell en Windows**.
 
@@ -803,7 +813,7 @@ No hay que tocar nada: la configuración ya está en el `sdkconfig.defaults` de 
 |---|---|---|
 | Chip | `esp32` | Ya fijado en el `sdkconfig`; **no hace falta** `idf.py set-target` |
 | CPU | 240 MHz | Máxima velocidad para el lazo de control |
-| Tick de FreeRTOS | 1000 Hz | Permite periodos exactos de 10 ms (control) y 20 ms (telemetría) |
+| Tick de FreeRTOS | 1000 Hz | Permite periodos exactos de 10 ms (ángulo y control) y 20 ms (telemetría del carro) |
 | Wi-Fi | Búferes reducidos, sin AMPDU | Menos memoria y menos latencia para ESP-NOW |
 | ESP-NOW | Canal 1, broadcast | Base y carro se encuentran sin configurar direcciones MAC |
 | UART0 de la base | 115200 baudios | El mismo puerto USB sirve para cargar el programa y para MATLAB |
@@ -912,9 +922,11 @@ Sal del monitor con `Ctrl + ]` antes de abrir MATLAB: el puerto COM no se puede 
    ```
 
 4. Elige el puerto de la base y pulsa **Conectar**.
-5. Comprueba que el panel diga **Carro: enlazado** y que lleguen tramas.
-6. Activa **Ventilador** y **Motores del carro**. El botón **PARADA** los apaga de inmediato.
-7. Al cerrar la ventana los actuadores se apagan y los datos quedan en la variable `datos_esp32`.
+5. Comprueba que el panel diga **Carro: enlazado** y que lleguen tramas. Al conectar, la interfaz no envía nada: las casillas muestran el estado real del carro.
+6. Elige el ángulo de referencia y activa **Ventilador** y **Motores del carro**. El botón **PARADA** los apaga de inmediato.
+7. Cerrar la ventana **no detiene** el sistema: sigue con la última orden. Los datos quedan en la variable `datos_esp32`.
+
+Al encender, la base arranca con los actuadores apagados y espera la primera orden. Si el carro deja de recibir paquetes de la base durante más de 500 ms, apaga ventilador y motores por seguridad.
 
 Para probar la interfaz sin hardware:
 
@@ -948,6 +960,6 @@ idf.py -p COM5 erase-flash
 3. **Error de $\hat d$.** La IMU sin medición de posición deja un offset constante en $\hat d$ del orden de 1–2 mm.
 4. **Lazo del carro.** El diseño usa $\tau_{car} = 0.8\text{ s}$; el lazo real tiene $`\tau_{63\%} \approx 0.94\text{ s}`$ y la banda muerta de $\pm5\text{ mm}$ no está en el modelo lineal.
 5. **Aire a lo largo del ángulo.** El modelo no incluye la variación del torque con $\theta$ (área expuesta e incidencia del chorro).
-6. **Solo simulación.** Falta discretizar para el ESP32 y validar con el carro, la IMU y el ventilador reales.
+6. **Validación con hardware pendiente.** El LQR+I ya corre en el ESP32 del carro (Euler a 100 Hz, `lqr_simo.c`). En una simulación equivalente en MATLAB con 1 ciclo de retardo del ángulo (base → ESP-NOW → carro), el escalón a $35^\circ$ sube el sobrepico de $0.9^\circ$ a $2.5^\circ$ (PWM máx. 73 %). Falta probarlo con el carro, la IMU y el ventilador reales.
 7. **Comparativa de solo ventilador.** `simular_sistema.m` conserva el LQR+I de 3 estados por razones de comparación; su margen real con el actuador es bajo (§4.3) y no debe usarse como diseño final.
 

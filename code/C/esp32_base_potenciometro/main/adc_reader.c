@@ -15,8 +15,6 @@ static TaskHandle_t s_adc_task_handle = NULL;
 
 static adc_oneshot_unit_handle_t s_adc1_handle = NULL;
 
-static float s_filtered_angle = 0.0f;
-static bool s_first_sample = true;
 
 static void adc_sample_task(void *pvParameters) {
     int raw_val = 0;
@@ -34,17 +32,9 @@ static void adc_sample_task(void *pvParameters) {
             if (raw_angle < 0.0f) raw_angle = 0.0f;
             if (raw_angle > ANGLE_MAX_DEG) raw_angle = ANGLE_MAX_DEG;
 
-            // Filtro pasa-bajas IIR de 1er orden (alfa=0.25 a 100 Hz):
-            // Elimina el ruido analogico de la escobilla mecanica del potenciometro
-            // sin generar retardo perceptible en el lazo de control.
-            if (s_first_sample) {
-                s_filtered_angle = raw_angle;
-                s_first_sample = false;
-            } else {
-                s_filtered_angle = (0.25f * raw_angle) + (0.75f * s_filtered_angle);
-            }
-
-            s_last_angle_deg = s_filtered_angle;
+            // Sin filtro aqui: el LQR ya filtra su derivada (tau_w) y un pasa-bajas extra
+            // agregaria ~30 ms de retardo que el diseno de MATLAB no incluye.
+            s_last_angle_deg = raw_angle;
         }
     }
 }

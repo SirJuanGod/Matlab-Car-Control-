@@ -13,7 +13,7 @@
 
 static const char *TAG = "MAIN_BASE";
 
-#define LOOP_PERIOD_MS 20 // 50 Hz tasa de transmision hacia Carro y MATLAB
+#define LOOP_PERIOD_MS 10 // 100 Hz: el LQR del carro recibe un angulo nuevo en cada ciclo
 
 static QueueHandle_t s_car_telemetry_queue = NULL;
 static QueueHandle_t s_matlab_cmd_queue = NULL;
@@ -32,12 +32,8 @@ static void base_hub_task(void *pvParameters) {
         .seq_num = 0,
         .theta_meas_deg = 0.0f,
         .theta_ref_deg = 35.0f, // Consigna nominal segun init_parametros.m
-        .d_ref_cm = 10.0f,      // Distancia nominal d0 = 10 cm
-        .matlab_pwm_feed = 0.0f,
-        .control_mode = 0,      // Control autonomo en carro por defecto
-        .enable_motors = 1,
-        .enable_fan = 1,
-        .flags = 0,
+        .enable_motors = 0,     // Arranca apagado: espera la orden de la interfaz
+        .enable_fan = 0,
         .checksum = 0
     };
 
@@ -53,9 +49,6 @@ static void base_hub_task(void *pvParameters) {
         base_to_car_packet_t new_cmd;
         if (xQueueReceive(s_matlab_cmd_queue, &new_cmd, 0) == pdTRUE) {
             cmd_to_car.theta_ref_deg = new_cmd.theta_ref_deg;
-            cmd_to_car.d_ref_cm = new_cmd.d_ref_cm;
-            cmd_to_car.matlab_pwm_feed = new_cmd.matlab_pwm_feed;
-            cmd_to_car.control_mode = new_cmd.control_mode;
             cmd_to_car.enable_motors = new_cmd.enable_motors;
             cmd_to_car.enable_fan = new_cmd.enable_fan;
         }
@@ -65,7 +58,7 @@ static void base_hub_task(void *pvParameters) {
         if (xQueueReceive(s_car_telemetry_queue, &last_car_tel, 0) == pdTRUE) {
             has_car_tel = true;
             tel_age = 0;
-        } else if (++tel_age > 25) {
+        } else if (++tel_age > 500 / LOOP_PERIOD_MS) {
             has_car_tel = false;
         }
 

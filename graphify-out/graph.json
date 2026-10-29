@@ -7,90 +7,6 @@
   },
   "nodes": [
     {
-      "id": "code_c_esp32_carro_control_main_car_controller_car_controller_init",
-      "label": "car_controller_init()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "mpu6050.c",
-      "file_type": "code",
-      "norm_label": "car_controller_init()",
-      "source_file": "code/C/esp32_carro_control/main/car_controller.c",
-      "source_location": "L28"
-    },
-    {
-      "id": "code_c_esp32_carro_control_main_car_controller_car_controller_reset_integrators",
-      "label": "car_controller_reset_integrators()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "mpu6050.c",
-      "file_type": "code",
-      "norm_label": "car_controller_reset_integrators()",
-      "source_file": "code/C/esp32_carro_control/main/car_controller.c",
-      "source_location": "L32"
-    },
-    {
-      "id": "code_c_esp32_carro_control_main_car_controller_car_controller_step",
-      "label": "car_controller_step()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "mpu6050.c",
-      "file_type": "code",
-      "norm_label": "car_controller_step()",
-      "source_file": "code/C/esp32_carro_control/main/car_controller.c",
-      "source_location": "L38"
-    },
-    {
-      "id": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_get_state",
-      "label": "kalman_observer_get_state()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "mpu6050.c",
-      "file_type": "code",
-      "norm_label": "kalman_observer_get_state()",
-      "source_file": "code/C/esp32_carro_control/main/kalman_observer.c",
-      "source_location": "L80"
-    },
-    {
-      "id": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_init",
-      "label": "kalman_observer_init()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "mpu6050.c",
-      "file_type": "code",
-      "norm_label": "kalman_observer_init()",
-      "source_file": "code/C/esp32_carro_control/main/kalman_observer.c",
-      "source_location": "L15"
-    },
-    {
-      "id": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_reset",
-      "label": "kalman_observer_reset()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "mpu6050.c",
-      "file_type": "code",
-      "norm_label": "kalman_observer_reset()",
-      "source_file": "code/C/esp32_carro_control/main/kalman_observer.c",
-      "source_location": "L19"
-    },
-    {
-      "id": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_update",
-      "label": "kalman_observer_update()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "mpu6050.c",
-      "file_type": "code",
-      "norm_label": "kalman_observer_update()",
-      "source_file": "code/C/esp32_carro_control/main/kalman_observer.c",
-      "source_location": "L26"
-    },
-    {
       "id": "code_c_esp32_carro_control_main_main_app_main",
       "label": "app_main()",
       "_callable": true,
@@ -100,7 +16,7 @@
       "file_type": "code",
       "norm_label": "app_main()",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L130"
+      "source_location": "L129"
     },
     {
       "id": "code_c_esp32_carro_control_main_main_car_control_task",
@@ -235,16 +151,28 @@
       "source_location": "L22"
     },
     {
+      "id": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_send_cb",
+      "label": "espnow_send_cb()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "espnow_base.c",
+      "file_type": "code",
+      "norm_label": "espnow_send_cb()",
+      "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
+      "source_location": "L43"
+    },
+    {
       "id": "code_c_esp32_carro_control_main_espnow_car_espnow_car_init",
       "label": "espnow_car_init()",
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "espnow_car_send_telemetry",
+      "community_name": "espnow_base.c",
       "file_type": "code",
       "norm_label": "espnow_car_init()",
       "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L50"
+      "source_location": "L51"
     },
     {
       "id": "code_c_esp32_carro_control_main_espnow_car_espnow_car_recv_cb",
@@ -252,11 +180,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "espnow_car_send_telemetry",
+      "community_name": "espnow_base.c",
       "file_type": "code",
       "norm_label": "espnow_car_recv_cb()",
       "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L19"
+      "source_location": "L17"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_espnow_car_espnow_car_send_cb",
+      "label": "espnow_car_send_cb()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "espnow_base.c",
+      "file_type": "code",
+      "norm_label": "espnow_car_send_cb()",
+      "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
+      "source_location": "L43"
     },
     {
       "id": "code_c_esp32_carro_control_main_espnow_car_espnow_car_send_telemetry",
@@ -264,11 +204,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "espnow_car_send_telemetry",
+      "community_name": "espnow_base.c",
       "file_type": "code",
       "norm_label": "espnow_car_send_telemetry()",
       "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L93"
+      "source_location": "L104"
     },
     {
       "id": "code_c_esp32_carro_control_main_main_car_telemetry_task",
@@ -276,11 +216,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "espnow_car_send_telemetry",
+      "community_name": "espnow_base.c",
       "file_type": "code",
       "norm_label": "car_telemetry_task()",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L115"
+      "source_location": "L114"
     },
     {
       "id": "code_c_esp32_carro_control_main_protocol_defs_protocol_checksum",
@@ -288,11 +228,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "espnow_car_send_telemetry",
+      "community_name": "espnow_base.c",
       "file_type": "code",
       "norm_label": "protocol_checksum()",
       "source_file": "code/C/esp32_carro_control/main/protocol_defs.h",
-      "source_location": "L48"
+      "source_location": "L49"
     },
     {
       "id": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_get_last_angle",
@@ -300,11 +240,71 @@
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "adc_reader_get_last_angle()",
       "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L101"
+      "source_location": "L86"
+    },
+    {
+      "id": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_init",
+      "label": "adc_reader_init()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "adc_reader.c",
+      "file_type": "code",
+      "norm_label": "adc_reader_init()",
+      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
+      "source_location": "L49"
+    },
+    {
+      "id": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_start",
+      "label": "adc_reader_start()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "adc_reader.c",
+      "file_type": "code",
+      "norm_label": "adc_reader_start()",
+      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
+      "source_location": "L76"
+    },
+    {
+      "id": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_stop",
+      "label": "adc_reader_stop()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "adc_reader.c",
+      "file_type": "code",
+      "norm_label": "adc_reader_stop()",
+      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
+      "source_location": "L81"
+    },
+    {
+      "id": "code_c_esp32_base_potenciometro_main_adc_reader_adc_sample_task",
+      "label": "adc_sample_task()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "adc_reader.c",
+      "file_type": "code",
+      "norm_label": "adc_sample_task()",
+      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
+      "source_location": "L19"
+    },
+    {
+      "id": "code_c_esp32_base_potenciometro_main_adc_reader_adc_timer_callback",
+      "label": "adc_timer_callback()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "adc_reader.c",
+      "file_type": "code",
+      "norm_label": "adc_timer_callback()",
+      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
+      "source_location": "L42"
     },
     {
       "id": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_base_init",
@@ -312,11 +312,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "espnow_base_init()",
       "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L50"
+      "source_location": "L51"
     },
     {
       "id": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_base_send",
@@ -324,11 +324,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "espnow_base_send()",
       "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L95"
+      "source_location": "L106"
     },
     {
       "id": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_recv_cb",
@@ -336,23 +336,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "espnow_recv_cb()",
       "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L19"
+      "source_location": "L17"
     },
     {
-      "id": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_send_cb",
-      "label": "espnow_send_cb()",
+      "id": "code_c_esp32_base_potenciometro_main_main_app_main",
+      "label": "app_main()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
-      "norm_label": "espnow_send_cb()",
-      "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L42"
+      "norm_label": "app_main()",
+      "source_file": "code/C/esp32_base_potenciometro/main/main.c",
+      "source_location": "L74"
     },
     {
       "id": "code_c_esp32_base_potenciometro_main_main_base_hub_task",
@@ -360,11 +360,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "base_hub_task()",
       "source_file": "code/C/esp32_base_potenciometro/main/main.c",
-      "source_location": "L22"
+      "source_location": "L21"
     },
     {
       "id": "code_c_esp32_base_potenciometro_main_protocol_defs_protocol_checksum",
@@ -372,11 +372,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "protocol_checksum()",
       "source_file": "code/C/esp32_base_potenciometro/main/protocol_defs.h",
-      "source_location": "L48"
+      "source_location": "L49"
     },
     {
       "id": "code_c_esp32_base_potenciometro_main_uart_matlab_uart_event_task",
@@ -384,11 +384,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "uart_event_task()",
       "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
-      "source_location": "L13"
+      "source_location": "L14"
+    },
+    {
+      "id": "code_c_esp32_base_potenciometro_main_uart_matlab_uart_matlab_init",
+      "label": "uart_matlab_init()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "adc_reader.c",
+      "file_type": "code",
+      "norm_label": "uart_matlab_init()",
+      "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
+      "source_location": "L82"
     },
     {
       "id": "code_c_esp32_base_potenciometro_main_uart_matlab_uart_matlab_send_telemetry",
@@ -396,129 +408,155 @@
       "_callable": true,
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "uart_matlab_send_telemetry()",
       "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
-      "source_location": "L109"
+      "source_location": "L107"
     },
     {
-      "id": "code_c_esp32_carro_control_main_espnow_car_espnow_car_send_cb",
-      "label": "espnow_car_send_cb()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "espnow_base.c",
-      "file_type": "code",
-      "norm_label": "espnow_car_send_cb()",
-      "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L42"
-    },
-    {
-      "id": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_init",
-      "label": "adc_reader_init()",
+      "id": "code_c_esp32_carro_control_main_car_controller_car_controller_init",
+      "label": "car_controller_init()",
       "_callable": true,
       "_origin": "ast",
       "community": 7,
-      "community_name": "adc_reader.c",
+      "community_name": "lqr_simo.c",
       "file_type": "code",
-      "norm_label": "adc_reader_init()",
-      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L62"
-    },
-    {
-      "id": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_start",
-      "label": "adc_reader_start()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "adc_reader.c",
-      "file_type": "code",
-      "norm_label": "adc_reader_start()",
-      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L91"
-    },
-    {
-      "id": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_stop",
-      "label": "adc_reader_stop()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "adc_reader.c",
-      "file_type": "code",
-      "norm_label": "adc_reader_stop()",
-      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L96"
-    },
-    {
-      "id": "code_c_esp32_base_potenciometro_main_adc_reader_adc_sample_task",
-      "label": "adc_sample_task()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "adc_reader.c",
-      "file_type": "code",
-      "norm_label": "adc_sample_task()",
-      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L21"
-    },
-    {
-      "id": "code_c_esp32_base_potenciometro_main_adc_reader_adc_timer_callback",
-      "label": "adc_timer_callback()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "adc_reader.c",
-      "file_type": "code",
-      "norm_label": "adc_timer_callback()",
-      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L55"
-    },
-    {
-      "id": "code_c_esp32_base_potenciometro_main_main_app_main",
-      "label": "app_main()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "adc_reader.c",
-      "file_type": "code",
-      "norm_label": "app_main()",
-      "source_file": "code/C/esp32_base_potenciometro/main/main.c",
-      "source_location": "L82"
-    },
-    {
-      "id": "code_c_esp32_base_potenciometro_main_uart_matlab_uart_matlab_init",
-      "label": "uart_matlab_init()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 7,
-      "community_name": "adc_reader.c",
-      "file_type": "code",
-      "norm_label": "uart_matlab_init()",
-      "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
-      "source_location": "L84"
-    },
-    {
-      "id": "code_c_esp32_carro_control_main_car_controller_c_code_c_esp32_carro_control_main_car_controller",
-      "label": "car_controller.c",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "mpu6050.c",
-      "file_type": "code",
-      "norm_label": "car_controller.c",
+      "norm_label": "car_controller_init()",
       "source_file": "code/C/esp32_carro_control/main/car_controller.c",
-      "source_location": "L1"
+      "source_location": "L17"
     },
     {
-      "id": "code_c_esp32_carro_control_main_kalman_observer_c_code_c_esp32_carro_control_main_kalman_observer",
-      "label": "kalman_observer.c",
+      "id": "code_c_esp32_carro_control_main_car_controller_car_controller_step",
+      "label": "car_controller_step()",
+      "_callable": true,
       "_origin": "ast",
-      "community": 0,
-      "community_name": "mpu6050.c",
+      "community": 7,
+      "community_name": "lqr_simo.c",
       "file_type": "code",
-      "norm_label": "kalman_observer.c",
+      "norm_label": "car_controller_step()",
+      "source_file": "code/C/esp32_carro_control/main/car_controller.c",
+      "source_location": "L22"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_get_state",
+      "label": "kalman_observer_get_state()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "kalman_observer_get_state()",
       "source_file": "code/C/esp32_carro_control/main/kalman_observer.c",
-      "source_location": "L1"
+      "source_location": "L80"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_init",
+      "label": "kalman_observer_init()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "kalman_observer_init()",
+      "source_file": "code/C/esp32_carro_control/main/kalman_observer.c",
+      "source_location": "L15"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_reset",
+      "label": "kalman_observer_reset()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "kalman_observer_reset()",
+      "source_file": "code/C/esp32_carro_control/main/kalman_observer.c",
+      "source_location": "L19"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_update",
+      "label": "kalman_observer_update()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "kalman_observer_update()",
+      "source_file": "code/C/esp32_carro_control/main/kalman_observer.c",
+      "source_location": "L26"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_lqr_simo_clampf",
+      "label": "clampf()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "clampf()",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L15"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_lqr_simo_ganancia",
+      "label": "ganancia()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "ganancia()",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L28"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_lqr_simo_lqr_simo_reset",
+      "label": "lqr_simo_reset()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "lqr_simo_reset()",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L19"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_lqr_simo_lqr_simo_step",
+      "label": "lqr_simo_step()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "lqr_simo_step()",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L44"
+    },
+    {
+      "id": "code_c_test_test_control_lazo_cerrado",
+      "label": "lazo_cerrado()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "lazo_cerrado()",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L16"
+    },
+    {
+      "id": "code_c_test_test_control_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L42"
     },
     {
       "id": "code_c_esp32_carro_control_main_motor_fan_pwm_c_code_c_esp32_carro_control_main_motor_fan_pwm",
@@ -565,28 +603,6 @@
       "source_location": ""
     },
     {
-      "id": "controller_output_t",
-      "label": "controller_output_t",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "mpu6050.c",
-      "file_type": "code",
-      "norm_label": "controller_output_t",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "kalman_state_t",
-      "label": "kalman_state_t",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "mpu6050.c",
-      "file_type": "code",
-      "norm_label": "kalman_state_t",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "readme",
       "label": "README.md",
       "_origin": "ast",
@@ -608,7 +624,7 @@
       "node_kind": "heading",
       "norm_label": "1.1 montaje fisico",
       "source_file": "README.md",
-      "source_location": "L21"
+      "source_location": "L22"
     },
     {
       "id": "readme_1_2_convenciones",
@@ -620,7 +636,7 @@
       "node_kind": "heading",
       "norm_label": "1.2 convenciones",
       "source_file": "README.md",
-      "source_location": "L27"
+      "source_location": "L28"
     },
     {
       "id": "readme_1_3_par\u00e1metros_del_modelo",
@@ -632,7 +648,7 @@
       "node_kind": "heading",
       "norm_label": "1.3 parametros del modelo",
       "source_file": "README.md",
-      "source_location": "L37"
+      "source_location": "L38"
     },
     {
       "id": "readme_1_descripci\u00f3n_del_sistema_y_convenciones",
@@ -644,7 +660,91 @@
       "node_kind": "heading",
       "norm_label": "1. descripcion del sistema y convenciones",
       "source_file": "README.md",
-      "source_location": "L19"
+      "source_location": "L20"
+    },
+    {
+      "id": "readme_2_1_compuerta_p\u00e9ndulo_colgante_derivaci\u00f3n_por_lagrange",
+      "label": "2.1 Compuerta (p\u00e9ndulo colgante): derivaci\u00f3n por Lagrange",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.1 compuerta (pendulo colgante): derivacion por lagrange",
+      "source_file": "README.md",
+      "source_location": "L57"
+    },
+    {
+      "id": "readme_2_2_torque_aerodin\u00e1mico",
+      "label": "2.2 Torque aerodin\u00e1mico",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.2 torque aerodinamico",
+      "source_file": "README.md",
+      "source_location": "L86"
+    },
+    {
+      "id": "readme_2_3_ventilador_y_saturaci\u00f3n",
+      "label": "2.3 Ventilador y saturaci\u00f3n",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.3 ventilador y saturacion",
+      "source_file": "README.md",
+      "source_location": "L105"
+    },
+    {
+      "id": "readme_2_4_carro",
+      "label": "2.4 Carro",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.4 carro",
+      "source_file": "README.md",
+      "source_location": "L111"
+    },
+    {
+      "id": "readme_2_5_sensores_y_estimadores",
+      "label": "2.5 Sensores y estimadores",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.5 sensores y estimadores",
+      "source_file": "README.md",
+      "source_location": "L137"
+    },
+    {
+      "id": "readme_2_6_sistema_no_lineal_completo",
+      "label": "2.6 Sistema no lineal completo",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.6 sistema no lineal completo",
+      "source_file": "README.md",
+      "source_location": "L185"
+    },
+    {
+      "id": "readme_2_ecuaciones_primitivas",
+      "label": "2. Ecuaciones primitivas",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "5. Estrategia de control LQR",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2. ecuaciones primitivas",
+      "source_file": "README.md",
+      "source_location": "L55"
     },
     {
       "id": "readme_3_1_punto_de_equilibrio",
@@ -656,7 +756,7 @@
       "node_kind": "heading",
       "norm_label": "3.1 punto de equilibrio",
       "source_file": "README.md",
-      "source_location": "L128"
+      "source_location": "L201"
     },
     {
       "id": "readme_3_2_linealizaci\u00f3n",
@@ -668,7 +768,7 @@
       "node_kind": "heading",
       "norm_label": "3.2 linealizacion",
       "source_file": "README.md",
-      "source_location": "L136"
+      "source_location": "L229"
     },
     {
       "id": "readme_3_3_modelo_en_espacio_de_estados_5_estados_2_entradas",
@@ -680,7 +780,7 @@
       "node_kind": "heading",
       "norm_label": "3.3 modelo en espacio de estados (5 estados, 2 entradas)",
       "source_file": "README.md",
-      "source_location": "L146"
+      "source_location": "L257"
     },
     {
       "id": "readme_3_4_funciones_de_transferencia_de_cada_subsistema",
@@ -692,7 +792,7 @@
       "node_kind": "heading",
       "norm_label": "3.4 funciones de transferencia de cada subsistema",
       "source_file": "README.md",
-      "source_location": "L158"
+      "source_location": "L326"
     },
     {
       "id": "readme_3_5_planta_simo_completa_en_35_circ_y_10_text_cm",
@@ -704,7 +804,7 @@
       "node_kind": "heading",
       "norm_label": "3.5 planta simo completa en $35^\\circ$ y $10\\text{ cm}$",
       "source_file": "README.md",
-      "source_location": "L173"
+      "source_location": "L360"
     },
     {
       "id": "readme_3_linealizaci\u00f3n_y_funciones_de_transferencia",
@@ -716,7 +816,7 @@
       "node_kind": "heading",
       "norm_label": "3. linealizacion y funciones de transferencia",
       "source_file": "README.md",
-      "source_location": "L126"
+      "source_location": "L199"
     },
     {
       "id": "readme_5_10_resumen_de_par\u00e1metros_de_dise\u00f1o",
@@ -728,7 +828,7 @@
       "node_kind": "heading",
       "norm_label": "5.10 resumen de parametros de diseno",
       "source_file": "README.md",
-      "source_location": "L382"
+      "source_location": "L632"
     },
     {
       "id": "readme_5_1_formulaci\u00f3n",
@@ -740,7 +840,7 @@
       "node_kind": "heading",
       "norm_label": "5.1 formulacion",
       "source_file": "README.md",
-      "source_location": "L273"
+      "source_location": "L482"
     },
     {
       "id": "readme_5_2_estados_y_entradas",
@@ -752,7 +852,7 @@
       "node_kind": "heading",
       "norm_label": "5.2 estados y entradas",
       "source_file": "README.md",
-      "source_location": "L281"
+      "source_location": "L501"
     },
     {
       "id": "readme_5_3_selecci\u00f3n_de_los_pesos_q_y_r",
@@ -764,7 +864,7 @@
       "node_kind": "heading",
       "norm_label": "5.3 seleccion de los pesos $q$ y $r$",
       "source_file": "README.md",
-      "source_location": "L289"
+      "source_location": "L525"
     },
     {
       "id": "readme_5_4_gain_scheduling_en_theta_ref_d_nom",
@@ -776,7 +876,7 @@
       "node_kind": "heading",
       "norm_label": "5.4 *gain scheduling* en $(\\theta_{ref}, d_{nom})$",
       "source_file": "README.md",
-      "source_location": "L314"
+      "source_location": "L550"
     },
     {
       "id": "readme_5_5_ley_de_control_completa",
@@ -788,7 +888,7 @@
       "node_kind": "heading",
       "norm_label": "5.5 ley de control completa",
       "source_file": "README.md",
-      "source_location": "L327"
+      "source_location": "L575"
     },
     {
       "id": "readme_5_6_estimaci\u00f3n_de_los_estados_no_medidos",
@@ -800,7 +900,7 @@
       "node_kind": "heading",
       "norm_label": "5.6 estimacion de los estados no medidos",
       "source_file": "README.md",
-      "source_location": "L339"
+      "source_location": "L589"
     },
     {
       "id": "readme_5_7_saturaci\u00f3n_y_anti_windup",
@@ -812,7 +912,7 @@
       "node_kind": "heading",
       "norm_label": "5.7 saturacion y anti-windup",
       "source_file": "README.md",
-      "source_location": "L347"
+      "source_location": "L597"
     },
     {
       "id": "readme_5_8_supervisor_de_distancia_el_carro_se_mueve_solo_cuando_hace_falta",
@@ -824,7 +924,7 @@
       "node_kind": "heading",
       "norm_label": "5.8 supervisor de distancia: el carro se mueve solo cuando hace falta",
       "source_file": "README.md",
-      "source_location": "L356"
+      "source_location": "L606"
     },
     {
       "id": "readme_5_9_prefiltro_de_referencia",
@@ -836,7 +936,7 @@
       "node_kind": "heading",
       "norm_label": "5.9 prefiltro de referencia",
       "source_file": "README.md",
-      "source_location": "L378"
+      "source_location": "L628"
     },
     {
       "id": "readme_5_estrategia_de_control_lqr",
@@ -848,7 +948,7 @@
       "node_kind": "heading",
       "norm_label": "5. estrategia de control lqr",
       "source_file": "README.md",
-      "source_location": "L271"
+      "source_location": "L480"
     },
     {
       "id": "readme_6_1_sistema_completo_lazo_cerrado",
@@ -860,7 +960,7 @@
       "node_kind": "heading",
       "norm_label": "6.1 sistema completo (lazo cerrado)",
       "source_file": "README.md",
-      "source_location": "L397"
+      "source_location": "L647"
     },
     {
       "id": "readme_6_2_estructura_interna_del_controlador",
@@ -872,7 +972,7 @@
       "node_kind": "heading",
       "norm_label": "6.2 estructura interna del controlador",
       "source_file": "README.md",
-      "source_location": "L428"
+      "source_location": "L678"
     },
     {
       "id": "readme_6_3_planta_linealizada_con_funciones_de_transferencia_35_circ_10_cm",
@@ -884,7 +984,7 @@
       "node_kind": "heading",
       "norm_label": "6.3 planta linealizada con funciones de transferencia ($35^\\circ$, 10 cm)",
       "source_file": "README.md",
-      "source_location": "L463"
+      "source_location": "L713"
     },
     {
       "id": "readme_6_diagramas_de_bloques_mermaid",
@@ -896,7 +996,7 @@
       "node_kind": "heading",
       "norm_label": "6. diagramas de bloques (mermaid)",
       "source_file": "README.md",
-      "source_location": "L395"
+      "source_location": "L645"
     },
     {
       "id": "readme_7_verificaci\u00f3n_y_reproducibilidad",
@@ -908,19 +1008,19 @@
       "node_kind": "heading",
       "norm_label": "7. verificacion y reproducibilidad",
       "source_file": "README.md",
-      "source_location": "L481"
+      "source_location": "L731"
     },
     {
-      "id": "readme_8_limitaciones_y_trabajo_futuro",
-      "label": "8. Limitaciones y trabajo futuro",
+      "id": "readme_9_limitaciones_y_trabajo_futuro",
+      "label": "9. Limitaciones y trabajo futuro",
       "_origin": "ast",
       "community": 1,
       "community_name": "5. Estrategia de control LQR",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "8. limitaciones y trabajo futuro",
+      "norm_label": "9. limitaciones y trabajo futuro",
       "source_file": "README.md",
-      "source_location": "L506"
+      "source_location": "L956"
     },
     {
       "id": "readme_contenido",
@@ -1067,24 +1167,79 @@
       "source_location": "L81"
     },
     {
+      "id": "code_c_esp32_base_potenciometro_main_espnow_base_c_code_c_esp32_base_potenciometro_main_espnow_base",
+      "label": "espnow_base.c",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "espnow_base.c",
+      "file_type": "code",
+      "norm_label": "espnow_base.c",
+      "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
+      "source_location": "L1"
+    },
+    {
+      "id": "code_c_esp32_base_potenciometro_main_espnow_base_c_esp_now_send_status_t",
+      "label": "esp_now_send_status_t",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "espnow_base.c",
+      "file_type": "code",
+      "norm_label": "esp_now_send_status_t",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "code_c_esp32_carro_control_main_espnow_car_c_car_to_base_packet_t",
       "label": "car_to_base_packet_t",
       "_origin": "ast",
       "community": 11,
-      "community_name": "espnow_car_send_telemetry",
+      "community_name": "espnow_base.c",
       "file_type": "code",
       "norm_label": "car_to_base_packet_t",
       "source_file": "",
       "source_location": ""
     },
     {
+      "id": "code_c_esp32_carro_control_main_espnow_car_c_code_c_esp32_carro_control_main_espnow_car",
+      "label": "espnow_car.c",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "espnow_base.c",
+      "file_type": "code",
+      "norm_label": "espnow_car.c",
+      "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
+      "source_location": "L1"
+    },
+    {
       "id": "code_c_esp32_carro_control_main_espnow_car_c_esp_err_t",
       "label": "esp_err_t",
       "_origin": "ast",
       "community": 11,
-      "community_name": "espnow_car_send_telemetry",
+      "community_name": "espnow_base.c",
       "file_type": "code",
       "norm_label": "esp_err_t",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_espnow_car_c_esp_now_recv_info_t",
+      "label": "esp_now_recv_info_t",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "espnow_base.c",
+      "file_type": "code",
+      "norm_label": "esp_now_recv_info_t",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_espnow_car_c_esp_now_send_status_t",
+      "label": "esp_now_send_status_t",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "espnow_base.c",
+      "file_type": "code",
+      "norm_label": "esp_now_send_status_t",
       "source_file": "",
       "source_location": ""
     },
@@ -1093,95 +1248,143 @@
       "label": "QueueHandle_t",
       "_origin": "ast",
       "community": 11,
-      "community_name": "espnow_car_send_telemetry",
+      "community_name": "espnow_base.c",
       "file_type": "code",
       "norm_label": "queuehandle_t",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "readme_2_1_compuerta_p\u00e9ndulo_colgante_derivaci\u00f3n_por_lagrange",
-      "label": "2.1 Compuerta (p\u00e9ndulo colgante): derivaci\u00f3n por Lagrange",
+      "id": "readme_8_10_problemas_comunes",
+      "label": "8.10 Problemas comunes",
       "_origin": "ast",
       "community": 12,
-      "community_name": "2. Ecuaciones primitivas",
+      "community_name": "8. Puesta en marcha de los ESP32",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "2.1 compuerta (pendulo colgante): derivacion por lagrange",
+      "norm_label": "8.10 problemas comunes",
       "source_file": "README.md",
-      "source_location": "L56"
+      "source_location": "L937"
     },
     {
-      "id": "readme_2_2_torque_aerodin\u00e1mico",
-      "label": "2.2 Torque aerodin\u00e1mico",
+      "id": "readme_8_1_qu\u00e9_se_necesita",
+      "label": "8.1 Qu\u00e9 se necesita",
       "_origin": "ast",
       "community": 12,
-      "community_name": "2. Ecuaciones primitivas",
+      "community_name": "8. Puesta en marcha de los ESP32",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "2.2 torque aerodinamico",
+      "norm_label": "8.1 que se necesita",
       "source_file": "README.md",
-      "source_location": "L73"
+      "source_location": "L777"
     },
     {
-      "id": "readme_2_3_ventilador_y_saturaci\u00f3n",
-      "label": "2.3 Ventilador y saturaci\u00f3n",
+      "id": "readme_8_2_conexiones",
+      "label": "8.2 Conexiones",
       "_origin": "ast",
       "community": 12,
-      "community_name": "2. Ecuaciones primitivas",
+      "community_name": "8. Puesta en marcha de los ESP32",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "2.3 ventilador y saturacion",
+      "norm_label": "8.2 conexiones",
       "source_file": "README.md",
-      "source_location": "L85"
+      "source_location": "L783"
     },
     {
-      "id": "readme_2_4_carro",
-      "label": "2.4 Carro",
+      "id": "readme_8_3_configuraci\u00f3n_del_esp32",
+      "label": "8.3 Configuraci\u00f3n del ESP32",
       "_origin": "ast",
       "community": 12,
-      "community_name": "2. Ecuaciones primitivas",
+      "community_name": "8. Puesta en marcha de los ESP32",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "2.4 carro",
+      "norm_label": "8.3 configuracion del esp32",
       "source_file": "README.md",
-      "source_location": "L89"
+      "source_location": "L808"
     },
     {
-      "id": "readme_2_5_sensores_y_estimadores",
-      "label": "2.5 Sensores y estimadores",
+      "id": "readme_8_4_instalar_esp_idf_una_sola_vez",
+      "label": "8.4 Instalar ESP-IDF (una sola vez)",
       "_origin": "ast",
       "community": 12,
-      "community_name": "2. Ecuaciones primitivas",
+      "community_name": "8. Puesta en marcha de los ESP32",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "2.5 sensores y estimadores",
+      "norm_label": "8.4 instalar esp-idf (una sola vez)",
       "source_file": "README.md",
-      "source_location": "L99"
+      "source_location": "L827"
     },
     {
-      "id": "readme_2_6_sistema_no_lineal_completo",
-      "label": "2.6 Sistema no lineal completo",
+      "id": "readme_8_5_activar_esp_idf_cada_vez_que_abras_powershell",
+      "label": "8.5 Activar ESP-IDF (cada vez que abras PowerShell)",
       "_origin": "ast",
       "community": 12,
-      "community_name": "2. Ecuaciones primitivas",
+      "community_name": "8. Puesta en marcha de los ESP32",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "2.6 sistema no lineal completo",
+      "norm_label": "8.5 activar esp-idf (cada vez que abras powershell)",
       "source_file": "README.md",
-      "source_location": "L115"
+      "source_location": "L851"
     },
     {
-      "id": "readme_2_ecuaciones_primitivas",
-      "label": "2. Ecuaciones primitivas",
+      "id": "readme_8_6_encontrar_el_puerto_com_de_cada_placa",
+      "label": "8.6 Encontrar el puerto COM de cada placa",
       "_origin": "ast",
       "community": 12,
-      "community_name": "2. Ecuaciones primitivas",
+      "community_name": "8. Puesta en marcha de los ESP32",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "2. ecuaciones primitivas",
+      "norm_label": "8.6 encontrar el puerto com de cada placa",
       "source_file": "README.md",
-      "source_location": "L54"
+      "source_location": "L865"
+    },
+    {
+      "id": "readme_8_7_compilar_y_cargar_el_carro",
+      "label": "8.7 Compilar y cargar el carro",
+      "_origin": "ast",
+      "community": 12,
+      "community_name": "8. Puesta en marcha de los ESP32",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "8.7 compilar y cargar el carro",
+      "source_file": "README.md",
+      "source_location": "L875"
+    },
+    {
+      "id": "readme_8_8_compilar_y_cargar_la_estaci\u00f3n_base",
+      "label": "8.8 Compilar y cargar la estaci\u00f3n base",
+      "_origin": "ast",
+      "community": 12,
+      "community_name": "8. Puesta en marcha de los ESP32",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "8.8 compilar y cargar la estacion base",
+      "source_file": "README.md",
+      "source_location": "L895"
+    },
+    {
+      "id": "readme_8_9_usar_el_sistema_desde_matlab",
+      "label": "8.9 Usar el sistema desde MATLAB",
+      "_origin": "ast",
+      "community": 12,
+      "community_name": "8. Puesta en marcha de los ESP32",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "8.9 usar el sistema desde matlab",
+      "source_file": "README.md",
+      "source_location": "L913"
+    },
+    {
+      "id": "readme_8_puesta_en_marcha_de_los_esp32",
+      "label": "8. Puesta en marcha de los ESP32",
+      "_origin": "ast",
+      "community": 12,
+      "community_name": "8. Puesta en marcha de los ESP32",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "8. puesta en marcha de los esp32",
+      "source_file": "README.md",
+      "source_location": "L757"
     },
     {
       "id": "readme_4_1_requisitos_que_deb\u00eda_cumplir_el_controlador",
@@ -1193,7 +1396,7 @@
       "node_kind": "heading",
       "norm_label": "4.1 requisitos que debia cumplir el controlador",
       "source_file": "README.md",
-      "source_location": "L189"
+      "source_location": "L398"
     },
     {
       "id": "readme_4_2_estrategias_evaluadas",
@@ -1205,7 +1408,7 @@
       "node_kind": "heading",
       "norm_label": "4.2 estrategias evaluadas",
       "source_file": "README.md",
-      "source_location": "L198"
+      "source_location": "L407"
     },
     {
       "id": "readme_4_3_resultados_comparativos",
@@ -1217,7 +1420,7 @@
       "node_kind": "heading",
       "norm_label": "4.3 resultados comparativos",
       "source_file": "README.md",
-      "source_location": "L208"
+      "source_location": "L417"
     },
     {
       "id": "readme_4_4_por_qu\u00e9_el_lqr_result\u00f3_la_mejor_opci\u00f3n",
@@ -1229,7 +1432,7 @@
       "node_kind": "heading",
       "norm_label": "4.4 por que el lqr resulto la mejor opcion",
       "source_file": "README.md",
-      "source_location": "L243"
+      "source_location": "L452"
     },
     {
       "id": "readme_4_5_\u00e1rbol_de_decisi\u00f3n",
@@ -1241,7 +1444,7 @@
       "node_kind": "heading",
       "norm_label": "4.5 arbol de decision",
       "source_file": "README.md",
-      "source_location": "L254"
+      "source_location": "L463"
     },
     {
       "id": "readme_4_c\u00f3mo_se_lleg\u00f3_al_lqr_como_mejor_opci\u00f3n",
@@ -1253,7 +1456,7 @@
       "node_kind": "heading",
       "norm_label": "4. como se llego al lqr como mejor opcion",
       "source_file": "README.md",
-      "source_location": "L187"
+      "source_location": "L396"
     },
     {
       "id": "claude",
@@ -1284,42 +1487,53 @@
       "label": "base_to_car_packet_t",
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "base_to_car_packet_t",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "code_c_esp32_base_potenciometro_main_espnow_base_c_code_c_esp32_base_potenciometro_main_espnow_base",
-      "label": "espnow_base.c",
+      "id": "code_c_esp32_base_potenciometro_main_adc_reader_c_code_c_esp32_base_potenciometro_main_adc_reader",
+      "label": "adc_reader.c",
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
-      "norm_label": "espnow_base.c",
-      "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
+      "norm_label": "adc_reader.c",
+      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
       "source_location": "L1"
     },
     {
-      "id": "code_c_esp32_base_potenciometro_main_espnow_base_c_esp_err_t",
+      "id": "code_c_esp32_base_potenciometro_main_adc_reader_c_esp_err_t",
       "label": "esp_err_t",
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "esp_err_t",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "code_c_esp32_base_potenciometro_main_espnow_base_c_esp_now_send_status_t",
-      "label": "esp_now_send_status_t",
+      "id": "code_c_esp32_base_potenciometro_main_espnow_base_c_esp_err_t",
+      "label": "esp_err_t",
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
-      "norm_label": "esp_now_send_status_t",
+      "norm_label": "esp_err_t",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "code_c_esp32_base_potenciometro_main_espnow_base_c_esp_now_recv_info_t",
+      "label": "esp_now_recv_info_t",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "adc_reader.c",
+      "file_type": "code",
+      "norm_label": "esp_now_recv_info_t",
       "source_file": "",
       "source_location": ""
     },
@@ -1328,7 +1542,7 @@
       "label": "QueueHandle_t",
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "queuehandle_t",
       "source_file": "",
@@ -1339,7 +1553,7 @@
       "label": "car_to_base_packet_t",
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "car_to_base_packet_t",
       "source_file": "",
@@ -1350,31 +1564,31 @@
       "label": "uart_matlab.c",
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
       "norm_label": "uart_matlab.c",
       "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
       "source_location": "L1"
     },
     {
-      "id": "code_c_esp32_carro_control_main_espnow_car_c_code_c_esp32_carro_control_main_espnow_car",
-      "label": "espnow_car.c",
+      "id": "code_c_esp32_base_potenciometro_main_uart_matlab_c_esp_err_t",
+      "label": "esp_err_t",
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
-      "norm_label": "espnow_car.c",
-      "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L1"
+      "norm_label": "esp_err_t",
+      "source_file": "",
+      "source_location": ""
     },
     {
-      "id": "code_c_esp32_carro_control_main_espnow_car_c_esp_now_send_status_t",
-      "label": "esp_now_send_status_t",
+      "id": "code_c_esp32_base_potenciometro_main_uart_matlab_c_queuehandle_t",
+      "label": "QueueHandle_t",
       "_origin": "ast",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "file_type": "code",
-      "norm_label": "esp_now_send_status_t",
+      "norm_label": "queuehandle_t",
       "source_file": "",
       "source_location": ""
     },
@@ -1931,57 +2145,112 @@
       "source_location": "L1"
     },
     {
-      "id": "code_c_esp32_base_potenciometro_main_adc_reader_c_code_c_esp32_base_potenciometro_main_adc_reader",
-      "label": "adc_reader.c",
+      "id": "code_c_esp32_carro_control_main_car_controller_c_code_c_esp32_carro_control_main_car_controller",
+      "label": "car_controller.c",
       "_origin": "ast",
       "community": 7,
-      "community_name": "adc_reader.c",
+      "community_name": "lqr_simo.c",
       "file_type": "code",
-      "norm_label": "adc_reader.c",
-      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
+      "norm_label": "car_controller.c",
+      "source_file": "code/C/esp32_carro_control/main/car_controller.c",
       "source_location": "L1"
     },
     {
-      "id": "code_c_esp32_base_potenciometro_main_adc_reader_c_esp_err_t",
-      "label": "esp_err_t",
+      "id": "code_c_esp32_carro_control_main_kalman_observer_c_code_c_esp32_carro_control_main_kalman_observer",
+      "label": "kalman_observer.c",
       "_origin": "ast",
       "community": 7,
-      "community_name": "adc_reader.c",
+      "community_name": "lqr_simo.c",
       "file_type": "code",
-      "norm_label": "esp_err_t",
+      "norm_label": "kalman_observer.c",
+      "source_file": "code/C/esp32_carro_control/main/kalman_observer.c",
+      "source_location": "L1"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_lqr_simo_c_code_c_esp32_carro_control_main_lqr_simo",
+      "label": "lqr_simo.c",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "lqr_simo.c",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L1"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_lqr_simo_h_code_c_esp32_carro_control_main_lqr_simo",
+      "label": "lqr_simo.h",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "lqr_simo.h",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.h",
+      "source_location": "L1"
+    },
+    {
+      "id": "code_c_esp32_carro_control_main_lqr_tablas",
+      "label": "lqr_tablas.h",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "lqr_tablas.h",
+      "source_file": "code/C/esp32_carro_control/main/lqr_tablas.h",
+      "source_location": "L1"
+    },
+    {
+      "id": "code_c_test_test_control",
+      "label": "test_control.c",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "test_control.c",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L1"
+    },
+    {
+      "id": "controller_output_t",
+      "label": "controller_output_t",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "file_type": "code",
+      "norm_label": "controller_output_t",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "code_c_esp32_base_potenciometro_main_adc_reader_c_queuehandle_t",
-      "label": "QueueHandle_t",
+      "id": "kalman_state_t",
+      "label": "kalman_state_t",
       "_origin": "ast",
       "community": 7,
-      "community_name": "adc_reader.c",
+      "community_name": "lqr_simo.c",
       "file_type": "code",
-      "norm_label": "queuehandle_t",
+      "norm_label": "kalman_state_t",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "code_c_esp32_base_potenciometro_main_uart_matlab_c_esp_err_t",
-      "label": "esp_err_t",
+      "id": "lqr_simo_out_t",
+      "label": "lqr_simo_out_t",
       "_origin": "ast",
       "community": 7,
-      "community_name": "adc_reader.c",
+      "community_name": "lqr_simo.c",
       "file_type": "code",
-      "norm_label": "esp_err_t",
+      "norm_label": "lqr_simo_out_t",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "code_c_esp32_base_potenciometro_main_uart_matlab_c_queuehandle_t",
-      "label": "QueueHandle_t",
+      "id": "resultado_t",
+      "label": "resultado_t",
       "_origin": "ast",
       "community": 7,
-      "community_name": "adc_reader.c",
+      "community_name": "lqr_simo.c",
       "file_type": "code",
-      "norm_label": "queuehandle_t",
+      "norm_label": "resultado_t",
       "source_file": "",
       "source_location": ""
     },
@@ -2022,6 +2291,18 @@
       "source_location": "L83"
     },
     {
+      "id": "code_c_readme_2_2_emparejamiento_esp_now_base_leftrightarrow_carro",
+      "label": "2.2 Emparejamiento ESP-NOW (Base $\\leftrightarrow$ Carro)",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "Firmware ESP32 en C / ESP-IDF con FreeRTOS (Control Carro & Compuerta)",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.2 emparejamiento esp-now (base $\\leftrightarrow$ carro)",
+      "source_file": "code/C/README.md",
+      "source_location": "L111"
+    },
+    {
       "id": "code_c_readme_2_protocolo_de_comunicaci\u00f3n",
       "label": "2. Protocolo de Comunicaci\u00f3n",
       "_origin": "ast",
@@ -2043,7 +2324,7 @@
       "node_kind": "heading",
       "norm_label": "3. instrucciones de compilacion y flasheo con esp-idf",
       "source_file": "code/C/README.md",
-      "source_location": "L113"
+      "source_location": "L121"
     },
     {
       "id": "code_c_readme_estructura_de_directorios",
@@ -2079,7 +2360,7 @@
       "node_kind": "heading",
       "norm_label": "para compilar y subir el nodo del carro:",
       "source_file": "code/C/README.md",
-      "source_location": "L125"
+      "source_location": "L133"
     },
     {
       "id": "code_c_readme_para_compilar_y_subir_la_estaci\u00f3n_base",
@@ -2091,7 +2372,7 @@
       "node_kind": "heading",
       "norm_label": "para compilar y subir la estacion base:",
       "source_file": "code/C/README.md",
-      "source_location": "L117"
+      "source_location": "L125"
     },
     {
       "id": "code_c_readme_proyecto_1_estaci\u00f3n_base_esp32_base_potenciometro",
@@ -2116,6 +2397,18 @@
       "norm_label": "proyecto 2: nodo carro (`esp32_carro_control`)",
       "source_file": "code/C/README.md",
       "source_location": "L67"
+    },
+    {
+      "id": "code_c_readme_pruebas_en_pc_controlador_y_observador_del_carro_sin_esp_idf",
+      "label": "Pruebas en PC (controlador y observador del carro, sin ESP-IDF)",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "Firmware ESP32 en C / ESP-IDF con FreeRTOS (Control Carro & Compuerta)",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "pruebas en pc (controlador y observador del carro, sin esp-idf)",
+      "source_file": "code/C/README.md",
+      "source_location": "L142"
     },
     {
       "id": "especificaciones_especificaciones_carro_1_rol_en_el_proyecto_y_condiciones_iniciales",
@@ -2271,20 +2564,9 @@
       "type": "external"
     },
     {
-      "id": "math",
-      "label": "math",
-      "community": 0,
-      "community_name": "mpu6050.c",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "math",
-      "source_file": "",
-      "type": "external"
-    },
-    {
       "id": "esp_event",
       "label": "esp_event",
-      "community": 3,
+      "community": 11,
       "community_name": "espnow_base.c",
       "external": true,
       "file_type": "concept",
@@ -2295,7 +2577,7 @@
     {
       "id": "esp_idf_version",
       "label": "esp_idf_version",
-      "community": 3,
+      "community": 11,
       "community_name": "espnow_base.c",
       "external": true,
       "file_type": "concept",
@@ -2306,7 +2588,7 @@
     {
       "id": "esp_log",
       "label": "esp_log",
-      "community": 3,
+      "community": 11,
       "community_name": "espnow_base.c",
       "external": true,
       "file_type": "concept",
@@ -2317,7 +2599,7 @@
     {
       "id": "esp_netif",
       "label": "esp_netif",
-      "community": 3,
+      "community": 11,
       "community_name": "espnow_base.c",
       "external": true,
       "file_type": "concept",
@@ -2328,7 +2610,7 @@
     {
       "id": "esp_now",
       "label": "esp_now",
-      "community": 3,
+      "community": 11,
       "community_name": "espnow_base.c",
       "external": true,
       "file_type": "concept",
@@ -2339,7 +2621,7 @@
     {
       "id": "esp_wifi",
       "label": "esp_wifi",
-      "community": 3,
+      "community": 11,
       "community_name": "espnow_base.c",
       "external": true,
       "file_type": "concept",
@@ -2350,7 +2632,7 @@
     {
       "id": "nvs_flash",
       "label": "nvs_flash",
-      "community": 3,
+      "community": 11,
       "community_name": "espnow_base.c",
       "external": true,
       "file_type": "concept",
@@ -2361,7 +2643,7 @@
     {
       "id": "string",
       "label": "string",
-      "community": 3,
+      "community": 11,
       "community_name": "espnow_base.c",
       "external": true,
       "file_type": "concept",
@@ -2370,10 +2652,54 @@
       "type": "external"
     },
     {
+      "id": "adc_oneshot",
+      "label": "adc_oneshot",
+      "community": 3,
+      "community_name": "adc_reader.c",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "adc_oneshot",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "esp_system",
+      "label": "esp_system",
+      "community": 3,
+      "community_name": "adc_reader.c",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "esp_system",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "esp_timer",
+      "label": "esp_timer",
+      "community": 3,
+      "community_name": "adc_reader.c",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "esp_timer",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "task",
+      "label": "task",
+      "community": 3,
+      "community_name": "adc_reader.c",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "task",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "uart",
       "label": "uart",
       "community": 3,
-      "community_name": "espnow_base.c",
+      "community_name": "adc_reader.c",
       "external": true,
       "file_type": "concept",
       "norm_label": "uart",
@@ -2388,17 +2714,6 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "esp_err",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "esp_system",
-      "label": "esp_system",
-      "community": 4,
-      "community_name": "esp32_carro_control/main/main.c",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "esp_system",
       "source_file": "",
       "type": "external"
     },
@@ -2458,63 +2773,62 @@
       "type": "external"
     },
     {
+      "id": "assert",
+      "label": "assert",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "assert",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "car_controller",
+      "label": "car_controller",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "car_controller",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "kalman_observer",
+      "label": "kalman_observer",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "kalman_observer",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "math",
+      "label": "math",
+      "community": 7,
+      "community_name": "lqr_simo.c",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "math",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "stdio",
       "label": "stdio",
-      "community": 4,
-      "community_name": "esp32_carro_control/main/main.c",
+      "community": 7,
+      "community_name": "lqr_simo.c",
       "external": true,
       "file_type": "concept",
       "norm_label": "stdio",
       "source_file": "",
       "type": "external"
-    },
-    {
-      "id": "task",
-      "label": "task",
-      "community": 4,
-      "community_name": "esp32_carro_control/main/main.c",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "task",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "adc_oneshot",
-      "label": "adc_oneshot",
-      "community": 7,
-      "community_name": "adc_reader.c",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "adc_oneshot",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "esp_timer",
-      "label": "esp_timer",
-      "community": 7,
-      "community_name": "adc_reader.c",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "esp_timer",
-      "source_file": "",
-      "type": "external"
     }
   ],
   "links": [
-    {
-      "source": "code_c_esp32_carro_control_main_car_controller_car_controller_init",
-      "target": "code_c_esp32_carro_control_main_car_controller_car_controller_reset_integrators",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "code/C/esp32_carro_control/main/car_controller.c",
-      "source_location": "L29",
-      "weight": 1.0
-    },
     {
       "source": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_init",
       "target": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_reset",
@@ -2525,6 +2839,42 @@
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/kalman_observer.c",
       "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_ganancia",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_clampf",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_lqr_simo_step",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_ganancia",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L53",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_lqr_simo_step",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_clampf",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L62",
       "weight": 1.0
     },
     {
@@ -2600,6 +2950,18 @@
       "weight": 1.0
     },
     {
+      "source": "code_c_test_test_control_main",
+      "target": "code_c_test_test_control_lazo_cerrado",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
       "source": "code_c_esp32_base_potenciometro_main_adc_reader_c_code_c_esp32_base_potenciometro_main_adc_reader",
       "target": "code_c_esp32_base_potenciometro_main_adc_reader_h_code_c_esp32_base_potenciometro_main_adc_reader",
       "relation": "imports",
@@ -2649,7 +3011,7 @@
     },
     {
       "source": "code_c_esp32_base_potenciometro_main_adc_reader_c_code_c_esp32_base_potenciometro_main_adc_reader",
-      "target": "task",
+      "target": "freertos",
       "relation": "imports",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -2661,6 +3023,18 @@
     },
     {
       "source": "code_c_esp32_base_potenciometro_main_adc_reader_c_code_c_esp32_base_potenciometro_main_adc_reader",
+      "target": "task",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_base_potenciometro_main_adc_reader_c_code_c_esp32_base_potenciometro_main_adc_reader",
       "target": "adc_oneshot",
       "relation": "imports",
       "_origin": "ast",
@@ -2668,7 +3042,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0
     },
     {
@@ -2705,30 +3079,6 @@
       "context": "import",
       "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.h",
       "source_location": "L6",
-      "weight": 1.0
-    },
-    {
-      "source": "code_c_esp32_base_potenciometro_main_adc_reader_h_code_c_esp32_base_potenciometro_main_adc_reader",
-      "target": "freertos",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.h",
-      "source_location": "L7",
-      "weight": 1.0
-    },
-    {
-      "source": "code_c_esp32_base_potenciometro_main_adc_reader_h_code_c_esp32_base_potenciometro_main_adc_reader",
-      "target": "queue",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.h",
-      "source_location": "L8",
       "weight": 1.0
     },
     {
@@ -3140,6 +3490,18 @@
       "weight": 1.0
     },
     {
+      "source": "code_c_esp32_base_potenciometro_main_uart_matlab_c_code_c_esp32_base_potenciometro_main_uart_matlab",
+      "target": "math",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
       "source": "code_c_esp32_base_potenciometro_main_uart_matlab_h_code_c_esp32_base_potenciometro_main_uart_matlab",
       "target": "stdint",
       "relation": "imports",
@@ -3225,7 +3587,7 @@
     },
     {
       "source": "code_c_esp32_carro_control_main_car_controller_c_code_c_esp32_carro_control_main_car_controller",
-      "target": "math",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_h_code_c_esp32_carro_control_main_lqr_simo",
       "relation": "imports",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -3233,6 +3595,18 @@
       "context": "import",
       "source_file": "code/C/esp32_carro_control/main/car_controller.c",
       "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_car_controller_c_code_c_esp32_carro_control_main_car_controller",
+      "target": "math",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "code/C/esp32_carro_control/main/car_controller.c",
+      "source_location": "L3",
       "weight": 1.0
     },
     {
@@ -3485,6 +3859,54 @@
       "context": "import",
       "source_file": "code/C/esp32_carro_control/main/kalman_observer.h",
       "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_c_code_c_esp32_carro_control_main_lqr_simo",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_h_code_c_esp32_carro_control_main_lqr_simo",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_c_code_c_esp32_carro_control_main_lqr_simo",
+      "target": "code_c_esp32_carro_control_main_lqr_tablas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_c_code_c_esp32_carro_control_main_lqr_simo",
+      "target": "math",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_c_code_c_esp32_carro_control_main_lqr_simo",
+      "target": "stdbool",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L4",
       "weight": 1.0
     },
     {
@@ -3860,15 +4282,63 @@
       "weight": 1.0
     },
     {
-      "source": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_init",
-      "target": "code_c_esp32_base_potenciometro_main_adc_reader_c_queuehandle_t",
-      "relation": "references",
+      "source": "code_c_test_test_control",
+      "target": "assert",
+      "relation": "imports",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "context": "parameter_type",
-      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L62",
+      "context": "import",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control",
+      "target": "math",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control",
+      "target": "stdio",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control",
+      "target": "car_controller",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control",
+      "target": "kalman_observer",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L8",
       "weight": 1.0
     },
     {
@@ -3880,7 +4350,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L50",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -3892,7 +4362,19 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L95",
+      "source_location": "L106",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_recv_cb",
+      "target": "code_c_esp32_base_potenciometro_main_espnow_base_c_esp_now_recv_info_t",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
+      "source_location": "L17",
       "weight": 1.0
     },
     {
@@ -3904,7 +4386,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L42",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -3916,7 +4398,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
-      "source_location": "L84",
+      "source_location": "L82",
       "weight": 1.0
     },
     {
@@ -3928,7 +4410,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
-      "source_location": "L109",
+      "source_location": "L107",
       "weight": 1.0
     },
     {
@@ -3940,7 +4422,19 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L50",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_espnow_car_espnow_car_recv_cb",
+      "target": "code_c_esp32_carro_control_main_espnow_car_c_esp_now_recv_info_t",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
+      "source_location": "L17",
       "weight": 1.0
     },
     {
@@ -3952,7 +4446,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L42",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -3964,7 +4458,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L93",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -3976,7 +4470,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L62",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -3988,7 +4482,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L91",
+      "source_location": "L76",
       "weight": 1.0
     },
     {
@@ -4000,7 +4494,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L96",
+      "source_location": "L81",
       "weight": 1.0
     },
     {
@@ -4012,7 +4506,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L50",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -4024,7 +4518,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L95",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -4036,7 +4530,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
-      "source_location": "L84",
+      "source_location": "L82",
       "weight": 1.0
     },
     {
@@ -4048,7 +4542,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "code/C/esp32_carro_control/main/car_controller.c",
-      "source_location": "L38",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -4060,7 +4554,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L50",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -4072,7 +4566,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L93",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -4097,6 +4591,18 @@
       "context": "return_type",
       "source_file": "code/C/esp32_carro_control/main/kalman_observer.c",
       "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_lqr_simo_step",
+      "target": "lqr_simo_out_t",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L44",
       "weight": 1.0
     },
     {
@@ -4172,6 +4678,18 @@
       "weight": 1.0
     },
     {
+      "source": "code_c_test_test_control_lazo_cerrado",
+      "target": "resultado_t",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
       "source": "claude",
       "target": "claude_graphify",
       "relation": "contains",
@@ -4184,24 +4702,13 @@
     },
     {
       "source": "code_c_esp32_base_potenciometro_main_adc_reader_c_code_c_esp32_base_potenciometro_main_adc_reader",
-      "target": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_get_last_angle",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L101",
-      "weight": 1.0
-    },
-    {
-      "source": "code_c_esp32_base_potenciometro_main_adc_reader_c_code_c_esp32_base_potenciometro_main_adc_reader",
       "target": "code_c_esp32_base_potenciometro_main_adc_reader_adc_sample_task",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L21",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -4212,7 +4719,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L55",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -4223,7 +4730,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L62",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -4234,7 +4741,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L91",
+      "source_location": "L76",
       "weight": 1.0
     },
     {
@@ -4245,40 +4752,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
-      "source_location": "L96",
+      "source_location": "L81",
       "weight": 1.0
     },
     {
-      "source": "code_c_esp32_base_potenciometro_main_espnow_base_c_code_c_esp32_base_potenciometro_main_espnow_base",
-      "target": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_recv_cb",
+      "source": "code_c_esp32_base_potenciometro_main_adc_reader_c_code_c_esp32_base_potenciometro_main_adc_reader",
+      "target": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_get_last_angle",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L19",
-      "weight": 1.0
-    },
-    {
-      "source": "code_c_esp32_base_potenciometro_main_espnow_base_c_code_c_esp32_base_potenciometro_main_espnow_base",
-      "target": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_send_cb",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L42",
-      "weight": 1.0
-    },
-    {
-      "source": "code_c_esp32_base_potenciometro_main_espnow_base_c_code_c_esp32_base_potenciometro_main_espnow_base",
-      "target": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_base_init",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L50",
+      "source_file": "code/C/esp32_base_potenciometro/main/adc_reader.c",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -4289,7 +4774,40 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L95",
+      "source_location": "L106",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_base_potenciometro_main_espnow_base_c_code_c_esp32_base_potenciometro_main_espnow_base",
+      "target": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_recv_cb",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_base_potenciometro_main_espnow_base_c_code_c_esp32_base_potenciometro_main_espnow_base",
+      "target": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_send_cb",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_base_potenciometro_main_espnow_base_c_code_c_esp32_base_potenciometro_main_espnow_base",
+      "target": "code_c_esp32_base_potenciometro_main_espnow_base_espnow_base_init",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -4300,7 +4818,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/main.c",
-      "source_location": "L22",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -4311,7 +4829,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/main.c",
-      "source_location": "L82",
+      "source_location": "L74",
       "weight": 1.0
     },
     {
@@ -4322,7 +4840,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/protocol_defs.h",
-      "source_location": "L48",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -4333,7 +4851,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
-      "source_location": "L109",
+      "source_location": "L107",
       "weight": 1.0
     },
     {
@@ -4344,7 +4862,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
-      "source_location": "L13",
+      "source_location": "L14",
       "weight": 1.0
     },
     {
@@ -4355,7 +4873,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_base_potenciometro/main/uart_matlab.c",
-      "source_location": "L84",
+      "source_location": "L82",
       "weight": 1.0
     },
     {
@@ -4366,18 +4884,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_carro_control/main/car_controller.c",
-      "source_location": "L28",
-      "weight": 1.0
-    },
-    {
-      "source": "code_c_esp32_carro_control_main_car_controller_c_code_c_esp32_carro_control_main_car_controller",
-      "target": "code_c_esp32_carro_control_main_car_controller_car_controller_reset_integrators",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "code/C/esp32_carro_control/main/car_controller.c",
-      "source_location": "L32",
+      "source_location": "L17",
       "weight": 1.0
     },
     {
@@ -4388,40 +4895,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_carro_control/main/car_controller.c",
-      "source_location": "L38",
-      "weight": 1.0
-    },
-    {
-      "source": "code_c_esp32_carro_control_main_espnow_car_c_code_c_esp32_carro_control_main_espnow_car",
-      "target": "code_c_esp32_carro_control_main_espnow_car_espnow_car_recv_cb",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L19",
-      "weight": 1.0
-    },
-    {
-      "source": "code_c_esp32_carro_control_main_espnow_car_c_code_c_esp32_carro_control_main_espnow_car",
-      "target": "code_c_esp32_carro_control_main_espnow_car_espnow_car_send_cb",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L42",
-      "weight": 1.0
-    },
-    {
-      "source": "code_c_esp32_carro_control_main_espnow_car_c_code_c_esp32_carro_control_main_espnow_car",
-      "target": "code_c_esp32_carro_control_main_espnow_car_espnow_car_init",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L50",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -4432,7 +4906,40 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L93",
+      "source_location": "L104",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_espnow_car_c_code_c_esp32_carro_control_main_espnow_car",
+      "target": "code_c_esp32_carro_control_main_espnow_car_espnow_car_recv_cb",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_espnow_car_c_code_c_esp32_carro_control_main_espnow_car",
+      "target": "code_c_esp32_carro_control_main_espnow_car_espnow_car_send_cb",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_espnow_car_c_code_c_esp32_carro_control_main_espnow_car",
+      "target": "code_c_esp32_carro_control_main_espnow_car_espnow_car_init",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -4480,6 +4987,50 @@
       "weight": 1.0
     },
     {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_c_code_c_esp32_carro_control_main_lqr_simo",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_clampf",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_c_code_c_esp32_carro_control_main_lqr_simo",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_lqr_simo_reset",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_c_code_c_esp32_carro_control_main_lqr_simo",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_ganancia",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_lqr_simo_c_code_c_esp32_carro_control_main_lqr_simo",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_lqr_simo_step",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/esp32_carro_control/main/lqr_simo.c",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
       "source": "code_c_esp32_carro_control_main_main",
       "target": "code_c_esp32_carro_control_main_main_car_telemetry_task",
       "relation": "contains",
@@ -4487,7 +5038,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L115",
+      "source_location": "L114",
       "weight": 1.0
     },
     {
@@ -4498,7 +5049,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L130",
+      "source_location": "L129",
       "weight": 1.0
     },
     {
@@ -4630,7 +5181,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/esp32_carro_control/main/protocol_defs.h",
-      "source_location": "L48",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -4668,6 +5219,17 @@
     },
     {
       "source": "code_c_readme_2_protocolo_de_comunicaci\u00f3n",
+      "target": "code_c_readme_2_2_emparejamiento_esp_now_base_leftrightarrow_carro",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/README.md",
+      "source_location": "L111",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_readme_2_protocolo_de_comunicaci\u00f3n",
       "target": "code_c_readme_2_1_enlace_serial_pc_matlab_leftrightarrow_estaci\u00f3n_base_115200_baudios",
       "relation": "contains",
       "_origin": "ast",
@@ -4685,7 +5247,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/README.md",
-      "source_location": "L117",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -4696,7 +5258,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/README.md",
-      "source_location": "L125",
+      "source_location": "L133",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_readme_3_instrucciones_de_compilaci\u00f3n_y_flasheo_con_esp_idf",
+      "target": "code_c_readme_pruebas_en_pc_controlador_y_observador_del_carro_sin_esp_idf",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/README.md",
+      "source_location": "L142",
       "weight": 1.0
     },
     {
@@ -4707,7 +5280,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "code/C/README.md",
-      "source_location": "L113",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -4741,6 +5314,28 @@
       "confidence_score": 1.0,
       "source_file": "code/C/README.md",
       "source_location": "L81",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control",
+      "target": "code_c_test_test_control_lazo_cerrado",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control",
+      "target": "code_c_test_test_control_main",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -5312,7 +5907,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -5323,7 +5918,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L27",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -5334,40 +5929,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L37",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_2_ecuaciones_primitivas",
-      "target": "readme_2_6_sistema_no_lineal_completo",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L115",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_2_ecuaciones_primitivas",
-      "target": "readme_2_1_compuerta_p\u00e9ndulo_colgante_derivaci\u00f3n_por_lagrange",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L56",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_2_ecuaciones_primitivas",
-      "target": "readme_2_2_torque_aerodin\u00e1mico",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L73",
+      "source_location": "L38",
       "weight": 1.0
     },
     {
@@ -5378,7 +5940,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L85",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -5389,7 +5951,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L89",
+      "source_location": "L111",
       "weight": 1.0
     },
     {
@@ -5400,7 +5962,40 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L99",
+      "source_location": "L137",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_2_ecuaciones_primitivas",
+      "target": "readme_2_6_sistema_no_lineal_completo",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L185",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_2_ecuaciones_primitivas",
+      "target": "readme_2_1_compuerta_p\u00e9ndulo_colgante_derivaci\u00f3n_por_lagrange",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L57",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_2_ecuaciones_primitivas",
+      "target": "readme_2_2_torque_aerodin\u00e1mico",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -5411,7 +6006,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L128",
+      "source_location": "L201",
       "weight": 1.0
     },
     {
@@ -5422,7 +6017,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L136",
+      "source_location": "L229",
       "weight": 1.0
     },
     {
@@ -5433,7 +6028,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L146",
+      "source_location": "L257",
       "weight": 1.0
     },
     {
@@ -5444,7 +6039,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L158",
+      "source_location": "L326",
       "weight": 1.0
     },
     {
@@ -5455,7 +6050,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L173",
+      "source_location": "L360",
       "weight": 1.0
     },
     {
@@ -5466,7 +6061,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L189",
+      "source_location": "L398",
       "weight": 1.0
     },
     {
@@ -5477,7 +6072,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L198",
+      "source_location": "L407",
       "weight": 1.0
     },
     {
@@ -5488,7 +6083,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L208",
+      "source_location": "L417",
       "weight": 1.0
     },
     {
@@ -5499,7 +6094,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L243",
+      "source_location": "L452",
       "weight": 1.0
     },
     {
@@ -5510,7 +6105,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L254",
+      "source_location": "L463",
       "weight": 1.0
     },
     {
@@ -5521,7 +6116,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L273",
+      "source_location": "L482",
       "weight": 1.0
     },
     {
@@ -5532,7 +6127,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L281",
+      "source_location": "L501",
       "weight": 1.0
     },
     {
@@ -5543,7 +6138,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L289",
+      "source_location": "L525",
       "weight": 1.0
     },
     {
@@ -5554,7 +6149,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L314",
+      "source_location": "L550",
       "weight": 1.0
     },
     {
@@ -5565,7 +6160,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L327",
+      "source_location": "L575",
       "weight": 1.0
     },
     {
@@ -5576,7 +6171,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L339",
+      "source_location": "L589",
       "weight": 1.0
     },
     {
@@ -5587,7 +6182,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L347",
+      "source_location": "L597",
       "weight": 1.0
     },
     {
@@ -5598,7 +6193,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L356",
+      "source_location": "L606",
       "weight": 1.0
     },
     {
@@ -5609,7 +6204,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L378",
+      "source_location": "L628",
       "weight": 1.0
     },
     {
@@ -5620,7 +6215,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L382",
+      "source_location": "L632",
       "weight": 1.0
     },
     {
@@ -5631,7 +6226,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L397",
+      "source_location": "L647",
       "weight": 1.0
     },
     {
@@ -5642,7 +6237,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L428",
+      "source_location": "L678",
       "weight": 1.0
     },
     {
@@ -5653,7 +6248,117 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L463",
+      "source_location": "L713",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_8_puesta_en_marcha_de_los_esp32",
+      "target": "readme_8_1_qu\u00e9_se_necesita",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L777",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_8_puesta_en_marcha_de_los_esp32",
+      "target": "readme_8_2_conexiones",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L783",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_8_puesta_en_marcha_de_los_esp32",
+      "target": "readme_8_3_configuraci\u00f3n_del_esp32",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L808",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_8_puesta_en_marcha_de_los_esp32",
+      "target": "readme_8_4_instalar_esp_idf_una_sola_vez",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L827",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_8_puesta_en_marcha_de_los_esp32",
+      "target": "readme_8_5_activar_esp_idf_cada_vez_que_abras_powershell",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L851",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_8_puesta_en_marcha_de_los_esp32",
+      "target": "readme_8_6_encontrar_el_puerto_com_de_cada_placa",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L865",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_8_puesta_en_marcha_de_los_esp32",
+      "target": "readme_8_7_compilar_y_cargar_el_carro",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L875",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_8_puesta_en_marcha_de_los_esp32",
+      "target": "readme_8_8_compilar_y_cargar_la_estaci\u00f3n_base",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L895",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_8_puesta_en_marcha_de_los_esp32",
+      "target": "readme_8_9_usar_el_sistema_desde_matlab",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L913",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_8_puesta_en_marcha_de_los_esp32",
+      "target": "readme_8_10_problemas_comunes",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L937",
       "weight": 1.0
     },
     {
@@ -5664,18 +6369,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L126",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
-      "target": "readme_4_c\u00f3mo_se_lleg\u00f3_al_lqr_como_mejor_opci\u00f3n",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L187",
+      "source_location": "L199",
       "weight": 1.0
     },
     {
@@ -5686,7 +6380,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L19",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "readme_4_c\u00f3mo_se_lleg\u00f3_al_lqr_como_mejor_opci\u00f3n",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L396",
       "weight": 1.0
     },
     {
@@ -5697,40 +6402,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L271",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
-      "target": "readme_6_diagramas_de_bloques_mermaid",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L395",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
-      "target": "readme_7_verificaci\u00f3n_y_reproducibilidad",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L481",
-      "weight": 1.0
-    },
-    {
-      "source": "readme_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
-      "target": "readme_8_limitaciones_y_trabajo_futuro",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "README.md",
-      "source_location": "L506",
+      "source_location": "L480",
       "weight": 1.0
     },
     {
@@ -5741,7 +6413,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L54",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -5753,6 +6425,50 @@
       "confidence_score": 1.0,
       "source_file": "README.md",
       "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "readme_6_diagramas_de_bloques_mermaid",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L645",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "readme_7_verificaci\u00f3n_y_reproducibilidad",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L731",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "readme_8_puesta_en_marcha_de_los_esp32",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L757",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_documentaci\u00f3n_t\u00e9cnica_modelado_funciones_de_transferencia_y_control_lqr",
+      "target": "readme_9_limitaciones_y_trabajo_futuro",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L956",
       "weight": 1.0
     },
     {
@@ -5874,7 +6590,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L99",
+      "source_location": "L110",
       "weight": 1.0
     },
     {
@@ -5886,19 +6602,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_base_potenciometro/main/espnow_base.c",
-      "source_location": "L27",
-      "weight": 1.0
-    },
-    {
-      "source": "code_c_esp32_base_potenciometro_main_main_app_main",
-      "target": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_start",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "call",
-      "source_file": "code/C/esp32_base_potenciometro/main/main.c",
-      "source_location": "L100",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -5910,7 +6614,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_base_potenciometro/main/main.c",
-      "source_location": "L95",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -5922,7 +6626,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_base_potenciometro/main/main.c",
-      "source_location": "L96",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -5934,7 +6638,19 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_base_potenciometro/main/main.c",
-      "source_location": "L97",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_base_potenciometro_main_main_app_main",
+      "target": "code_c_esp32_base_potenciometro_main_adc_reader_adc_reader_start",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/esp32_base_potenciometro/main/main.c",
+      "source_location": "L91",
       "weight": 1.0
     },
     {
@@ -5946,7 +6662,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_base_potenciometro/main/main.c",
-      "source_location": "L54",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -5958,7 +6674,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_base_potenciometro/main/main.c",
-      "source_location": "L74",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -5970,7 +6686,43 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_base_potenciometro/main/main.c",
-      "source_location": "L78",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_car_controller_car_controller_init",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_lqr_simo_reset",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/esp32_carro_control/main/car_controller.c",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_car_controller_car_controller_step",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_lqr_simo_step",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/esp32_carro_control/main/car_controller.c",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_car_controller_car_controller_step",
+      "target": "code_c_esp32_carro_control_main_lqr_simo_lqr_simo_reset",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/esp32_carro_control/main/car_controller.c",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -5982,7 +6734,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L27",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -5994,7 +6746,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/espnow_car.c",
-      "source_location": "L96",
+      "source_location": "L107",
       "weight": 1.0
     },
     {
@@ -6006,7 +6758,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L141",
+      "source_location": "L140",
       "weight": 1.0
     },
     {
@@ -6018,7 +6770,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L142",
+      "source_location": "L141",
       "weight": 1.0
     },
     {
@@ -6030,7 +6782,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L144",
+      "source_location": "L143",
       "weight": 1.0
     },
     {
@@ -6042,7 +6794,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L146",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -6054,7 +6806,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L151",
+      "source_location": "L150",
       "weight": 1.0
     },
     {
@@ -6066,7 +6818,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L152",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -6083,18 +6835,6 @@
     },
     {
       "source": "code_c_esp32_carro_control_main_main_car_control_task",
-      "target": "code_c_esp32_carro_control_main_mpu6050_mpu6050_is_ready",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "call",
-      "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L104",
-      "weight": 1.0
-    },
-    {
-      "source": "code_c_esp32_carro_control_main_main_car_control_task",
       "target": "code_c_esp32_carro_control_main_mpu6050_mpu6050_read_accel_x",
       "relation": "calls",
       "_origin": "ast",
@@ -6102,7 +6842,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L70",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -6114,7 +6854,19 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L75",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_esp32_carro_control_main_main_car_control_task",
+      "target": "code_c_esp32_carro_control_main_mpu6050_mpu6050_is_ready",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/esp32_carro_control/main/main.c",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -6126,7 +6878,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L78",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -6138,7 +6890,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L92",
+      "source_location": "L91",
       "weight": 1.0
     },
     {
@@ -6150,7 +6902,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L93",
+      "source_location": "L92",
       "weight": 1.0
     },
     {
@@ -6162,10 +6914,94 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "code/C/esp32_carro_control/main/main.c",
-      "source_location": "L125",
+      "source_location": "L124",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control_lazo_cerrado",
+      "target": "code_c_esp32_carro_control_main_car_controller_car_controller_init",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control_lazo_cerrado",
+      "target": "code_c_esp32_carro_control_main_car_controller_car_controller_step",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control_main",
+      "target": "code_c_esp32_carro_control_main_car_controller_car_controller_init",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control_main",
+      "target": "code_c_esp32_carro_control_main_car_controller_car_controller_step",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control_main",
+      "target": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_init",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control_main",
+      "target": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_get_state",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "code_c_test_test_control_main",
+      "target": "code_c_esp32_carro_control_main_kalman_observer_kalman_observer_update",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "code/C/test/test_control.c",
+      "source_location": "L78",
       "weight": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "02f2c5564f8e230022811a0a4512698d4f885c43"
+  "built_at_commit": "6d3839da3b736d5a4374d6e2e8a0421047878dd7"
 }

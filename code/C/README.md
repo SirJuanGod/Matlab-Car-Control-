@@ -38,7 +38,7 @@ flowchart LR
     P2_MAIN --- P2_MPU[" mpu6050.h / .c<br><small>Driver I2C bajo nivel</small>"]
     P2_MAIN --- P2_KALMAN[" kalman_observer.h / .c<br><small>Filtro Kalman (d = 10 - Delta_x)</small>"]
     P2_MAIN --- P2_MOTOR[" motor_fan_pwm.h / .c<br><small>Driver LEDC para L298N</small>"]
-    P2_MAIN --- P2_CAR[" car_controller.h / .c<br><small>PID de posición y aerodinámica</small>"]
+    P2_MAIN --- P2_CAR[" car_controller.h / .c<br><small>LQR+I SIMO (lqr_simo.c, lqr_tablas.h) + PID de posición</small>"]
     P2_MAIN --- P2_ESPNOW[" espnow_car.h / .c<br><small>Enlace hacia la base</small>"]
     P2_MAIN --- P2_PROTO[" protocol_defs.h<br><small>Tramas binarias compartidas</small>"]
 
@@ -82,38 +82,31 @@ flowchart LR
 
 ### 2.1 Enlace Serial PC / MATLAB $\leftrightarrow$ Estación Base (115200 Baudios)
 
-* **Telemetría enviada por la Base a MATLAB (50 Hz):**
+* **Telemetría enviada por la Base a MATLAB (100 Hz):**
   ```
   $TEL,<theta_meas>,<dist_est>,<vel_est>,<ax>,<u_fan>,<u_car>,<error_dist>,<status>\n
   ```
-  * `theta_meas`: Ángulo medido de la compuerta por el ADC [0.0 - 180.0 °].
+  * `theta_meas`: Ángulo medido de la compuerta por el ADC [0.0 - 90.0 °].
   * `dist_est`: Distancia estimada del carro a la compuerta [cm].
   * `vel_est`: Velocidad lineal del carro estimada por Kalman [m/s].
   * `ax`: Aceleración longitudinal medida por el MPU6050 [m/s²].
   * `u_fan`: PWM aplicado al ventilador San Ace 40 [10.0 - 90.0 %].
   * `u_car`: Esfuerzo de los motores de tracción [-100.0 a +100.0 %].
-  * `error_dist`: Error de distancia instantáneo $e_d = d_{est} - d_{ref}$ [cm].
-  * `status`: Modo de control activo (0: autónomo, 1: feedback MATLAB).
+  * `error_dist`: Error de distancia instantáneo $e_d = d_{est} - d_{ref}$ [cm]; $d_{ref}$ la calcula el LQR del carro, así que $d_{ref} = d_{est} - e_d$.
+  * `status`: Actuadores realmente encendidos en el carro: bit 0 ventilador, bit 1 motores (`3` = ambos).
   * Si la base no recibe telemetría del carro durante más de 500 ms, los campos del carro se envían en `0`.
   * Tras el arranque la base silencia sus logs (UART0 es compartido con MATLAB); igual conviene ignorar en MATLAB toda línea que no empiece con `$TEL,` (p. ej. el texto del bootloader).
 
 * **Comando enviado por MATLAB a la Base:**
   ```
-  $CMD,<theta_ref>,<d_ref>,<matlab_pwm>,<mode>,<en_motors>,<en_fan>\n
+  $CMD,<theta_ref>,<en_motors>,<en_fan>\n
   ```
-  * `theta_ref`: Consigna de ángulo deseada en grados (ej. `35.0`).
-  * `d_ref`: Consigna de distancia del carro en cm (ej. `10.0`).
-  * `matlab_pwm`: Señal PWM calculada en la simulación si `mode = 1` (HIL).
-  * `mode`: `0` para control local en el carro, `1` para feedback desde MATLAB.
+  * `theta_ref`: Consigna de ángulo en grados, en $[0, 90]$ (ej. `35.0`).
   * `en_motors`: `1` para habilitar motores, `0` para detenerlos.
   * `en_fan`: `1` para habilitar ventilador, `0` para apagarlo.
-  * Los 6 campos son obligatorios y deben ser números finitos; si no, la trama se descarta.
-
-* **Lectura desde MATLAB:** `code/MATLAB/uart_esp32.m` abre el puerto, envía la consigna, grafica θ y d en vivo y devuelve los datos; al terminar (o con Ctrl+C) apaga motores y ventilador.
-  ```matlab
-  datos = uart_esp32("COM5", 30, 35, 10);   % puerto, duracion [s], theta_ref [deg], d_ref [cm]
-  plot(datos.t, datos.theta_deg)
-  ```
+  * Los 3 campos son obligatorios y `theta_ref` debe estar en rango; si no, la trama se descarta.
+  * No hay consigna de distancia ni PWM desde MATLAB: el **LQR+I SIMO corre en el ESP32 del carro** y calcula el PWM del ventilador y $d_{ref}$.
+  * La base arranca con motores y ventilador **apagados** y conserva la última orden recibida: el sistema sigue funcionando aunque se cierre MATLAB.
 
 ### 2.2 Emparejamiento ESP-NOW (Base $\leftrightarrow$ Carro)
 
@@ -121,7 +114,7 @@ Por defecto ambos nodos usan broadcast y aceptan paquetes de **cualquier** ESP32
 1. Flashea ambos y lee en `idf.py monitor` la línea `MAC propia (...)` de cada uno.
 2. En `main/protocol_defs.h` de **ambos** proyectos pon `BASE_MAC_ADDR` y `CAR_MAC_ADDR` con esas MAC y vuelve a flashear. Cada nodo descarta lo que no venga de su par.
 
-* **Interfaz MATLAB:** `>> gui_esp32` (en `code/MATLAB`) abre el puerto, envía `$CMD` (motores y ventilador arrancan apagados), grafica θ, el PWM enviado (con mín/máx y aviso de saturación), la distancia de la IMU y el esfuerzo del carro, y al cerrar apaga los actuadores y deja los datos en `datos_esp32`. Pruebas sin hardware: `runtests('test_gui_esp32')`.
+* **Interfaz MATLAB:** `>> gui_esp32` (en `code/MATLAB`) lee `$TEL` y grafica θ, el PWM enviado (con mín/máx y aviso de saturación), la distancia de la IMU con la $d_{ref}$ del LQR y el esfuerzo del carro. Solo envía `$CMD` cuando el usuario cambia la consigna o las casillas; al conectarse muestra el estado real de los actuadores y cerrarla no detiene el sistema (para eso está **PARADA**). Pruebas sin hardware: `runtests('test_gui_esp32')`.
 
 ---
 
@@ -149,5 +142,5 @@ idf.py -p COM_PUERTO_CARRO flash monitor
 ### Pruebas en PC (controlador y observador del carro, sin ESP-IDF)
 ```bash
 cd code/C
-gcc -I esp32_carro_control/main test/test_control.c esp32_carro_control/main/car_controller.c esp32_carro_control/main/kalman_observer.c -lm -o test_control && ./test_control
+gcc -I esp32_carro_control/main test/test_control.c esp32_carro_control/main/car_controller.c esp32_carro_control/main/lqr_simo.c esp32_carro_control/main/kalman_observer.c -lm -o test_control && ./test_control
 ```

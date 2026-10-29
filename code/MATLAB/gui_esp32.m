@@ -1,10 +1,12 @@
 function fig = gui_esp32()
 %GUI_ESP32 Interfaz en tiempo real con el hardware (Estacion Base ESP32 por UART).
-% Envia la consigna $CMD y grafica la telemetria $TEL (protocolo: code/C/README.md, 2.1).
+% El control (LQR+I SIMO) corre en el ESP32 del carro; esta interfaz solo lee la telemetria $TEL
+% y envia la consigna $CMD (angulo, motores y ventilador; protocolo: code/C/README.md, 2.1).
 % Muestra en vivo theta, la senal PWM enviada al ventilador (grafica + indicador numerico
-% con min/max y saturacion), la distancia estimada por la IMU y el esfuerzo del carro.
-% Al desconectar o cerrar la ventana apaga motores y ventilador y deja los datos en
-% 'datos_esp32' del workspace base. Cierra 'idf.py monitor' antes: el COM no se comparte.
+% con min/max y saturacion), la distancia estimada por la IMU con la d_ref que fija el LQR,
+% y el esfuerzo del carro. No envia nada hasta que el usuario cambia algo, y cerrarla no
+% detiene el sistema (para eso esta PARADA). Al cerrar deja los datos en 'datos_esp32'.
+% Cierra 'idf.py monitor' antes: el COM no se comparte.
 p = cargar_parametros(fileparts(mfilename('fullpath')));
 
 T_VENTANA = 30;    % [s] historial visible en las graficas
@@ -16,6 +18,7 @@ sp = [];
 M = nan(3000, 9);  % [t theta d v ax u_fan u_car e_d status]
 n = 0;
 t0 = tic; t_ultima = -inf; t_consigna = 0;
+usuario_actuo = false; % hasta que el usuario cambie algo, las casillas reflejan el estado real
 
 fig = uifigure('Name','ESP32: compuerta + ventilador + carro (hardware)','Position',[60 60 1250 720], ...
     'CloseRequestFcn', @(~,~) cerrar());
@@ -24,8 +27,8 @@ gl.ColumnWidth = {300,'1x'};
 
 % ---- Panel de conexion y consignas ----
 pl = uipanel(gl,'Title','Conexion y consignas');
-pg = uigridlayout(pl,[15 2]);
-pg.RowHeight = repmat({26},1,15);
+pg = uigridlayout(pl,[14 2]);
+pg.RowHeight = repmat({26},1,14);
 pg.ColumnWidth = {'1.4x','1x'};
 
 uilabel(pg,'Text','Puerto');
@@ -37,8 +40,6 @@ btnCon.Layout.Column = [1 2];
 
 uilabel(pg,'Text','Angulo ref. [deg]');
 efTh = uieditfield(pg,'numeric','Value',p.theta_ref_deg,'Limits',[0 90],'ValueChangedFcn',@(~,~) onConsigna());
-uilabel(pg,'Text','Distancia ref. [cm]');
-efD = uieditfield(pg,'numeric','Value',p.d_ini_cm,'Limits',[p.d_min p.d_max]*100,'ValueChangedFcn',@(~,~) onConsigna());
 chkMot = uicheckbox(pg,'Text','Motores del carro','Value',false,'ValueChangedFcn',@(~,~) onConsigna());
 chkMot.Layout.Column = [1 2];
 chkFan = uicheckbox(pg,'Text','Ventilador','Value',false,'ValueChangedFcn',@(~,~) onConsigna());
@@ -61,12 +62,12 @@ lblCar = uilabel(pg,'Text','Carro: --','WordWrap','on');
 lblCar.Layout.Column = [1 2];
 lblEE = uilabel(pg,'Text','Error estacionario: --','FontWeight','bold','WordWrap','on');
 lblEE.Layout.Column = [1 2];
-pg.RowHeight{15} = 40; % el texto ocupa dos lineas
+pg.RowHeight{14} = 40; % el texto ocupa dos lineas
 
 % ---- Graficas ----
 ag = uigridlayout(gl,[2 2]);
 titulos = {'Angulo de la compuerta \theta','Senal PWM enviada al ventilador [%]', ...
-           'Distancia carro-compuerta d (IMU)','Esfuerzo de los motores del carro [%]'};
+           'Distancia carro-compuerta d (IMU) y d_{ref} del LQR','Esfuerzo de los motores del carro [%]'};
 ylabs = {'\theta [deg]','PWM [%]','d [cm]','u_{car} [%]'};
 axs = gobjects(1,4);
 for k = 1:4
@@ -74,7 +75,7 @@ for k = 1:4
     title(axs(k),titulos{k}); ylabel(axs(k),ylabs{k}); xlabel(axs(k),'t [s]');
     grid(axs(k),'on'); hold(axs(k),'on');
 end
-nMax = T_VENTANA * 50; % la base envia a 50 Hz
+nMax = T_VENTANA * 100; % la base envia a 100 Hz
 hTh    = animatedline(axs(1),'Color',[0 0.45 0.74],'LineWidth',1.4,'MaximumNumPoints',nMax);
 hThRef = animatedline(axs(1),'Color','r','LineStyle','--','MaximumNumPoints',nMax);
 hPWM   = animatedline(axs(2),'Color',[0 0.45 0.74],'LineWidth',1.4,'MaximumNumPoints',nMax);
@@ -103,14 +104,13 @@ fig.UserData.lineaCmd = @lineaCmd;
         configureCallback(sp, "terminator", @(src,~) procesar(readline(src)));
         btnCon.Text = 'Desconectar'; ddCOM.Enable = 'off';
         lblCon.Text = sprintf('Conectado a %s. Esperando telemetria...', ddCOM.Value);
-        enviarCmd();
+        usuario_actuo = false; % conectar no cambia nada en el sistema
         start(tmr);
     end
 
     function desconectar()
         stop(tmr);
-        onParada();
-        delete(sp); sp = [];
+        delete(sp); sp = []; % el sistema sigue con la ultima consigna
         btnCon.Text = 'Conectar'; ddCOM.Enable = 'on';
         lblCon.Text = 'Desconectado. Datos en ''datos_esp32''.';
         guardar();
@@ -123,6 +123,7 @@ fig.UserData.lineaCmd = @lineaCmd;
 
     function onConsigna()
         t_consigna = toc(t0); % el error estacionario se vuelve a medir desde aqui
+        usuario_actuo = true;
         enviarCmd();
     end
 
@@ -136,12 +137,11 @@ fig.UserData.lineaCmd = @lineaCmd;
     end
 
     function s = lineaCmd()
-        % Modo 0: el control corre en el carro; matlab_pwm solo se usa en modo HIL (1)
-        s = sprintf("$CMD,%.2f,%.2f,0.00,0,%d,%d", efTh.Value, efD.Value, chkMot.Value, chkFan.Value);
+        s = sprintf("$CMD,%.2f,%d,%d", efTh.Value, chkMot.Value, chkFan.Value);
     end
 
     function vigilar()
-        enviarCmd();
+        if usuario_actuo, enviarCmd(); end % reenvio: si la base se reinicia, recupera la consigna
         if toc(t0) - t_ultima > T_SIN_DATOS
             lblCon.Text = 'Base sin datos: revise cable, puerto o reinicio del ESP32.';
             lblCon.FontColor = [0.8 0.1 0.1];
@@ -158,7 +158,7 @@ fig.UserData.lineaCmd = @lineaCmd;
 
         addpoints(hTh, t, v(1));  addpoints(hThRef, t, efTh.Value);
         addpoints(hPWM, t, v(5));
-        addpoints(hD, t, v(2));   addpoints(hDRef, t, efD.Value);
+        addpoints(hD, t, v(2));   addpoints(hDRef, t, v(2) - v(7)); % d_ref = d - e_d
         addpoints(hCar, t, v(6));
 
         pwm = M(1:n,6);
@@ -172,7 +172,13 @@ fig.UserData.lineaCmd = @lineaCmd;
         if all(v(2:7) == 0)
             lblCar.Text = 'Carro: sin enlace ESP-NOW.'; lblCar.FontColor = [0.8 0.1 0.1];
         else
-            lblCar.Text = sprintf('Carro: enlazado (modo %d).', v(8)); lblCar.FontColor = [0 0.5 0];
+            onoff = {'apagado','encendido'};
+            lblCar.Text = sprintf('Carro: enlazado. Ventilador %s, motores %s.', ...
+                onoff{bitand(v(8),1) + 1}, onoff{(bitand(v(8),2) > 0) + 1});
+            lblCar.FontColor = [0 0.5 0];
+            if ~usuario_actuo % mostrar lo que el carro esta haciendo de verdad
+                chkFan.Value = bitand(v(8),1) > 0; chkMot.Value = bitand(v(8),2) > 0;
+            end
         end
         % Error estacionario: promedio de la ultima ventana, solo cuando la consigna lleva T_ASIENTO quieta
         if t - t_consigna >= T_ASIENTO
@@ -194,7 +200,7 @@ fig.UserData.lineaCmd = @lineaCmd;
     end
 
     function cerrar()
-        if ~isempty(sp), desconectar(); else, guardar(); end
+        if ~isempty(sp), desconectar(); else, guardar(); end % no apaga: el sistema es independiente
         delete(tmr);
         delete(fig);
     end
@@ -203,7 +209,7 @@ end
 function p = cargar_parametros(folder) %#ok<INUSD> usado dentro de evalc
 % Funcion local sin anidadas: run() puede crear variables aqui (no en gui_esp32)
 evalc('run(fullfile(folder,''init_parametros.m''))');
-p = struct('theta_ref_deg',theta_ref_deg,'d_ini_cm',d_ini_cm,'d_min',d_min,'d_max',d_max, ...
+p = struct('theta_ref_deg',theta_ref_deg,'d_min',d_min,'d_max',d_max, ...
            'pwm_min',pwm_min,'pwm_max',pwm_max);
 end
 

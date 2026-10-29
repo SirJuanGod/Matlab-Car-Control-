@@ -37,12 +37,8 @@ static void car_control_task(void *pvParameters) {
         .seq_num = 0,
         .theta_meas_deg = 0.0f,
         .theta_ref_deg = 35.0f,
-        .d_ref_cm = 10.0f,      // Distancia inicial nominal d0 = 10 cm
-        .matlab_pwm_feed = 0.0f,
-        .control_mode = 0,      // Autonomo
         .enable_motors = 0,     // Inicia seguro (deshabilitado)
         .enable_fan = 0,        // Inicia seguro (deshabilitado)
-        .flags = 0,
         .checksum = 0
     };
 
@@ -62,7 +58,6 @@ static void car_control_task(void *pvParameters) {
             if (comm_loss_ticks > 50) {
                 active_cmd.enable_motors = 0;
                 active_cmd.enable_fan = 0;
-                active_cmd.matlab_pwm_feed = 0.0f;
             }
         }
 
@@ -78,20 +73,16 @@ static void car_control_task(void *pvParameters) {
         bool motors_on = (active_cmd.enable_motors != 0) && mpu6050_is_ready();
         bool fan_on = (active_cmd.enable_fan != 0);
 
-        // 4. Calcular Bloque de Control (PID de Carro + Lazo Ventilador)
+        // 4. Control: LQR+I SIMO (ventilador y d_ref) + PID de distancia del carro
         controller_output_t ctrl_out = car_controller_step(
             k_state.d_est_cm,
             k_state.v_est,
             active_cmd.theta_meas_deg,
-            active_cmd.d_ref_cm,
             active_cmd.theta_ref_deg,
-            active_cmd.matlab_pwm_feed,
-            active_cmd.control_mode,
+            fan_on,
+            motors_on,
             dt_s
         );
-
-        // Sin acumular error mientras el actuador esta apagado (evita el salto al re-habilitar)
-        car_controller_reset_integrators(!motors_on, !fan_on);
 
         // El observador debe ver el esfuerzo realmente aplicado, no el calculado
         last_u_motor = motors_on ? ctrl_out.u_car_percent : 0.0f;
@@ -110,7 +101,7 @@ static void car_control_task(void *pvParameters) {
             .u_motor_pwm = ctrl_out.u_car_percent,
             .error_dist_cm = ctrl_out.error_dist_cm,
             .imu_ready = mpu6050_is_ready() ? 1 : 0,
-            .control_status = active_cmd.control_mode,
+            .control_status = (fan_on ? 1 : 0) | (motors_on ? 2 : 0),
             .checksum = 0
         };
 
@@ -157,7 +148,7 @@ void app_main(void) {
     }
 
     kalman_observer_init();
-    car_controller_init();
+    car_controller_init(0.0f);
 
     // 3. Inicializar ESP-NOW
     static const uint8_t peer_mac[6] = BASE_MAC_ADDR;

@@ -18,14 +18,10 @@
  */
 typedef struct {
     uint32_t seq_num;          // Contador secuencial de trama
-    float    theta_meas_deg;   // Angulo medido de la compuerta por ADC [0.0 - 180.0 deg]
-    float    theta_ref_deg;    // Consigna de angulo deseada [deg]
-    float    d_ref_cm;         // Consigna de distancia deseada [cm]
-    float    matlab_pwm_feed;  // Esfuerzo de control PWM calculado en MATLAB (modo HIL) [%]
-    uint8_t  control_mode;     // 0: Control autonomo en Carro, 1: Feedback/HIL desde MATLAB
+    float    theta_meas_deg;   // Angulo medido de la compuerta por ADC [0.0 - 90.0 deg]
+    float    theta_ref_deg;    // Consigna de angulo deseada [deg] (d_ref la calcula el LQR del carro)
     uint8_t  enable_motors;    // 1: Habilitar motores de traccion, 0: Parada segura
     uint8_t  enable_fan;       // 1: Habilitar ventilador, 0: Ventilador apagado
-    uint8_t  flags;            // Banderas auxiliares
     uint16_t checksum;         // Suma de comprobacion
 } base_to_car_packet_t;
 
@@ -41,7 +37,7 @@ typedef struct {
     float    u_motor_pwm;      // Esfuerzo de traccion del PID del carro [-100.0 a +100.0 %]
     float    error_dist_cm;    // Error de distancia instantaneo e_d [cm]
     uint8_t  imu_ready;        // 1: IMU calibrada y operativa
-    uint8_t  control_status;   // Banderas de estado del controlador
+    uint8_t  control_status;   // Actuadores encendidos: bit0 ventilador, bit1 motores
     uint16_t checksum;         // Suma de comprobacion
 } car_to_base_packet_t;
 

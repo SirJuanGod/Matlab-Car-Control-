@@ -40,8 +40,19 @@ tc.verifySubstring(etiqueta(tc, 'min '), 'min 25.0 % | max 90.0 %');
 end
 
 function testComandoArrancaSeguroYCumpleProtocolo(tc)
-% Formato que parsea uart_matlab.c: $CMD,<th>,<d>,<pwm>,<mode>,<en_motors>,<en_fan>
-tc.verifyEqual(tc.TestData.fig.UserData.lineaCmd(), "$CMD,35.00,10.00,0.00,0,0,0");
+% Formato que parsea uart_matlab.c: $CMD,<theta_ref>,<en_motors>,<en_fan>
+tc.verifyEqual(tc.TestData.fig.UserData.lineaCmd(), "$CMD,35.00,0,0");
+end
+
+function testCasillasMuestranEstadoRealDelCarro(tc)
+% Antes de que el usuario toque algo, la interfaz refleja lo que el carro hace (status: bit0 ventilador, bit1 motores)
+tc.TestData.procesar("$TEL,34.50,10.20,0.010,0.050,40.00,-3.00,0.20,3");
+tc.verifySubstring(etiqueta(tc, 'Carro:'), 'Ventilador encendido, motores encendido');
+chk = findall(tc.TestData.fig, 'Type', 'uicheckbox');
+tc.verifyTrue(all([chk.Value]));
+tc.verifyEqual(tc.TestData.fig.UserData.lineaCmd(), "$CMD,35.00,1,1"); % un reenvio no apagaria nada
+tc.TestData.procesar("$TEL,34.50,10.20,0.010,0.050,40.00,-3.00,0.20,1");
+tc.verifySubstring(etiqueta(tc, 'Carro:'), 'Ventilador encendido, motores apagado');
 end
 
 function testErrorEstacionarioEsperaYPromedia(tc)
