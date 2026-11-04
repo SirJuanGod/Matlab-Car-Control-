@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
@@ -12,11 +13,29 @@
 #include "motor_fan_pwm.h"
 #include "car_controller.h"
 #include "espnow_car.h"
+#include "status_led.h"
 
 static const char *TAG = "MAIN_CAR";
 
 #define CONTROL_LOOP_PERIOD_MS 10 // 100 Hz (dt = 0.01 s) identico a imu_Ts en MATLAB
 #define TELEMETRY_PERIOD_MS    20 // 50 Hz envio de paquetes hacia la base
+
+// Mantener el rumbo con el giroscopio Z: la rueda loca hace que el frente se desvie al arrancar.
+// Mientras los motores empujan se integra el giro desde el arranque (yaw) y se corrige con un PD
+// repartiendo PWM entre ruedas. Si el carro gira hacia el lado contrario al corregir, cambiar el signo.
+#define HEADING_SIGN       1.0f   // Ajustado tras invertir el sentido de los motores (MOTOR_DIR_INVERT): mantiene la
+                                  // correccion fisica que ya iba derecha. Si al corregir se tuerce mas, poner -1.0f
+#define HEADING_KP         1.5f   // [% de PWM por grado de desvio]
+#define HEADING_KD         0.08f  // [% de PWM por deg/s]
+#define HEADING_GZ_DEADBAND 0.5f  // [deg/s] ruido del giroscopio que no se integra
+// En retroceso la rueda loca queda por delante del eje (posicion inestable) y desvia mas el
+// frente: ganancias propias, mas fuertes. HEADING_REV_SIGN invierte la correccion solo en reversa
+// (+1 = la diferencia de PWM se aplica al reves que en avance, que es lo fisicamente esperado).
+#define HEADING_REV_SIGN   1.0f
+#define HEADING_REV_KP     3.0f   // [% de PWM por grado de desvio]
+#define HEADING_REV_KD     0.15f  // [% de PWM por deg/s]
+
+static bool s_init_error = false; // error en el arranque (p. ej. IMU): LED parpadeando siempre
 
 static QueueHandle_t s_rx_cmd_queue = NULL;
 static QueueHandle_t s_tx_telemetry_queue = NULL;
@@ -28,6 +47,10 @@ static void car_control_task(void *pvParameters) {
 
     uint32_t seq_count = 0;
     float current_ax = 0.0f;
+    float current_gz = 0.0f;
+    float yaw_deg = 0.0f;
+    bool led_error = false;
+    bool motors_were_on = false;
     float last_u_motor = 0.0f;
     uint32_t comm_loss_ticks = 0;
     bool link_established = false;
@@ -66,11 +89,24 @@ static void car_control_task(void *pvParameters) {
             current_ax = 0.0f;
         }
 
+        if (mpu6050_read_gyro_z(&current_gz) != ESP_OK) {
+            current_gz = 0.0f;
+        }
+
         // 3. Actualizar Observador de Estados Kalman (estimacion de distancia y velocidad)
         kalman_state_t k_state = kalman_observer_update(current_ax, last_u_motor, dt_s);
 
         // Motores solo con IMU operativa: sin ella el observador estima a ciegas
         bool motors_on = (active_cmd.enable_motors != 0) && mpu6050_is_ready();
+
+        // Al activar los motores la distancia vuelve a CAR_D0_NOMINAL_CM: la IMU no da posicion
+        // absoluta, asi que el carro se coloca a esa distancia de la compuerta antes de activarlos
+        if (motors_on && !motors_were_on) {
+            kalman_observer_reset();
+            k_state = kalman_observer_get_state();
+            ESP_LOGI(TAG, "Motores activados: distancia reiniciada a %.1f cm", (double)CAR_D0_NOMINAL_CM);
+        }
+        motors_were_on = motors_on;
         bool fan_on = (active_cmd.enable_fan != 0);
 
         // 4. Control: LQR+I SIMO (ventilador y d_ref) + PID de distancia del carro
@@ -85,13 +121,36 @@ static void car_control_task(void *pvParameters) {
         );
 
         // El observador debe ver el esfuerzo realmente aplicado, no el calculado
-        last_u_motor = motors_on ? ctrl_out.u_car_percent : 0.0f;
+        // (PWM efectivo con la compensacion de zona muerta: 80-100 %, no el u_car de 0-100 %)
+        last_u_motor = motors_on ? car_motor_effective_percent(ctrl_out.u_car_percent) : 0.0f;
 
-        // 5. Aplicar senales fisicas a los actuadores
+        // 5. Correccion de rumbo: solo mientras los motores empujan; cada arranque fija el frente
+        float steer = 0.0f;
+        if (motors_on && last_u_motor != 0.0f) {
+            float gz = (fabsf(current_gz) < HEADING_GZ_DEADBAND) ? 0.0f : current_gz;
+            yaw_deg += gz * dt_s;
+            if (last_u_motor > 0.0f) {
+                steer = HEADING_SIGN * (HEADING_KP * yaw_deg + HEADING_KD * gz);
+            } else {
+                // En retroceso la misma diferencia de PWM gira el carro al reves
+                steer = -HEADING_REV_SIGN * HEADING_SIGN * (HEADING_REV_KP * yaw_deg + HEADING_REV_KD * gz);
+            }
+        } else {
+            yaw_deg = 0.0f;
+        }
+
+        // 6. Aplicar senales fisicas a los actuadores
         fan_set_pwm_percent(ctrl_out.u_fan_percent, fan_on);
-        car_set_motors(ctrl_out.u_car_percent, motors_on);
+        car_set_motors_steer(ctrl_out.u_car_percent, steer, motors_on);
 
-        // 6. Preparar paquete de telemetria para el enlace ESP-NOW
+        // LED: parpadeo continuo con error de arranque o sin enlace con la base
+        bool error_now = s_init_error || (link_established && comm_loss_ticks > 50);
+        if (error_now != led_error) {
+            status_led_set_mode(error_now ? STATUS_LED_ERROR : STATUS_LED_OFF);
+            led_error = error_now;
+        }
+
+        // 7. Preparar paquete de telemetria para el enlace ESP-NOW
         car_to_base_packet_t tel_pkt = {
             .seq_num = seq_count++,
             .dist_est_cm = k_state.d_est_cm,
@@ -137,14 +196,16 @@ void app_main(void) {
     configASSERT(s_tx_telemetry_queue);
 
     // 2. Inicializar perifericos y hardware
+    ESP_ERROR_CHECK(status_led_init());
     ESP_ERROR_CHECK(motor_fan_pwm_init());
     actuators_emergency_stop(); // Seguridad: arrancar apagado
 
     if (mpu6050_init() == ESP_OK) {
         // Calibracion de sesgo de reposo (100 muestras)
-        mpu6050_calibrate_bias(100);
+        if (mpu6050_calibrate_bias(100) != ESP_OK) s_init_error = true;
     } else {
         ESP_LOGE(TAG, "Fallo al inicializar MPU6050. Verifique cables I2C SDA/SCL.");
+        s_init_error = true;
     }
 
     kalman_observer_init();
@@ -161,5 +222,7 @@ void app_main(void) {
     // Tarea de despacho de telemetria a 50 Hz en Nucleo 0
     xTaskCreatePinnedToCore(car_telemetry_task, "car_tx_task", 3072, NULL, 4, NULL, 0);
 
+    // LED D2: tres parpadeos y se apaga si todo cargo bien; parpadeo continuo si hubo error
+    status_led_set_mode(s_init_error ? STATUS_LED_ERROR : STATUS_LED_BOOT_OK);
     ESP_LOGI(TAG, "Sistema de Control del Carro en ejecucion.");
 }

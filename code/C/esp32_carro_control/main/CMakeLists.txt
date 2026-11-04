@@ -5,5 +5,6 @@ idf_component_register(SRCS "main.c"
                             "car_controller.c"
                             "lqr_simo.c"
                             "espnow_car.c"
+                            "status_led.c"
                        INCLUDE_DIRS "."
                        REQUIRES esp_wifi esp_netif esp_event nvs_flash driver esp_driver_gpio esp_driver_ledc esp_driver_i2c)

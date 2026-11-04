@@ -4,6 +4,7 @@
 #include <stdbool.h>
 
 #define PI_F 3.14159265f
+#define LQR_STALL_OMEGA_RAD_S 0.05f // [rad/s] (~3 deg/s) por debajo la compuerta se considera atascada
 
 // Estados del controlador (integradores del bloque Controlador_SIMO del .slx)
 static float s_thr;   // referencia prefiltrada [rad]          (Int_theta_ref)
@@ -66,7 +67,11 @@ lqr_simo_out_t lqr_simo_step(float theta_cmd, float theta_meas, float d_est, flo
     // AntiWindup: no integra con el PWM saturado empujando en la misma direccion ni con |e| grande
     float e = th - thr;
     bool satura = (out.p_raw >= LQR_PWM_MAX && e < 0) || (out.p_raw <= LQR_PWM_MIN && e > 0);
-    float e_int = (satura || fabsf(e) > LQR_XI_BAND_RAD) ? 0.0f : e;
+    // Fuera de la banda la integral normalmente se apaga (evita sobrepaso en escalones grandes),
+    // pero si la compuerta esta atascada (|omega| pequeno) se integra el error completo para que
+    // el PWM siga subiendo hasta mover la compuerta o saturar.
+    bool atascada = fabsf(om) < LQR_STALL_OMEGA_RAD_S;
+    float e_int = (satura || (fabsf(e) > LQR_XI_BAND_RAD && !atascada)) ? 0.0f : e;
 
     // Supervisor_d: acerca si el ventilador no alcanza, aleja si sobra, regresa hacia d_ini
     float r = 0.0f;
