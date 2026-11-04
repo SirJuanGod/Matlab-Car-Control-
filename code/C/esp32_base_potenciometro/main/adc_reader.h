@@ -10,6 +10,11 @@
 #define ANGLE_MAX_DEG          180.0f
 #define ADC_SAMPLING_PERIOD_US 10000 // 10 ms = 100 Hz
 
+// Filtrado del angulo
+#define ADC_OVERSAMPLES        16     // Lecturas promediadas por cada periodo de muestreo
+#define ANGLE_KF_R             0.05f  // Varianza de la medicion promediada [deg^2]
+#define ANGLE_KF_Q_ACCEL       2000.0f // Densidad de aceleracion angular [deg^2/s^3]: mas alto = sigue mas rapido, filtra menos
+
 /**
  * @brief Inicializa el periferico ADC1 en GPIO34 y configura el muestreo periodico no bloqueante.
  *        La lectura filtrada se consulta con adc_reader_get_last_angle().

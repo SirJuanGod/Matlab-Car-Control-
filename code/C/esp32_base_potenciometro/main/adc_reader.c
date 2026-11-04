@@ -16,25 +16,79 @@ static TaskHandle_t s_adc_task_handle = NULL;
 static adc_oneshot_unit_handle_t s_adc1_handle = NULL;
 
 
+// Filtro de Kalman de 2 estados [theta, omega] con modelo de velocidad constante.
+// A diferencia de un pasa-bajas de 1er orden, sigue rampas sin error de retardo en
+// regimen permanente, asi que reduce el ruido sin agregar el atraso que el LQR no modela.
+typedef struct {
+    float theta;      // [deg]
+    float omega;      // [deg/s]
+    float P00, P01, P11;
+    bool  initialized;
+} angle_kalman_t;
+
+static angle_kalman_t s_kf = {0};
+
+static float angle_kalman_update(angle_kalman_t *kf, float z) {
+    const float dt = ADC_SAMPLING_PERIOD_US * 1e-6f;
+
+    if (!kf->initialized) {
+        kf->theta = z;
+        kf->omega = 0.0f;
+        kf->P00 = ANGLE_KF_R;
+        kf->P01 = 0.0f;
+        kf->P11 = 100.0f;
+        kf->initialized = true;
+        return kf->theta;
+    }
+
+    // Prediccion: x = F x, P = F P F' + Q (Q de aceleracion blanca de densidad q)
+    const float q = ANGLE_KF_Q_ACCEL;
+    const float dt2 = dt * dt, dt3 = dt2 * dt;
+    kf->theta += kf->omega * dt;
+    float P00 = kf->P00 + dt * (2.0f * kf->P01 + dt * kf->P11) + q * dt3 / 3.0f;
+    float P01 = kf->P01 + dt * kf->P11 + q * dt2 / 2.0f;
+    float P11 = kf->P11 + q * dt;
+
+    // Correccion con la medicion del potenciometro
+    float S  = P00 + ANGLE_KF_R;
+    float K0 = P00 / S;
+    float K1 = P01 / S;
+    float innov = z - kf->theta;
+    kf->theta += K0 * innov;
+    kf->omega += K1 * innov;
+    kf->P00 = (1.0f - K0) * P00;
+    kf->P01 = (1.0f - K0) * P01;
+    kf->P11 = P11 - K1 * P01;
+
+    return kf->theta;
+}
+
 static void adc_sample_task(void *pvParameters) {
     int raw_val = 0;
     while (1) {
         // Espera notificacion del timer hardware de 100 Hz
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
-        bool read_ok = (s_adc1_handle != NULL) &&
-                       (adc_oneshot_read(s_adc1_handle, POT_ADC_CHANNEL, &raw_val) == ESP_OK);
+        // Sobremuestreo: promedia ADC_OVERSAMPLES lecturas seguidas (< 1 ms en total)
+        int32_t sum = 0;
+        int n_ok = 0;
+        for (int i = 0; i < ADC_OVERSAMPLES && s_adc1_handle != NULL; i++) {
+            if (adc_oneshot_read(s_adc1_handle, POT_ADC_CHANNEL, &raw_val) == ESP_OK) {
+                sum += raw_val;
+                n_ok++;
+            }
+        }
 
-        if (read_ok) {
-            if (raw_val < 0) raw_val = 0;
-            if (raw_val > 4095) raw_val = 4095;
-            float raw_angle = ((float)raw_val / ADC_MAX_COUNTS) * ANGLE_MAX_DEG;
-            if (raw_angle < 0.0f) raw_angle = 0.0f;
-            if (raw_angle > ANGLE_MAX_DEG) raw_angle = ANGLE_MAX_DEG;
+        if (n_ok > 0) {
+            float raw_avg = (float)sum / (float)n_ok;
+            if (raw_avg < 0.0f) raw_avg = 0.0f;
+            if (raw_avg > ADC_MAX_COUNTS) raw_avg = ADC_MAX_COUNTS;
+            float raw_angle = (raw_avg / ADC_MAX_COUNTS) * ANGLE_MAX_DEG;
 
-            // Sin filtro aqui: el LQR ya filtra su derivada (tau_w) y un pasa-bajas extra
-            // agregaria ~30 ms de retardo que el diseno de MATLAB no incluye.
-            s_last_angle_deg = raw_angle;
+            float filt = angle_kalman_update(&s_kf, raw_angle);
+            if (filt < 0.0f) filt = 0.0f;
+            if (filt > ANGLE_MAX_DEG) filt = ANGLE_MAX_DEG;
+            s_last_angle_deg = filt;
         }
     }
 }
