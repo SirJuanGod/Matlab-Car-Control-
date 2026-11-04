@@ -104,7 +104,20 @@ void fan_set_pwm_percent(float percent, bool enabled) {
     ledc_update_duty(PWM_MODE, FAN_CHANNEL);
 }
 
+float car_motor_effective_percent(float u_percent) {
+    if (fabsf(u_percent) < 1.5f) return 0.0f;
+    float mag = fabsf(u_percent);
+    if (mag > 100.0f) mag = 100.0f;
+    float duty = MOTOR_PWM_MIN_PERCENT + (mag / 100.0f) * (MOTOR_PWM_MAX_PERCENT - MOTOR_PWM_MIN_PERCENT);
+    if (duty > 100.0f) duty = 100.0f;
+    return (u_percent > 0.0f) ? duty : -duty;
+}
+
 void car_set_motors(float u_percent, bool enabled) {
+    car_set_motors_steer(u_percent, 0.0f, enabled);
+}
+
+void car_set_motors_steer(float u_percent, float steer_percent, bool enabled) {
     if (!enabled || fabsf(u_percent) < 1.5f) {
         // Parada / frenado pasivo (todos los pines de puente a 0)
         gpio_set_level(MOTOR_LEFT_IN1_PIN, 0);
@@ -118,33 +131,36 @@ void car_set_motors(float u_percent, bool enabled) {
         return;
     }
 
-    if (u_percent > 100.0f) u_percent = 100.0f;
-    if (u_percent < -100.0f) u_percent = -100.0f;
-
     // Compensacion de zona muerta por friccion estatica mecanica (stiction de motorreductores 1:48)
-    // Los motores TGP01D-A130 requieren un ciclo minimo ~20% para vencer el rozamiento
-    float mag = fabsf(u_percent);
-    float duty_percent = 20.0f + (mag * 0.80f); // Escala lineal de 20% a 100%
-    if (duty_percent > 100.0f) duty_percent = 100.0f;
+    // En pruebas el carro no avanzaba con ciclos bajos: se usa un minimo de MOTOR_PWM_MIN_PERCENT
+    float duty_percent = fabsf(car_motor_effective_percent(u_percent)); // Escala lineal de MIN a MAX
 
-    uint32_t duty = (uint32_t)((duty_percent / 100.0f) * (float)PWM_MAX_DUTY_COUNT);
+    // Correccion de rumbo: steer > 0 acelera la rueda derecha y frena la izquierda
+    // (en duty absoluto). Se limita para no bajar de la friccion estatica ni pasar de 100 %.
+    if (steer_percent > MOTOR_STEER_MAX_PERCENT) steer_percent = MOTOR_STEER_MAX_PERCENT;
+    if (steer_percent < -MOTOR_STEER_MAX_PERCENT) steer_percent = -MOTOR_STEER_MAX_PERCENT;
+    float duty_left = duty_percent - steer_percent;
+    float duty_right = duty_percent + steer_percent;
+    // Si una rueda se pasaria de 100 %, se baja la otra lo que falta (mantiene la diferencia)
+    if (duty_right > 100.0f) { duty_left -= duty_right - 100.0f; duty_right = 100.0f; }
+    if (duty_left > 100.0f)  { duty_right -= duty_left - 100.0f; duty_left = 100.0f; }
+    if (duty_left < MOTOR_STEER_MIN_DUTY)  duty_left = MOTOR_STEER_MIN_DUTY;
+    if (duty_right < MOTOR_STEER_MIN_DUTY) duty_right = MOTOR_STEER_MIN_DUTY;
 
-    if (u_percent > 0.0f) {
-        // Avance hacia la compuerta (reduce d)
-        gpio_set_level(MOTOR_LEFT_IN1_PIN, 1);
-        gpio_set_level(MOTOR_LEFT_IN2_PIN, 0);
-        gpio_set_level(MOTOR_RIGHT_IN3_PIN, 1);
-        gpio_set_level(MOTOR_RIGHT_IN4_PIN, 0);
-    } else {
-        // Retroceso alejandose de la compuerta (aumenta d)
-        gpio_set_level(MOTOR_LEFT_IN1_PIN, 0);
-        gpio_set_level(MOTOR_LEFT_IN2_PIN, 1);
-        gpio_set_level(MOTOR_RIGHT_IN3_PIN, 0);
-        gpio_set_level(MOTOR_RIGHT_IN4_PIN, 1);
-    }
+    uint32_t duty_l = (uint32_t)((duty_left / 100.0f) * (float)PWM_MAX_DUTY_COUNT);
+    uint32_t duty_r = (uint32_t)((duty_right / 100.0f) * (float)PWM_MAX_DUTY_COUNT);
 
-    ledc_set_duty(PWM_MODE, MOTOR_LEFT_CHANNEL, duty);
-    ledc_set_duty(PWM_MODE, MOTOR_RIGHT_CHANNEL, duty);
+    // u > 0: avance hacia la compuerta (reduce d); u < 0: retroceso (aumenta d).
+    // Con el cableado actual IN1=1/IN3=1 mueve el carro hacia atras (prueba de direccion),
+    // por eso MOTOR_DIR_INVERT invierte el sentido de ambos puentes.
+    bool in_a = (u_percent > 0.0f) != (MOTOR_DIR_INVERT != 0);
+    gpio_set_level(MOTOR_LEFT_IN1_PIN, in_a);
+    gpio_set_level(MOTOR_LEFT_IN2_PIN, !in_a);
+    gpio_set_level(MOTOR_RIGHT_IN3_PIN, in_a);
+    gpio_set_level(MOTOR_RIGHT_IN4_PIN, !in_a);
+
+    ledc_set_duty(PWM_MODE, MOTOR_LEFT_CHANNEL, duty_l);
+    ledc_set_duty(PWM_MODE, MOTOR_RIGHT_CHANNEL, duty_r);
     ledc_update_duty(PWM_MODE, MOTOR_LEFT_CHANNEL);
     ledc_update_duty(PWM_MODE, MOTOR_RIGHT_CHANNEL);
 }

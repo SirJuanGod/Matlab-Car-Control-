@@ -23,6 +23,17 @@
 #define FAN_PWM_MIN_PERCENT    10.0f
 #define FAN_PWM_MAX_PERCENT    90.0f
 
+// Rango de ciclo de trabajo de los motores de traccion cuando estan activos
+#define MOTOR_PWM_MIN_PERCENT  80.0f
+#define MOTOR_PWM_MAX_PERCENT  100.0f
+
+// 1: invierte el sentido de giro de ambos motores (u > 0 debe acercar el carro a la compuerta)
+#define MOTOR_DIR_INVERT       1
+
+// Correccion de rumbo por traccion diferencial (rueda loca: el frente se desvia al acelerar)
+#define MOTOR_STEER_MAX_PERCENT 20.0f // Diferencia maxima de PWM entre ruedas [%]
+#define MOTOR_STEER_MIN_DUTY    65.0f // Ninguna rueda baja de este PWM al corregir [%]
+
 /**
  * @brief Configura el periferico LEDC de hardware para control PWM a 5 kHz (10 bits) y pines GPIO.
  * 
@@ -48,6 +59,24 @@ void fan_set_pwm_percent(float percent, bool enabled);
  * @param enabled Habilita o frena los motores.
  */
 void car_set_motors(float u_percent, bool enabled);
+
+/**
+ * @brief Como car_set_motors, con correccion de rumbo por diferencia de PWM entre ruedas.
+ *
+ * @param u_percent Esfuerzo de traccion [-100.0% a +100.0%].
+ * @param steer_percent Correccion [%]: > 0 sube el PWM de la rueda derecha y baja el de la
+ *                      izquierda; < 0 al reves. Limitado a +-MOTOR_STEER_MAX_PERCENT.
+ * @param enabled Habilita o frena los motores.
+ */
+void car_set_motors_steer(float u_percent, float steer_percent, bool enabled);
+
+/**
+ * @brief PWM con signo que car_set_motors aplica realmente para un esfuerzo dado.
+ *
+ * @param u_percent Esfuerzo de traccion [-100.0% a +100.0%].
+ * @return 0 si |u| < 1.5 %; si no, +/-[MOTOR_PWM_MIN_PERCENT, MOTOR_PWM_MAX_PERCENT].
+ */
+float car_motor_effective_percent(float u_percent);
 
 /**
  * @brief Parada de emergencia segura de todos los actuadores.
