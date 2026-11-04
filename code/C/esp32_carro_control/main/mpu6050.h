@@ -11,6 +11,10 @@
 #define MPU6050_I2C_FREQ_HZ    400000
 #define MPU6050_ADDR           0x68
 
+// Acondicionamiento de la aceleracion longitudinal (lectura a 100 Hz desde main.c)
+#define IMU_ACCEL_LPF_ALPHA    0.3f   // Pasa-bajas de 1er orden: fc ~ 5.7 Hz a 100 Hz
+#define IMU_ACCEL_DEADBAND     0.08f  // [m/s^2] por debajo se considera reposo (ruido/vibracion)
+
 /**
  * @brief Inicializa el puerto I2C y despierta/configura el sensor MPU6050 (rango +-2g).
  * 
@@ -33,6 +37,14 @@ esp_err_t mpu6050_calibrate_bias(uint16_t samples_count);
  * @return esp_err_t ESP_OK si la lectura I2C fue exitosa.
  */
 esp_err_t mpu6050_read_accel_x(float *out_ax);
+
+/**
+ * @brief Lee la velocidad angular de giro del frente (eje Z) compensada con el sesgo de reposo.
+ *
+ * @param out_gz_dps Velocidad angular [deg/s].
+ * @return esp_err_t ESP_OK si la lectura I2C fue exitosa.
+ */
+esp_err_t mpu6050_read_gyro_z(float *out_gz_dps);
 
 /**
  * @brief Indica si el sensor esta operativo y calibrado.
