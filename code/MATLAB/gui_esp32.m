@@ -13,12 +13,16 @@ T_VENTANA = 30;    % [s] historial visible en las graficas
 T_SIN_DATOS = 0.5; % [s] sin tramas -> base desconectada
 T_ASIENTO = 2.0;   % [s] espera tras cambiar la consigna antes de medir el error estacionario
 T_PROMEDIO = 1.0;  % [s] ventana del promedio del error estacionario
+TAU_SUAVE = 0.3;   % [s] constante de tiempo del suavizado de las graficas (solo visual; 'datos_esp32' guarda lo crudo)
+N_DIEZMO = 4;      % se dibuja 1 de cada N_DIEZMO tramas (100 Hz / 4 = 25 Hz) para trazos limpios
 
 sp = [];
 M = nan(3000, 9);  % [t theta d v ax u_fan u_car e_d status]
 n = 0;
 t0 = tic; t_ultima = -inf; t_consigna = 0;
 usuario_actuo = false; % hasta que el usuario cambie algo, las casillas reflejan el estado real
+vs = [];         % [theta d u_fan u_car d_ref] suavizados con filtro exponencial (solo para mostrar)
+t_prev = NaN;
 
 fig = uifigure('Name','ESP32: compuerta + ventilador + carro (hardware)','Position',[60 60 1250 720], ...
     'CloseRequestFcn', @(~,~) cerrar());
@@ -75,7 +79,7 @@ for k = 1:4
     title(axs(k),titulos{k}); ylabel(axs(k),ylabs{k}); xlabel(axs(k),'t [s]');
     grid(axs(k),'on'); hold(axs(k),'on');
 end
-nMax = T_VENTANA * 100; % la base envia a 100 Hz
+nMax = ceil(T_VENTANA * 100 / N_DIEZMO); % la base envia a 100 Hz y se dibuja 1 de cada N_DIEZMO
 hTh    = animatedline(axs(1),'Color',[0 0.45 0.74],'LineWidth',1.4,'MaximumNumPoints',nMax);
 hThRef = animatedline(axs(1),'Color','r','LineStyle','--','MaximumNumPoints',nMax);
 hPWM   = animatedline(axs(2),'Color',[0 0.45 0.74],'LineWidth',1.4,'MaximumNumPoints',nMax);
@@ -156,18 +160,30 @@ fig.UserData.lineaCmd = @lineaCmd;
         if n > size(M,1), M = [M; nan(size(M))]; end
         M(n,:) = [t, v.'];
 
-        addpoints(hTh, t, v(1));  addpoints(hThRef, t, efTh.Value);
-        addpoints(hPWM, t, v(5));
-        addpoints(hD, t, v(2));   addpoints(hDRef, t, v(2) - v(7)); % d_ref = d - e_d
-        addpoints(hCar, t, v(6));
+        % Suavizado exponencial de 1er orden con dt real entre tramas (solo visual)
+        crudo = [v(1), v(2), v(5), v(6), v(2) - v(7)]; % d_ref = d - e_d
+        if isempty(vs) || isnan(t_prev)
+            vs = crudo;
+        else
+            a = min(1, (t - t_prev) / (TAU_SUAVE + (t - t_prev)));
+            vs = vs + a * (crudo - vs);
+        end
+        t_prev = t;
+
+        if mod(n, N_DIEZMO) == 0
+            addpoints(hTh, t, vs(1));  addpoints(hThRef, t, efTh.Value);
+            addpoints(hPWM, t, vs(3));
+            addpoints(hD, t, vs(2));   addpoints(hDRef, t, vs(5));
+            addpoints(hCar, t, vs(4));
+        end
 
         pwm = M(1:n,6);
         sat = '';
         if v(5) <= p.pwm_min || v(5) >= p.pwm_max, sat = '  (SATURADO)'; end
-        lblPWM.Text = sprintf('PWM enviado: %.1f %%%s', v(5), sat);
+        lblPWM.Text = sprintf('PWM enviado: %.1f %%%s', vs(3), sat);
         lblPWMx.Text = sprintf('min %.1f %% | max %.1f %%', min(pwm), max(pwm));
-        lblTh.Text = sprintf('theta = %.2f deg (ref %.1f, error %.2f)', v(1), efTh.Value, efTh.Value - v(1));
-        lblD.Text = sprintf('d (IMU) = %.2f cm | v = %.3f m/s', v(2), v(3));
+        lblTh.Text = sprintf('theta = %.2f deg (ref %.1f, error %.2f)', vs(1), efTh.Value, efTh.Value - vs(1));
+        lblD.Text = sprintf('d (IMU) = %.2f cm | v = %.3f m/s | u_car = %.1f %%', vs(2), v(3), vs(4));
         % La base envia ceros cuando no recibe nada del carro por ESP-NOW
         if all(v(2:7) == 0)
             lblCar.Text = 'Carro: sin enlace ESP-NOW.'; lblCar.FontColor = [0.8 0.1 0.1];
