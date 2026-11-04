@@ -4,12 +4,12 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define ESPNOW_WIFI_CHANNEL 1
+#define ESPNOW_WIFI_CHANNEL 8
 
 // MAC STA de cada nodo (cada ESP32 imprime la suya al arrancar).
 // Con FF:FF:FF:FF:FF:FF se usa broadcast SIN filtro: cualquier ESP32 en el canal puede mandar comandos.
-#define BASE_MAC_ADDR {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}
-#define CAR_MAC_ADDR  {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}
+#define BASE_MAC_ADDR {0x78, 0x1C, 0x3C, 0xA7, 0xC3, 0x7C}
+#define CAR_MAC_ADDR  {0xD0, 0xEF, 0x76, 0x33, 0x88, 0x24}
 
 #pragma pack(push, 1)
 
