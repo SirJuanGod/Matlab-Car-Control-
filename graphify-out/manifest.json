@@ -1,373 +1,373 @@
 {
   "CLAUDE.md": {
-    "mtime": 1793812016.281082,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911466.855204,
+    "seen": 1793911601.4068859,
     "ast_hash": "8a6643a420fdad6bfb583523bc6cef16",
     "semantic_hash": ""
   },
   "code/C/esp32_base_potenciometro/main/adc_reader.c": {
-    "mtime": 1793815961.974881,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.5177562,
+    "seen": 1793911601.4068859,
     "ast_hash": "691401eef5582635ecae8dd439e3f7ba",
     "semantic_hash": ""
   },
   "code/C/esp32_base_potenciometro/main/adc_reader.h": {
-    "mtime": 1793815962.292703,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.519763,
+    "seen": 1793911601.4068859,
     "ast_hash": "8fb815dee93ef871bea84de8a1aaf9d1",
     "semantic_hash": ""
   },
   "code/C/esp32_base_potenciometro/main/espnow_base.c": {
-    "mtime": 1793812017.026569,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.561521,
+    "seen": 1793911601.4068859,
     "ast_hash": "e216e21bcf280dd0eed3a5f668ed3059",
     "semantic_hash": ""
   },
   "code/C/esp32_base_potenciometro/main/espnow_base.h": {
-    "mtime": 1793812017.026569,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.6219287,
+    "seen": 1793911601.4068859,
     "ast_hash": "4d211476afdb5dfa4f30fbe5cf0832e0",
     "semantic_hash": ""
   },
   "code/C/esp32_base_potenciometro/main/main.c": {
-    "mtime": 1793812017.0464952,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.6219287,
+    "seen": 1793911601.4068859,
     "ast_hash": "39bcfff4cdb131ac9da102b50e82d3ee",
     "semantic_hash": ""
   },
   "code/C/esp32_base_potenciometro/main/protocol_defs.h": {
-    "mtime": 1793815175.612371,
-    "seen": 1793823867.7837179,
-    "ast_hash": "dd93cb84f93ee8316525765eb9da1dcb",
+    "mtime": 1793911467.6219287,
+    "seen": 1793911601.4068859,
+    "ast_hash": "f195da584c38df34bf0d84498244fd83",
     "semantic_hash": ""
   },
   "code/C/esp32_base_potenciometro/main/uart_matlab.c": {
-    "mtime": 1793812017.0724955,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.6481555,
+    "seen": 1793911601.4068859,
     "ast_hash": "22fcebf6ec0f1a60f807eb00d7182a96",
     "semantic_hash": ""
   },
   "code/C/esp32_base_potenciometro/main/uart_matlab.h": {
-    "mtime": 1793812017.0724955,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.6749823,
+    "seen": 1793911601.4068859,
     "ast_hash": "aa6056811d0f633810f04403eb48dffa",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/car_controller.c": {
-    "mtime": 1793817940.2784412,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.6988516,
+    "seen": 1793911601.4068859,
     "ast_hash": "f34b1da2d5293707ca23a69aa77ac769",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/car_controller.h": {
-    "mtime": 1793812017.1266694,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.6988516,
+    "seen": 1793911601.4068859,
     "ast_hash": "14dd06ba6f6c59c585926a50ed02cf3c",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/espnow_car.c": {
-    "mtime": 1793812017.1632917,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.7646782,
+    "seen": 1793911601.4068859,
     "ast_hash": "e62b4ac27fbe398888cd31a638df1838",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/espnow_car.h": {
-    "mtime": 1793812017.1632917,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.7646782,
+    "seen": 1793911601.4068859,
     "ast_hash": "8f50b56b96c1e79b6b397a558b8cf1c1",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/kalman_observer.c": {
-    "mtime": 1793812017.164259,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.782222,
+    "seen": 1793911601.4068859,
     "ast_hash": "7f61e14eeb6acc427cd4178ff50c5a7e",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/kalman_observer.h": {
-    "mtime": 1793812017.164259,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.782222,
+    "seen": 1793911601.4068859,
     "ast_hash": "6d9dc873783ed5f678aabb09008479cd",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/main.c": {
-    "mtime": 1793823599.0368826,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.784227,
+    "seen": 1793911601.4068859,
     "ast_hash": "db164ffdc4dc346bad01bf49438dc9a6",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/motor_fan_pwm.c": {
-    "mtime": 1793852026.857178,
-    "seen": 1793852416.9104915,
-    "ast_hash": "1651649235ff7e4f2bc34d06f33deb2a",
+    "mtime": 1793911467.784227,
+    "seen": 1793911601.4068859,
+    "ast_hash": "dd38f27f8cb37cbeab533448ace15a61",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/motor_fan_pwm.h": {
-    "mtime": 1793823599.0268128,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.7862337,
+    "seen": 1793911601.4068859,
     "ast_hash": "0153d5149454f8b0bcab40c3a63f2207",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/mpu6050.c": {
-    "mtime": 1793821445.872923,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.7862337,
+    "seen": 1793911601.4068859,
     "ast_hash": "ccc5828e579b0f24786ae758c33d4a05",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/mpu6050.h": {
-    "mtime": 1793821445.872923,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.7862337,
+    "seen": 1793911601.4068859,
     "ast_hash": "8f2e11206ca53d39a033a5003dfc70ed",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/protocol_defs.h": {
-    "mtime": 1793815175.6608794,
-    "seen": 1793823867.7837179,
-    "ast_hash": "dd93cb84f93ee8316525765eb9da1dcb",
+    "mtime": 1793911467.7862337,
+    "seen": 1793911601.4068859,
+    "ast_hash": "f195da584c38df34bf0d84498244fd83",
     "semantic_hash": ""
   },
   "code/MATLAB/animar_sistema.m": {
-    "mtime": 1793812017.4724553,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.8933842,
+    "seen": 1793911601.4068859,
     "ast_hash": "c231a1afc6c59fa2ee8e073c0caabfc5",
     "semantic_hash": ""
   },
   "code/MATLAB/diseno_polos_ceros.m": {
-    "mtime": 1793812017.4724553,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.9074047,
+    "seen": 1793911601.4068859,
     "ast_hash": "274c0b086927808b3ac64ada67d6a6be",
     "semantic_hash": ""
   },
   "code/MATLAB/gui_animacion.m": {
-    "mtime": 1793812017.532487,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.9093723,
+    "seen": 1793911601.4068859,
     "ast_hash": "d7aef679279d798954b397f523d196fd",
     "semantic_hash": ""
   },
   "code/MATLAB/gui_simulacion.m": {
-    "mtime": 1793812017.5751717,
-    "seen": 1793823867.7837179,
-    "ast_hash": "e7e1f8a0171df14dd6c0db42bdbde772",
+    "mtime": 1793911592.2988896,
+    "seen": 1793911601.4068859,
+    "ast_hash": "39a5ea6b27e569b72758a4ee8cc658bf",
     "semantic_hash": ""
   },
   "code/MATLAB/init_parametros.m": {
-    "mtime": 1793812017.5751717,
-    "seen": 1793823867.7837179,
-    "ast_hash": "0492230ed76dc518f0e8d2638d308bd3",
+    "mtime": 1793911592.3569913,
+    "seen": 1793911601.4068859,
+    "ast_hash": "04f1bac62100a8d242c4478a61cd2534",
     "semantic_hash": ""
   },
   "code/MATLAB/lqr_simo.m": {
-    "mtime": 1793812017.5751717,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.9470544,
+    "seen": 1793911601.4068859,
     "ast_hash": "1f9ff43942d6668cf304e3f15dcde7aa",
     "semantic_hash": ""
   },
   "code/MATLAB/polos_ceros.m": {
-    "mtime": 1793812017.578138,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911468.035995,
+    "seen": 1793911601.4068859,
     "ast_hash": "665dd0406e0b12f712d8462b890fed7b",
     "semantic_hash": ""
   },
   "code/MATLAB/polosandzero_car.m": {
-    "mtime": 1793812017.579139,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911468.035995,
+    "seen": 1793911601.4068859,
     "ast_hash": "5c5c65d27bd05d86d448ada2dc1e1909",
     "semantic_hash": ""
   },
   "code/MATLAB/simular_sistema.m": {
-    "mtime": 1793812017.579139,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911468.0379994,
+    "seen": 1793911601.4068859,
     "ast_hash": "7c78fd178434bf20572b98dda979b576",
     "semantic_hash": ""
   },
   "code/MATLAB/sintonizar_loop_shaping.m": {
-    "mtime": 1793812017.579139,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911468.0379994,
+    "seen": 1793911601.4068859,
     "ast_hash": "03302a5f414a393774341aa0fe7ee01f",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1793812016.885384,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.4801157,
+    "seen": 1793911601.4068859,
     "ast_hash": "388d66c236a26b0f83fab31103a86dcc",
     "semantic_hash": ""
   },
   "code/C/README.md": {
-    "mtime": 1793812016.9292164,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.515751,
+    "seen": 1793911601.4068859,
     "ast_hash": "b081d23fb608c7a6ae5831fd2e38bab9",
     "semantic_hash": ""
   },
   "code/C/esp32_base_potenciometro/CMakeLists.txt": {
-    "mtime": 1793812016.9292164,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.5177562,
+    "seen": 1793911601.4068859,
     "ast_hash": "00506c02fa3eb4f9f7242246508e5444",
     "semantic_hash": ""
   },
   "code/C/esp32_base_potenciometro/main/CMakeLists.txt": {
-    "mtime": 1793812016.9292164,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.5177562,
+    "seen": 1793911601.4068859,
     "ast_hash": "377bfecd36ffc371694cf496cef7d0cb",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/CMakeLists.txt": {
-    "mtime": 1793812017.0724955,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.6968455,
+    "seen": 1793911601.4068859,
     "ast_hash": "062787a8d87f17aee8794e05ab2d46f3",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/CMakeLists.txt": {
-    "mtime": 1793821479.8419018,
-    "seen": 1793823867.7837179,
-    "ast_hash": "c9f7bd5d3959a629b47dc59499c363cb",
+    "mtime": 1793911467.6968455,
+    "seen": 1793911601.4068859,
+    "ast_hash": "5974c87feda839fb876bce35974e8823",
     "semantic_hash": ""
   },
   "control/estrategias_control.md": {
-    "mtime": 1793812017.6294427,
-    "seen": 1793823867.7837179,
-    "ast_hash": "605182de010a818a9614ff558d469648",
+    "mtime": 1793911592.0292697,
+    "seen": 1793911601.4068859,
+    "ast_hash": "829398f10dca042fb1e49c58f3b542fb",
     "semantic_hash": ""
   },
   "especificaciones/arquitectura_sistema.md": {
-    "mtime": 1793812017.6294427,
-    "seen": 1793823867.7837179,
-    "ast_hash": "98fbafe4c5ebe2c5a3312504c627f25b",
+    "mtime": 1793911592.0701632,
+    "seen": 1793911601.4068859,
+    "ast_hash": "4131f6d2cb54ce252fb0a713c4c3e36f",
     "semantic_hash": ""
   },
   "especificaciones/especificaciones_carro.md": {
-    "mtime": 1793812017.6294427,
-    "seen": 1793823867.7837179,
-    "ast_hash": "3126c628319f82b7ab11bb9605da1692",
+    "mtime": 1793911592.1105456,
+    "seen": 1793911601.4068859,
+    "ast_hash": "ddd714f574dbebf61d9e18baee571c57",
     "semantic_hash": ""
   },
   "especificaciones/especificaciones_compuerta.md": {
-    "mtime": 1793812017.6294427,
-    "seen": 1793823867.7837179,
-    "ast_hash": "01b0ad3407b08d3f7dd76b93cdf8d09f",
+    "mtime": 1793911592.151,
+    "seen": 1793911601.4068859,
+    "ast_hash": "9bb367587e6ae44a9459d5e009564327",
     "semantic_hash": ""
   },
   "especificaciones/especificaciones_ventilador.md": {
-    "mtime": 1793812017.6294427,
-    "seen": 1793823867.7837179,
-    "ast_hash": "92a1026443e709351d40389b4cbb40a5",
+    "mtime": 1793911592.1816528,
+    "seen": 1793911601.4068859,
+    "ast_hash": "740138f6d56d42a39fe6a9472c3a3295",
     "semantic_hash": ""
   },
   "code/MATLAB/Outputs/preview/antes_root.png": {
-    "mtime": 1793812017.3426366,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.8559594,
+    "seen": 1793911601.4068859,
     "ast_hash": "6e64f237f2c8a61c82878c7558c59ce7",
     "semantic_hash": ""
   },
   "code/MATLAB/Outputs/preview/v1_root.png": {
-    "mtime": 1793812017.3842762,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.8770401,
+    "seen": 1793911601.4068859,
     "ast_hash": "f8a0e9b5a3931cfec962c9abd73d6a97",
     "semantic_hash": ""
   },
   "code/MATLAB/Outputs/preview/v2_root.png": {
-    "mtime": 1793812017.4724553,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.8924184,
+    "seen": 1793911601.4068859,
     "ast_hash": "22e92be4cfe3e9186fa2f87c14762b50",
     "semantic_hash": ""
   },
   "outputs/animacion_carro_lejos.gif": {
-    "mtime": 1793812018.5423968,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911468.231955,
+    "seen": 1793911601.4068859,
     "ast_hash": "2b869fba0327914cb3f521c08a12901e",
     "semantic_hash": ""
   },
   "outputs/comparacion_loop_shaping.png": {
-    "mtime": 1793812019.3825812,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911468.359518,
+    "seen": 1793911601.4068859,
     "ast_hash": "67b3a5de8725a07a1a8ca05e7cc96eb0",
     "semantic_hash": ""
   },
   "outputs/animacion_carro_lejos.mp4": {
-    "mtime": 1793812019.1823685,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911468.3435123,
+    "seen": 1793911601.4068859,
     "ast_hash": "9d4224e2b425dba62359a1ae9a2a0637",
     "semantic_hash": ""
   },
   "code/MATLAB/gui_esp32.m": {
-    "mtime": 1793817556.8290255,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.9154084,
+    "seen": 1793911601.4068859,
     "ast_hash": "a1897174640efa3fcc2bdd1accfec253",
     "semantic_hash": ""
   },
   "code/MATLAB/test_gui_esp32.m": {
-    "mtime": 1793812017.6294427,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911468.0379994,
+    "seen": 1793911601.4068859,
     "ast_hash": "a50e90a440ff9048e295479671bbe91c",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/lqr_simo.c": {
-    "mtime": 1793822556.454945,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.784227,
+    "seen": 1793911601.4068859,
     "ast_hash": "1c94c91cfe5cb2b59f5561df8a1930ec",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/lqr_simo.h": {
-    "mtime": 1793812017.1975043,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.784227,
+    "seen": 1793911601.4068859,
     "ast_hash": "736df37236835f26d290e93d4c0e0b10",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/lqr_tablas.h": {
-    "mtime": 1793812017.2342706,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.784227,
+    "seen": 1793911601.4068859,
     "ast_hash": "473c6840b8a3a26471dd01179de4ea36",
     "semantic_hash": ""
   },
   "code/C/test/test_control.c": {
-    "mtime": 1793812017.2923388,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.8398688,
+    "seen": 1793911601.4068859,
     "ast_hash": "a824089350126e0c64d21843660e7767",
     "semantic_hash": ""
   },
   "code/MATLAB/exportar_lqr_c.m": {
-    "mtime": 1793812017.532487,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.9083714,
+    "seen": 1793911601.4068859,
     "ast_hash": "cfd092da4461772450624e27508e01f8",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/status_led.c": {
-    "mtime": 1793821479.7360847,
-    "seen": 1793823867.7837179,
-    "ast_hash": "f88142d0f31edbe649b98aecba298e19",
+    "mtime": 1793911467.7862337,
+    "seen": 1793911601.4068859,
+    "ast_hash": "8b52c57fcc81532aa02d46f8ee3d16e9",
     "semantic_hash": ""
   },
   "code/C/esp32_carro_control/main/status_led.h": {
-    "mtime": 1793821479.6702244,
-    "seen": 1793823867.7837179,
-    "ast_hash": "e7dd58fa0fbcf824b161c8a2896542e1",
+    "mtime": 1793911467.7862337,
+    "seen": 1793911601.4068859,
+    "ast_hash": "6e375b99b3ff1d457b5c2c58e0b6cec3",
     "semantic_hash": ""
   },
   "code/C/esp32_prueba_motores/main/main.c": {
-    "mtime": 1793852038.7104294,
-    "seen": 1793852416.9104915,
+    "mtime": 1793911467.808089,
+    "seen": 1793911601.4068859,
     "ast_hash": "1571be9e7849b0edaba2ae861f1dc1d8",
     "semantic_hash": ""
   },
   "code/C/esp32_prueba_motores/CMakeLists.txt": {
-    "mtime": 1793814423.0106988,
-    "seen": 1793823867.7837179,
-    "ast_hash": "3175e22bfca22b25f47d619df1b463bb",
+    "mtime": 1793911467.8065827,
+    "seen": 1793911601.4068859,
+    "ast_hash": "c4427d28659ba2e853d4f3b5bf5a8b5d",
     "semantic_hash": ""
   },
   "code/C/esp32_prueba_motores/main/CMakeLists.txt": {
-    "mtime": 1793851808.690229,
-    "seen": 1793852416.9104915,
-    "ast_hash": "9fb70bb004d51463c0d438759b7d1cd9",
+    "mtime": 1793911467.8065827,
+    "seen": 1793911601.4068859,
+    "ast_hash": "aadca2e0390b2de61466f7c98408fe1b",
     "semantic_hash": ""
   },
   "code/C/test/CMakeLists.txt": {
-    "mtime": 1793812017.24234,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.8398688,
+    "seen": 1793911601.4068859,
     "ast_hash": "f9641cace402550d5259c875c32bda9d",
     "semantic_hash": ""
   },
   "code/C/test/main/CMakeLists.txt": {
-    "mtime": 1793812017.24234,
-    "seen": 1793823867.7837179,
+    "mtime": 1793911467.8398688,
+    "seen": 1793911601.4068859,
     "ast_hash": "2d1578a74b4f1a2377fbc44b42bf3714",
     "semantic_hash": ""
   }

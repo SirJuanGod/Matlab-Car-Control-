@@ -5,7 +5,7 @@
   "3": "adc_reader.c",
   "4": "esp32_carro_control/main/main.c",
   "5": "Especificaciones del Ventilador y Etapa de Potencia L298N (24V)",
-  "6": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+  "6": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma Móvil con IMU",
   "7": "uart_matlab.c",
   "8": "Firmware ESP32 en C / ESP-IDF con FreeRTOS (Control Carro & Compuerta)",
   "9": "Especificaciones del Carro (Plataforma Móvil con IMU y Control Independiente)",

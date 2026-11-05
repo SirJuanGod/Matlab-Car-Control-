@@ -2122,7 +2122,7 @@
       "node_kind": "heading",
       "norm_label": "2. diagrama de bloques de los lazos internos",
       "source_file": "especificaciones/arquitectura_sistema.md",
-      "source_location": "L69"
+      "source_location": "L71"
     },
     {
       "id": "especificaciones_arquitectura_sistema_3_especificaciones_clave_de_las_interfaces",
@@ -2134,7 +2134,7 @@
       "node_kind": "heading",
       "norm_label": "3. especificaciones clave de las interfaces",
       "source_file": "especificaciones/arquitectura_sistema.md",
-      "source_location": "L114"
+      "source_location": "L118"
     },
     {
       "id": "especificaciones_arquitectura_sistema_arquitectura_del_sistema_de_control_angular_y_plataforma_m\u00f3vil",
@@ -2242,7 +2242,7 @@
       "node_kind": "heading",
       "norm_label": "4.1 configuracion de hardware critica del l298n",
       "source_file": "especificaciones/especificaciones_ventilador.md",
-      "source_location": "L76"
+      "source_location": "L78"
     },
     {
       "id": "especificaciones_especificaciones_ventilador_4_2_l\u00f3gica_de_control_desde_el_esp32",
@@ -2254,7 +2254,7 @@
       "node_kind": "heading",
       "norm_label": "4.2 logica de control desde el esp32",
       "source_file": "especificaciones/especificaciones_ventilador.md",
-      "source_location": "L86"
+      "source_location": "L88"
     },
     {
       "id": "especificaciones_especificaciones_ventilador_4_etapa_de_potencia_m\u00f3dulo_puente_h_l298n_a_24_vdc",
@@ -2278,7 +2278,7 @@
       "node_kind": "heading",
       "norm_label": "5. dinamica del actuador aerodinamico",
       "source_file": "especificaciones/especificaciones_ventilador.md",
-      "source_location": "L100"
+      "source_location": "L102"
     },
     {
       "id": "especificaciones_especificaciones_ventilador_enlaces_del_grafo",
@@ -2309,7 +2309,7 @@
       "label": "1.1 Funci\u00f3n de Conversi\u00f3n Directa del Potenci\u00f3metro",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "1.1 funcion de conversion directa del potenciometro",
@@ -2321,43 +2321,43 @@
       "label": "1.2 Ecuaci\u00f3n Din\u00e1mica No Lineal",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "1.2 ecuacion dinamica no lineal",
       "source_file": "control/estrategias_control.md",
-      "source_location": "L22"
+      "source_location": "L25"
     },
     {
       "id": "control_estrategias_control_1_3_punto_de_operaci\u00f3n_y_equilibrio_theta_eq",
       "label": "1.3 Punto de Operaci\u00f3n y Equilibrio ($\\theta_{eq}$)",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "1.3 punto de operacion y equilibrio ($\\theta_{eq}$)",
       "source_file": "control/estrategias_control.md",
-      "source_location": "L35"
+      "source_location": "L38"
     },
     {
       "id": "control_estrategias_control_1_4_modelo_linealizado_peque\u00f1a_se\u00f1al",
       "label": "1.4 Modelo Linealizado (Peque\u00f1a Se\u00f1al)",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "1.4 modelo linealizado (pequena senal)",
       "source_file": "control/estrategias_control.md",
-      "source_location": "L38"
+      "source_location": "L41"
     },
     {
       "id": "control_estrategias_control_1_modelo_matem\u00e1tico_del_lazo_angular_de_la_compuerta_canal_pwm_\u03b8",
       "label": "1. Modelo Matem\u00e1tico del Lazo Angular de la Compuerta (canal PWM \u2192 \u03b8)",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "1. modelo matematico del lazo angular de la compuerta (canal pwm \u2192 \u03b8)",
@@ -2365,107 +2365,107 @@
       "source_location": "L12"
     },
     {
+      "id": "control_estrategias_control_2_1_espacio_de_estados_aumentado",
+      "label": "2.1 Espacio de Estados Aumentado",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.1 espacio de estados aumentado",
+      "source_file": "control/estrategias_control.md",
+      "source_location": "L51"
+    },
+    {
+      "id": "control_estrategias_control_2_2_optimizaci\u00f3n_cuadr\u00e1tica",
+      "label": "2.2 Optimizaci\u00f3n Cuadr\u00e1tica",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.2 optimizacion cuadratica",
+      "source_file": "control/estrategias_control.md",
+      "source_location": "L56"
+    },
+    {
+      "id": "control_estrategias_control_2_3_extensi\u00f3n_a_dos_salidas_del_controlador_simo_u_pwm_y_d_ref",
+      "label": "2.3 Extensi\u00f3n a Dos Salidas del Controlador (SIMO: $u_{PWM}$ y $d_{ref}$)",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2.3 extension a dos salidas del controlador (simo: $u_{pwm}$ y $d_{ref}$)",
+      "source_file": "control/estrategias_control.md",
+      "source_location": "L66"
+    },
+    {
       "id": "control_estrategias_control_2_estrategia_control_\u00f3ptimo_lqr_con_acci\u00f3n_integral_lqr_i",
       "label": "2. Estrategia: Control \u00d3ptimo LQR con Acci\u00f3n Integral ($LQR+I$)",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "2. estrategia: control optimo lqr con accion integral ($lqr+i$)",
       "source_file": "control/estrategias_control.md",
-      "source_location": "L46"
+      "source_location": "L49"
     },
     {
-      "id": "control_estrategias_control_3_1_espacio_de_estados_aumentado",
-      "label": "3.1 Espacio de Estados Aumentado",
+      "id": "control_estrategias_control_3_1_estimaci\u00f3n_de_distancia_por_imu",
+      "label": "3.1 Estimaci\u00f3n de Distancia por IMU",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "3.1 espacio de estados aumentado",
+      "norm_label": "3.1 estimacion de distancia por imu",
       "source_file": "control/estrategias_control.md",
-      "source_location": "L48"
+      "source_location": "L88"
     },
     {
-      "id": "control_estrategias_control_3_2_optimizaci\u00f3n_cuadr\u00e1tica",
-      "label": "3.2 Optimizaci\u00f3n Cuadr\u00e1tica",
+      "id": "control_estrategias_control_3_2_control_pid_de_distancia_del_carro",
+      "label": "3.2 Control PID de Distancia del Carro",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "3.2 optimizacion cuadratica",
+      "norm_label": "3.2 control pid de distancia del carro",
       "source_file": "control/estrategias_control.md",
-      "source_location": "L53"
+      "source_location": "L95"
     },
     {
-      "id": "control_estrategias_control_3_3_extensi\u00f3n_a_dos_salidas_del_controlador_simo_u_pwm_y_d_ref",
-      "label": "3.3 Extensi\u00f3n a Dos Salidas del Controlador (SIMO: $u_{PWM}$ y $d_{ref}$)",
+      "id": "control_estrategias_control_3_control_del_carro_y_odometr\u00eda_por_imu_arranque_a_10_cm",
+      "label": "3. Control del Carro y Odometr\u00eda por IMU (Arranque a 10 cm)",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "3.3 extension a dos salidas del controlador (simo: $u_{pwm}$ y $d_{ref}$)",
+      "norm_label": "3. control del carro y odometria por imu (arranque a 10 cm)",
       "source_file": "control/estrategias_control.md",
-      "source_location": "L63"
+      "source_location": "L84"
     },
     {
-      "id": "control_estrategias_control_5_1_estimaci\u00f3n_de_distancia_por_imu",
-      "label": "5.1 Estimaci\u00f3n de Distancia por IMU",
+      "id": "control_estrategias_control_4_monitoreo_en_la_interfaz_gr\u00e1fica_gui",
+      "label": "4. Monitoreo en la Interfaz Gr\u00e1fica (GUI)",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "5.1 estimacion de distancia por imu",
+      "norm_label": "4. monitoreo en la interfaz grafica (gui)",
       "source_file": "control/estrategias_control.md",
-      "source_location": "L85"
-    },
-    {
-      "id": "control_estrategias_control_5_2_control_pid_de_distancia_del_carro",
-      "label": "5.2 Control PID de Distancia del Carro",
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "5.2 control pid de distancia del carro",
-      "source_file": "control/estrategias_control.md",
-      "source_location": "L92"
-    },
-    {
-      "id": "control_estrategias_control_5_control_del_carro_y_odometr\u00eda_por_imu_arranque_a_10_cm",
-      "label": "5. Control del Carro y Odometr\u00eda por IMU (Arranque a 10 cm)",
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "5. control del carro y odometria por imu (arranque a 10 cm)",
-      "source_file": "control/estrategias_control.md",
-      "source_location": "L81"
-    },
-    {
-      "id": "control_estrategias_control_6_monitoreo_en_la_interfaz_gr\u00e1fica_gui",
-      "label": "6. Monitoreo en la Interfaz Gr\u00e1fica (GUI)",
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "6. monitoreo en la interfaz grafica (gui)",
-      "source_file": "control/estrategias_control.md",
-      "source_location": "L101"
+      "source_location": "L104"
     },
     {
       "id": "control_estrategias_control_enlaces_del_grafo",
       "label": "Enlaces del Grafo",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
       "norm_label": "enlaces del grafo",
@@ -2473,14 +2473,14 @@
       "source_location": "L3"
     },
     {
-      "id": "control_estrategias_control_estrategias_de_control_compuerta_pid_lqr_h_infinita_y_carro_independiente",
-      "label": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "id": "control_estrategias_control_estrategias_de_control_compuerta_lqr_i_simo_y_plataforma_m\u00f3vil_con_imu",
+      "label": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "_origin": "ast",
       "community": 6,
-      "community_name": "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente",
+      "community_name": "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma M\u00f3vil con IMU",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "estrategias de control: compuerta (pid, lqr, h-infinita) y carro independiente",
+      "norm_label": "estrategias de control: compuerta (lqr+i simo) y plataforma movil con imu",
       "source_file": "control/estrategias_control.md",
       "source_location": "L1"
     },
@@ -6450,7 +6450,7 @@
     },
     {
       "source": "control_estrategias_control",
-      "target": "control_estrategias_control_estrategias_de_control_compuerta_pid_lqr_h_infinita_y_carro_independiente",
+      "target": "control_estrategias_control_estrategias_de_control_compuerta_lqr_i_simo_y_plataforma_m\u00f3vil_con_imu",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -6478,7 +6478,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "control/estrategias_control.md",
-      "source_location": "L22",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -6489,7 +6489,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "control/estrategias_control.md",
-      "source_location": "L35",
+      "source_location": "L38",
       "weight": 1.0
     },
     {
@@ -6500,77 +6500,77 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "control/estrategias_control.md",
-      "source_location": "L38",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
       "source": "control_estrategias_control_2_estrategia_control_\u00f3ptimo_lqr_con_acci\u00f3n_integral_lqr_i",
-      "target": "control_estrategias_control_3_1_espacio_de_estados_aumentado",
+      "target": "control_estrategias_control_2_1_espacio_de_estados_aumentado",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "control/estrategias_control.md",
-      "source_location": "L48",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
       "source": "control_estrategias_control_2_estrategia_control_\u00f3ptimo_lqr_con_acci\u00f3n_integral_lqr_i",
-      "target": "control_estrategias_control_3_2_optimizaci\u00f3n_cuadr\u00e1tica",
+      "target": "control_estrategias_control_2_2_optimizaci\u00f3n_cuadr\u00e1tica",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "control/estrategias_control.md",
-      "source_location": "L53",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
       "source": "control_estrategias_control_2_estrategia_control_\u00f3ptimo_lqr_con_acci\u00f3n_integral_lqr_i",
-      "target": "control_estrategias_control_3_3_extensi\u00f3n_a_dos_salidas_del_controlador_simo_u_pwm_y_d_ref",
+      "target": "control_estrategias_control_2_3_extensi\u00f3n_a_dos_salidas_del_controlador_simo_u_pwm_y_d_ref",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "control/estrategias_control.md",
-      "source_location": "L63",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
-      "source": "control_estrategias_control_5_control_del_carro_y_odometr\u00eda_por_imu_arranque_a_10_cm",
-      "target": "control_estrategias_control_5_1_estimaci\u00f3n_de_distancia_por_imu",
+      "source": "control_estrategias_control_3_control_del_carro_y_odometr\u00eda_por_imu_arranque_a_10_cm",
+      "target": "control_estrategias_control_3_1_estimaci\u00f3n_de_distancia_por_imu",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "control/estrategias_control.md",
-      "source_location": "L85",
+      "source_location": "L88",
       "weight": 1.0
     },
     {
-      "source": "control_estrategias_control_5_control_del_carro_y_odometr\u00eda_por_imu_arranque_a_10_cm",
-      "target": "control_estrategias_control_5_2_control_pid_de_distancia_del_carro",
+      "source": "control_estrategias_control_3_control_del_carro_y_odometr\u00eda_por_imu_arranque_a_10_cm",
+      "target": "control_estrategias_control_3_2_control_pid_de_distancia_del_carro",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "control/estrategias_control.md",
-      "source_location": "L92",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
-      "source": "control_estrategias_control_estrategias_de_control_compuerta_pid_lqr_h_infinita_y_carro_independiente",
-      "target": "control_estrategias_control_6_monitoreo_en_la_interfaz_gr\u00e1fica_gui",
+      "source": "control_estrategias_control_estrategias_de_control_compuerta_lqr_i_simo_y_plataforma_m\u00f3vil_con_imu",
+      "target": "control_estrategias_control_4_monitoreo_en_la_interfaz_gr\u00e1fica_gui",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "control/estrategias_control.md",
-      "source_location": "L101",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
-      "source": "control_estrategias_control_estrategias_de_control_compuerta_pid_lqr_h_infinita_y_carro_independiente",
+      "source": "control_estrategias_control_estrategias_de_control_compuerta_lqr_i_simo_y_plataforma_m\u00f3vil_con_imu",
       "target": "control_estrategias_control_1_modelo_matem\u00e1tico_del_lazo_angular_de_la_compuerta_canal_pwm_\u03b8",
       "relation": "contains",
       "_origin": "ast",
@@ -6581,7 +6581,7 @@
       "weight": 1.0
     },
     {
-      "source": "control_estrategias_control_estrategias_de_control_compuerta_pid_lqr_h_infinita_y_carro_independiente",
+      "source": "control_estrategias_control_estrategias_de_control_compuerta_lqr_i_simo_y_plataforma_m\u00f3vil_con_imu",
       "target": "control_estrategias_control_enlaces_del_grafo",
       "relation": "contains",
       "_origin": "ast",
@@ -6592,25 +6592,25 @@
       "weight": 1.0
     },
     {
-      "source": "control_estrategias_control_estrategias_de_control_compuerta_pid_lqr_h_infinita_y_carro_independiente",
+      "source": "control_estrategias_control_estrategias_de_control_compuerta_lqr_i_simo_y_plataforma_m\u00f3vil_con_imu",
       "target": "control_estrategias_control_2_estrategia_control_\u00f3ptimo_lqr_con_acci\u00f3n_integral_lqr_i",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "control/estrategias_control.md",
-      "source_location": "L46",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
-      "source": "control_estrategias_control_estrategias_de_control_compuerta_pid_lqr_h_infinita_y_carro_independiente",
-      "target": "control_estrategias_control_5_control_del_carro_y_odometr\u00eda_por_imu_arranque_a_10_cm",
+      "source": "control_estrategias_control_estrategias_de_control_compuerta_lqr_i_simo_y_plataforma_m\u00f3vil_con_imu",
+      "target": "control_estrategias_control_3_control_del_carro_y_odometr\u00eda_por_imu_arranque_a_10_cm",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "control/estrategias_control.md",
-      "source_location": "L81",
+      "source_location": "L84",
       "weight": 1.0
     },
     {
@@ -6643,7 +6643,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones/arquitectura_sistema.md",
-      "source_location": "L114",
+      "source_location": "L118",
       "weight": 1.0
     },
     {
@@ -6676,7 +6676,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones/arquitectura_sistema.md",
-      "source_location": "L69",
+      "source_location": "L71",
       "weight": 1.0
     },
     {
@@ -6918,7 +6918,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones/especificaciones_ventilador.md",
-      "source_location": "L76",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -6929,7 +6929,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones/especificaciones_ventilador.md",
-      "source_location": "L86",
+      "source_location": "L88",
       "weight": 1.0
     },
     {
@@ -6951,7 +6951,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "especificaciones/especificaciones_ventilador.md",
-      "source_location": "L100",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -8245,5 +8245,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "4be5bd8e32bc8496bbe4fd74b8f5002fd07280dc"
+  "built_at_commit": "a0b4733e5420f5c676004fe1349c26e6f3597ba0"
 }

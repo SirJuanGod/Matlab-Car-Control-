@@ -1,7 +1,7 @@
-# Graph Report - esp32-car-base-codes-f15829  (2026-11-04)
+# Graph Report - pending-commits-github-a98aee  (2026-11-05)
 
 ## Corpus Check
-- 48 files · ~374,878 words
+- 48 files · ~375,022 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 12 file(s) not represented in the graph (top: (none) 5, .slx 3, .defaults 2)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4be5bd8e`
+- Built from commit: `a0b4733e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -21,7 +21,7 @@
 - CLAUDE.md
 - adc_reader.c
 - Especificaciones del Ventilador y Etapa de Potencia L298N (24V)
-- Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente
+- Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma Móvil con IMU
 - uart_matlab.c
 - Firmware ESP32 en C / ESP-IDF con FreeRTOS (Control Carro & Compuerta)
 - Especificaciones del Carro (Plataforma Móvil con IMU y Control Independiente)
@@ -75,9 +75,9 @@ Nodes (10): adc_reader_get_last_angle(), adc_reader_init(), adc_reader_start(), 
 Cohesion: 0.13
 Nodes (15): 1.1 Estructura SIMO del Controlador, 1. Descripción General de la Arquitectura, 2. Diagrama de Bloques de los Lazos Internos, 3. Especificaciones Clave de las Interfaces, Arquitectura del Sistema de Control Angular y Plataforma Móvil, Enlaces del Grafo, 1. Rol en la Arquitectura de Control, 2. Parámetros de Identificación del Ventilador (+7 more)
 
-### Community 6 - "Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente"
+### Community 6 - "Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma Móvil con IMU"
 Cohesion: 0.13
-Nodes (15): 1.1 Función de Conversión Directa del Potenciómetro, 1.2 Ecuación Dinámica No Lineal, 1.3 Punto de Operación y Equilibrio ($\theta_{eq}$), 1.4 Modelo Linealizado (Pequeña Señal), 1. Modelo Matemático del Lazo Angular de la Compuerta (canal PWM → θ), 2. Estrategia: Control Óptimo LQR con Acción Integral ($LQR+I$), 3.1 Espacio de Estados Aumentado, 3.2 Optimización Cuadrática (+7 more)
+Nodes (15): 1.1 Función de Conversión Directa del Potenciómetro, 1.2 Ecuación Dinámica No Lineal, 1.3 Punto de Operación y Equilibrio ($\theta_{eq}$), 1.4 Modelo Linealizado (Pequeña Señal), 1. Modelo Matemático del Lazo Angular de la Compuerta (canal PWM → θ), 2.1 Espacio de Estados Aumentado, 2.2 Optimización Cuadrática, 2.3 Extensión a Dos Salidas del Controlador (SIMO: $u_{PWM}$ y $d_{ref}$) (+7 more)
 
 ### Community 7 - "uart_matlab.c"
 Cohesion: 0.13
