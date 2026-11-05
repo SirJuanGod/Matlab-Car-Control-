@@ -9,6 +9,11 @@ static const char *TAG = "ACTUATORS_PWM";
 #define PWM_TIMER           LEDC_TIMER_0
 #define PWM_MODE            LEDC_LOW_SPEED_MODE
 #define PWM_FREQ_HZ         5000
+// Ventilador de PC de 3 cables (DS07015R12): con 5 kHz pita y el recorte rapido confunde su
+// electronica; a 25 Hz responde de forma limpia y monotona (medido con el tacometro: 90 % de PWM
+// da ~98 % de las RPM maximas) y no se oye. Usa su propio timer para no tocar los motores.
+#define FAN_PWM_TIMER       LEDC_TIMER_1
+#define FAN_PWM_FREQ_HZ     25
 #define PWM_RESOLUTION      LEDC_TIMER_10_BIT
 #define PWM_MAX_DUTY_COUNT  1023 // 2^10 - 1
 
@@ -46,13 +51,22 @@ esp_err_t motor_fan_pwm_init(void) {
     };
     ESP_ERROR_CHECK(ledc_timer_config(&timer_conf));
 
+    ledc_timer_config_t fan_timer_conf = {
+        .speed_mode = PWM_MODE,
+        .duty_resolution = PWM_RESOLUTION,
+        .timer_num = FAN_PWM_TIMER,
+        .freq_hz = FAN_PWM_FREQ_HZ,
+        .clk_cfg = LEDC_AUTO_CLK
+    };
+    ESP_ERROR_CHECK(ledc_timer_config(&fan_timer_conf));
+
     // 3. Configurar Canales LEDC
     ledc_channel_config_t ch_fan = {
         .gpio_num = FAN_PWM_PIN,
         .speed_mode = PWM_MODE,
         .channel = FAN_CHANNEL,
         .intr_type = LEDC_INTR_DISABLE,
-        .timer_sel = PWM_TIMER,
+        .timer_sel = FAN_PWM_TIMER,
         .duty = 0,
         .hpoint = 0
     };
@@ -80,8 +94,8 @@ esp_err_t motor_fan_pwm_init(void) {
     };
     ESP_ERROR_CHECK(ledc_channel_config(&ch_m_right));
 
-    ESP_LOGI(TAG, "LEDC PWM Inicializado (5 kHz, 10 bits: Ventilador GPIO%d, Motores GPIO%d/%d).",
-             FAN_PWM_PIN, MOTOR_LEFT_PWM_PIN, MOTOR_RIGHT_PWM_PIN);
+    ESP_LOGI(TAG, "LEDC PWM Inicializado (10 bits: Ventilador GPIO%d a %d Hz, Motores GPIO%d/%d a %d Hz).",
+             FAN_PWM_PIN, FAN_PWM_FREQ_HZ, MOTOR_LEFT_PWM_PIN, MOTOR_RIGHT_PWM_PIN, PWM_FREQ_HZ);
     return ESP_OK;
 }
 
