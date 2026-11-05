@@ -17,7 +17,7 @@ J_g         = 0.0002;    % [kg*m^2] momento de inercia respecto al eje de giro
 b_c         = 0.0010;    % [N*m*s/rad] amortiguamiento viscoso del pivote
 tau_f       = 0.0001;    % [N*m] friccion de Coulomb/estatica en el pivote
 theta_min   = 0.0;       % [rad] limite mecanico inferior (reposo)
-theta_max   = pi/2;        % [rad] limite mecanico superior (90 deg)
+theta_max   = pi/2;      % [rad] limite mecanico superior (90 deg)
 tau_stop    = 0.005;     % [s] constante de tiempo del tope mecanico (choque inelastico)
 
 %% Sensor de Angulo (Potenciometro 0 - 3.3 V, ADC 12 bits del ESP32)
@@ -25,7 +25,7 @@ V_pot_min   = 0.0;       % [V] voltaje a 0 deg
 V_pot_mid   = 0.825;     % [V] voltaje a 45 deg
 V_pot_max   = 1.65;      % [V] voltaje a 90 deg
 K_pot_deg   = V_pot_max / 90.0;   % [V/deg] 0.018333 V/deg (18.33 mV/deg)
-K_pot_rad   = V_pot_max / (pi/2);      % [V/rad] ~1.0504 V/rad
+K_pot_rad   = V_pot_max / (pi/2); % [V/rad] ~1.0504 V/rad
 
 adc_bits    = 12;                  % [-] resolucion del ADC del ESP32 (0 - 4095)
 adc_counts  = 2^adc_bits - 1;      % 4095 cuentas
@@ -69,14 +69,14 @@ obs_qb        = 1.0;     % covarianza de proceso para sesgo
 %% Condiciones Iniciales, Referencia y Parametros del Controlador SIMO
 theta_ref_deg = 35.0;    % [deg] angulo de consigna deseado
 theta0_deg    = 0.0;     % [deg] angulo inicial 
-t_sim         = 10.0;     % [s] tiempo de simulacion
+t_sim         = 10.0;    % [s] tiempo de simulacion
 tau_ref       = 0.15;    % [s] filtro de primer orden de la referencia
-ref_rate_deg  = 200.0;    % [deg/s] velocidad maxima de la referencia
+ref_rate_deg  = 200.0;   % [deg/s] velocidad maxima de la referencia
 usar_imu      = 1;       % 1: el controlador usa d estimada (IMU+Kalman); 0: d real (ideal)
 fan_fac       = 1.0;     % [-] 1 = sin degradacion; 0.4 = pierde 60 %. Solo afecta a la planta
 fan_t0        = 3.0;     % [s] inicio de la degradacion del ventilador
 fan_dur       = 12.0;    % [s] duracion de la rampa de degradacion
-gov_deg       = 90.0;     % [deg] gobernador de referencia: theta_ref <= theta_medida + gov_deg
+gov_deg       = 90.0;    % [deg] gobernador de referencia: theta_ref <= theta_medida + gov_deg
                          %       (levanta la compuerta suave desde el suelo; 90 = desactivado)
 
 % Supervisor de distancia:
@@ -91,12 +91,12 @@ xi_band_deg = 5.0;      % [deg]  la integral del error solo acumula con |error| 
 % LQR+I SIMO: x = [d_theta; omega; d_v_fan; d_d(cm); x_i], u = [d_u_PWM; d_d_ref(cm)]
 tau_car   = 0.8;         % [s]
 v_car_max = 0.75;        % [m/s]
-q_th      = 10000;          % peso de d_theta   [1/rad^2]
-q_om      = 60;           % peso de omega
+q_th      = 10000;       % peso de d_theta   [1/rad^2]
+q_om      = 60;          % peso de omega
 q_d       = 0.5;         % peso de d_d       [1/cm^2]
-q_xi      = 10000;         % peso de la integral del error
+q_xi      = 10000;       % peso de la integral del error
 r_pwm     = 0.02;        % peso de d_u_PWM   [1/%^2]
-r_d       = 1.0;        % peso de d_d_ref   [1/cm^2] (r_d alto => carro casi inactivo)
+r_d       = 1.0;         % peso de d_d_ref   [1/cm^2] (r_d alto => carro casi inactivo)
 tau_w     = 0.04;        % [s] filtro de la derivada que estima omega a partir del ADC
 
 % Perturbacion externa de torque sobre la compuerta (pulso rectangular):

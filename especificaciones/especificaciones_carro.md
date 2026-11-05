@@ -74,11 +74,12 @@ $$\begin{aligned}
 
 ## 6. Lazo de Control de Posición Longitudinal del Carro
 
-El vehículo regula su posición longitudinal mediante un lazo PID independiente:
+El vehículo regula su posición longitudinal mediante un lazo PID independiente (donde $\Delta x > 0$ es avanzar hacia la compuerta y reducir $d$):
 
-$$e_d(t) = d_{ref}(t) - \hat{d}_{IMU}(t)$$
-$$u_{car}(t) = \text{sat}_{[-100, 100]}\left( K_{p,d} \cdot e_d(t) + K_{i,d} \int_0^t e_d(\tau) d\tau + K_{d,d} \frac{d e_d(t)}{dt} \right)$$
+$$e_d(t) = \hat{d}_{IMU}(t) - d_{ref}(t)$$
+$$u_{car}(t) = \text{sat}_{[-100, 100]}\left( K_{p,d} \cdot e_d(t) + K_{i,d} \int_0^t e_d(\tau) d\tau - K_{d,d}\, \hat{v}(t) \right)$$
 
-* **$u_{car} > 0$:** Motores giran en sentido de avance hacia la compuerta (reduce $d$).
-* **$u_{car} < 0$:** Motores giran en sentido de retroceso alejándose de la compuerta (aumenta $d$).
+* **$u_{car} > 0$ (cuando $\hat{d}_{IMU} > d_{ref}$):** Motores giran en sentido de avance hacia la compuerta (reduce $d$).
+* **$u_{car} < 0$ (cuando $\hat{d}_{IMU} < d_{ref}$):** Motores giran en sentido de retroceso alejándose de la compuerta (aumenta $d$).
 * **Banda Muerta:** $\pm 5\text{ mm}$ para amortiguar conmutaciones por fricción estática del suelo.
+* **Fuerza de Tracción:** $F_{trac} = \frac{u_{car}}{100} F_{max}$ ($F_{max} \approx 3.0\text{ N}$).

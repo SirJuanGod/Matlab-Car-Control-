@@ -16,7 +16,7 @@ La compuerta es la **planta física** del lazo de control angular:
 * **Sistema Pasivo / No Controlado Directamente:** Carece de servomotores o motores acoplados a su eje.
 * Su desplazamiento angular $\theta(t)$ resulta del equilibrio dinámico entre el **torque aerodinámico** transmitido por el chorro del ventilador, el **torque gravitacional restaurador** y las **fuerzas de amortiguamiento y fricción** en el soporte.
 * **Montaje mecánico:** la compuerta cuelga de un **soporte en L invertida** (poste vertical con un brazo horizontal); el pivote, con el potenciómetro, está en la punta del brazo, de modo que la compuerta queda **suspendida** sin tocar el suelo. El **ventilador va sobre el chasis del carro** y sopla horizontalmente hacia la compuerta.
-* **Convención de ángulo:** $\theta = 0^\circ$ es la compuerta **colgando en reposo** (vertical, sin aire). El aire la empuja alejándola del carro y la gravedad la devuelve hacia $\theta = 0^\circ$ (torque restaurador $\propto \sin\theta$): la planta es **estable**. El potenciómetro de 0–90° cubre desde el reposo colgante hasta la vertical hacia arriba.
+* **Convención de ángulo:** $\theta = 0^\circ$ es la compuerta **colgando en reposo** (vertical, sin aire). El aire la empuja alejándola del carro y la gravedad la devuelve hacia $\theta = 0^\circ$ (torque restaurador $\propto \sin\theta$): la planta es **estable**. El rango operativo de 0–90° cubre desde el reposo colgante hasta la posición horizontal (el rango total del potenciómetro de 0–180° abarca hasta la vertical hacia arriba).
 
 ---
 
@@ -24,7 +24,7 @@ La compuerta es la **planta física** del lazo de control angular:
 
 Para simplificar el hardware y **eliminar por completo cualquier etapa de acondicionamiento de señal o divisor de tensión resistivo**, el potenciómetro se alimenta directamente desde el riel de **$3.3\text{ VDC}$** regulado del ESP32.
 
-```
+```mermaid
 graph LR
     %% Placa ESP32
     subgraph Placa [ESP32 - Lógica 3.3V]
@@ -43,7 +43,7 @@ graph LR
     %% Conexiones
     V33 -->|+3.3V| P1
     P3 -->|0V| GND
-    P2 -->|Señal analógica<br>0.0V - 3.3V DIRECTO| ADC
+    P2 -->|Señal analógica<br>0.0V - 1.65V DIRECTO| ADC
     
     %% Nota de seguridad
     classDef safe fill:#d4edda,stroke:#28a745,stroke-width:2px;

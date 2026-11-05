@@ -42,6 +42,7 @@ El ventilador es el **actuador rápido** del lazo de control angular de la compu
 
 El accionamiento del ventilador se realiza a través de un canal del módulo L298N (dual full-bridge driver).
 
+```mermaid
 graph LR
     %% Fuentes y Controladores
     PSU[Fuente 24VDC]
@@ -72,6 +73,7 @@ graph LR
 
     %% Conexión de Salida
     L298N == "OUT1, OUT2" ===> Fan
+```
 
 ### 4.1 Configuración de Hardware Crítica del L298N
 

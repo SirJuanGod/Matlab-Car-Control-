@@ -48,6 +48,7 @@ El mismo lazo se describe desde dos lados:
   * $u_{PWM}$: canal rápido; corrige la dinámica de $\theta$ (limitada por $\tau_{fan} \approx 0.15\text{ s}$).
   * $d_{ref}$: canal lento; el lazo interno del carro (IMU) debe ser bastante más lento que el del ventilador y su función es mantener el PWM lejos de la saturación (límites de 10 % / 90 %).
 
+```mermaid
 graph LR
     %% Entradas y Sumador
     Ref((theta_ref)) --> Sum{+}
@@ -65,9 +66,11 @@ graph LR
     Flap -->|theta| Out(((theta)))
     Flap --> Sensor[theta_meas<br>Potenciómetro / ADC]
     Sensor -->|-| Sum
+```
 
 ## 2. Diagrama de Bloques de los Lazos Internos
 
+```mermaid
 graph LR
     %% LAZO 1: CONTROL ANGULAR
     subgraph Lazo1 [Lazo 1: Control Angular de la Compuerta]
@@ -80,7 +83,7 @@ graph LR
         Plant1 -->|theta_t| Out1(((theta)))
 
         %% Retroalimentación Lazo 1
-        Plant1 -->|V_pot 0-3.3V| ADC[ADC ESP32 12-bit<br>Res: ~0.044°/LSB]
+        Plant1 -->|V_pot 0-1.65V| ADC[ADC ESP32 12-bit<br>Res: ~0.044°/LSB]
         ADC -->|-| Sum1
         
         %% Monitoreo
@@ -109,6 +112,7 @@ graph LR
     classDef note fill:#f9f,stroke:#333,stroke-width:1px;
     NotaD0>Arranque Lazo 2 siempre en [d0 = 10 cm] :::note
     NotaD0 -.-> Out2
+```
 ---
 
 ## 3. Especificaciones Clave de las Interfaces

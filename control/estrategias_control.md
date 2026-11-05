@@ -1,4 +1,4 @@
-# Estrategias de Control: Compuerta (PID, LQR, H-infinita) y Carro Independiente
+# Estrategias de Control: Compuerta (LQR+I SIMO) y Plataforma Móvil con IMU
 
 ## Enlaces del Grafo
 
@@ -11,13 +11,16 @@
 
 ## 1. Modelo Matemático del Lazo Angular de la Compuerta (canal PWM → θ)
 
-El lazo de inclinación angular de la compuerta se ejecuta en el **ESP32**, muestreando la señal del potenciómetro conectada directamente a su **ADC de 12 bits** en el rango nativo de **$0.0\text{ V} - 1.65\text{ V}$** y modulando el ventilador San Ace 40 mediante el **driver L298N a 24 VDC**.
+El lazo de inclinación angular de la compuerta se ejecuta en el **ESP32**, muestreando la señal del potenciómetro conectada directamente a su **ADC de 12 bits** en el rango de **$0.0\text{ V} - 1.65\text{ V}$** (dentro del fondo de escala de $0.0\text{ V} - 3.3\text{ V}$ del ADC) y modulando el ventilador San Ace 40 mediante el **driver L298N a 24 VDC**.
 
 ### 1.1 Función de Conversión Directa del Potenciómetro
 
-Sin circuitos de atenuación intermedios:
-$$V_{pot}(\theta) = \left(\frac{1.65\text{ V}}{90^\circ}\right) \theta \approx 0.01833 \cdot \theta \quad [\text{V}]$$
-$$\theta[^\circ] = \left(\frac{\text{Lectura\_ADC}}{4095}\right) \times 90.0^\circ$$
+El potenciómetro se alimenta al riel regulado de $3.3\text{ V}$ del ESP32. Dado que cubre $180^\circ$ en su carrera eléctrica total ($0-3.3\text{ V}$), el rango de operación de la compuerta ($0^\circ$ a $90^\circ$) corresponde exactamente a $0.0\text{ V} - 1.65\text{ V}$:
+$$V_{pot}(\theta) = \left(\frac{3.3\text{ V}}{180^\circ}\right) \theta = \left(\frac{1.65\text{ V}}{90^\circ}\right) \theta \approx 0.01833 \cdot \theta \quad [\text{V}]$$
+
+Con el ADC de 12 bits ($0 - 4095$ cuentas referenciadas a $3.3\text{ V}$):
+$$\theta[^\circ] = \left(\frac{\text{Lectura\_ADC}}{4095}\right) \times 180.0^\circ = \left(\frac{\text{Lectura\_ADC}}{2047.5}\right) \times 90.0^\circ$$
+$$\Delta \theta = \frac{180.0^\circ}{4095} \approx 0.04396^\circ/\text{LSB} \quad (\approx 0.044^\circ)$$
 
 ### 1.2 Ecuación Dinámica No Lineal
 
@@ -38,19 +41,19 @@ $$u_{eq} = \frac{m_g g \ell_c \sin(\theta_{eq})}{k_m(d)}$$
 ### 1.4 Modelo Linealizado (Pequeña Señal)
 $$G_p(s) = \frac{\delta \theta(s)}{\delta u(s)} = \frac{\frac{k_m(d)}{J_g}}{s^2 + \frac{b_c}{J_g}s + \frac{m_g g \ell_c \cos(\theta_{eq})}{J_g}}$$
 
-Incluyendo la dinámica del actuador y el sensor ($K_{pot} = \frac{1.65}{90}\text{ V/deg}$):
+Incluyendo la dinámica del actuador y el sensor ($K_{pot} = \frac{3.3}{180} = \frac{1.65}{90}\text{ V/deg} \approx 0.01833\text{ V/deg}$):
 $$G_{total}(s) = \frac{V_{pot}(s)}{\delta u(s)} = \left(\frac{1}{\tau_{fan}s + 1}\right) G_p(s) \cdot K_{pot}$$
 
 ---
 
 ## 2. Estrategia: Control Óptimo LQR con Acción Integral ($LQR+I$)
 
-### 3.1 Espacio de Estados Aumentado
+### 2.1 Espacio de Estados Aumentado
 Vector de estados: $x(t) = [\delta \theta, \; \delta \dot{\theta}, \; x_i]^T$, donde $\dot{x}_i = \theta(t) - \theta_{ref}$:
 
 $$A_a = \begin{bmatrix} 0 & 1 & 0 \\ -\frac{m_g g \ell_c \cos(\theta_{eq})}{J_g} & -\frac{b_c}{J_g} & 0 \\ 1 & 0 & 0 \end{bmatrix}, \quad B_a = \begin{bmatrix} 0 \\ \frac{k_m(d)}{J_g} \\ 0 \end{bmatrix}, \quad C_a = \begin{bmatrix} 1 & 0 & 0 \end{bmatrix}$$
 
-### 3.2 Optimización Cuadrática
+### 2.2 Optimización Cuadrática
 $$J = \int_0^\infty \left( x^T Q x + R \cdot \delta u^2 \right) dt$$
 * $Q = \text{diag}([q_\theta, \; q_\omega, \; q_{int}])$, $R > 0$.
 * Ganancia: $K_{LQR} = \text{lqr}(A_a, B_a, Q, R)$.
@@ -60,7 +63,7 @@ $$J = \int_0^\infty \left( x^T Q x + R \cdot \delta u^2 \right) dt$$
 
 ---
 
-### 3.3 Extensión a Dos Salidas del Controlador (SIMO: $u_{PWM}$ y $d_{ref}$)
+### 2.3 Extensión a Dos Salidas del Controlador (SIMO: $u_{PWM}$ y $d_{ref}$)
 
 El controlador recibe solo $\theta_{meas}$ y entrega dos salidas, $u = [\delta u_{PWM}, \; \delta d_{ref}]^T$. Estados: $x = [\delta\theta, \; \delta\omega, \; \delta v_{fan}, \; \delta d, \; x_i]^T$, con el lazo interno del carro aproximado como primer orden ($\tau_{car}$).
 
@@ -78,18 +81,18 @@ $$A = \begin{bmatrix} 0 & 1 & 0 & 0 & 0 \\ -\frac{m_g g \ell_c \cos\theta_{eq}}{
 
 ---
 
-## 5. Control del Carro y Odometría por IMU (Arranque a 10 cm)
+## 3. Control del Carro y Odometría por IMU (Arranque a 10 cm)
 
 El carro cuenta con un lazo interno que regula su posición; su referencia $d_{ref}$ es la segunda salida del controlador SIMO (ver [[arquitectura_sistema]], sección 1.1):
 
-### 5.1 Estimación de Distancia por IMU
+### 3.1 Estimación de Distancia por IMU
 Partiendo de $d_0 = 10\text{ cm}$:
 1. La IMU mide la aceleración longitudinal $a_x(t)$.
 2. Un observador de Kalman estima la velocidad longitudinal $\hat{v}(t)$ compensando el sesgo del sensor $b_{imu}$.
 3. La distancia instantánea hacia la compuerta es:
    $$\hat{d}(t) = 10\text{ cm} - \int_0^t \hat{v}(\tau) d\tau = 10\text{ cm} - \Delta \hat{x}(t)$$
 
-### 5.2 Control PID de Distancia del Carro
+### 3.2 Control PID de Distancia del Carro
 Convención: $\Delta x>0$ es avanzar (reduce $d$) y $e_a = \hat{d} - d_{ref}$, de modo que $e_a>0$ pide avanzar. Con banda muerta de $\pm 5\text{ mm}$ sobre $e_a$ y derivada sobre la velocidad estimada $\hat v$ (la entrega el Kalman, sin derivar ruido):
 $$u_{car}(t) = \text{sat}_{[-100, 100]}\left( K_{p,d}\, e_a(t) + K_{i,d} \int_0^t e_a(\tau) d\tau - K_{d,d}\, \hat{v}(t) \right), \qquad F_{trac} = \frac{u_{car}}{100}\, F_{max}$$
 * Si $\hat{d} > d_{ref}$: el carro avanza hacia la compuerta ($\Delta x > 0$).
@@ -98,8 +101,9 @@ $$u_{car}(t) = \text{sat}_{[-100, 100]}\left( K_{p,d}\, e_a(t) + K_{i,d} \int_0^
 
 ---
 
-## 6. Monitoreo en la Interfaz Gráfica (GUI)
+## 4. Monitoreo en la Interfaz Gráfica (GUI)
 La GUI en MATLAB (`gui_simulacion.m`):
 1. **Gráfica de la señal PWM:** Muestra la evolución temporal del PWM ($10-90\%$) enviado al actuador en el subplot superior derecho.
 2. **Indicador de Estado PWM:** Muestra en texto el valor final y los picos mínimos/máximos de PWM aplicados.
 3. **Validación IMU:** Grafica la distancia real frente a la estimada por la IMU a partir de la condición inicial de $10\text{ cm}$.
+
