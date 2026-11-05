@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El aire, bajo control · Car Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { corePlugins: { preflight: false } };</script>
+<script>
+  window.MathJax = {
+    startup: { typeset: false, ready: () => { MathJax.startup.defaultReady(); document.head.appendChild(MathJax.svgStylesheet()); window.__mj = true; window.dispatchEvent(new Event('mj-ready')); } },
+    svg: { fontCache: 'local' }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script>window.react = window.React;</script>
+<script crossorigin src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
+<script crossorigin src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+<style>
+  :root {
+    --ink: #1d1d1f; --ink2: #3a3a3c; --mute: #6e6e73; --line: #d2d2d7; --soft: #f5f5f7;
+    --blue: #0071e3; --red: #e3261b; --green: #18a34a; --orange: #e86a00; --purple: #8e3ccb;
+  }
+  *, *::before, *::after { box-sizing: border-box; border-width: 0; border-style: solid; }
+  html, body { margin: 0; background: #e8e8ed; }
+  h1, h2, h3, p, ul, ol, figure { margin: 0; }
+  ul { list-style: none; padding: 0; }
+  button { border: 0; padding: 0; font: inherit; cursor: pointer; background: none; }
+  a { text-decoration: none; }
+  mjx-container svg { display: inline; max-width: none; }
+  body, .stage { font-family: -apple-system, "SF Pro Display", "SF Pro Text", Inter, "Helvetica Neue", Arial, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .h1 { font-size: 104px; line-height: 1.02; font-weight: 800; letter-spacing: -0.035em; }
+  .h2 { font-size: 64px; line-height: 1.06; font-weight: 750; letter-spacing: -0.03em; }
+  .h3 { font-size: 34px; line-height: 1.15; font-weight: 700; letter-spacing: -0.015em; }
+  .lead { font-size: 32px; line-height: 1.35; color: var(--ink2); font-weight: 500; letter-spacing: -0.01em; }
+  .body { font-size: 26px; line-height: 1.4; color: var(--ink2); }
+  .small { font-size: 21px; line-height: 1.4; color: var(--mute); }
+  .eyebrow { font-size: 22px; font-weight: 700; letter-spacing: 0.02em; color: var(--blue); }
+  .grad { background: linear-gradient(95deg, #0071e3 0%, #8e3ccb 55%, #e3261b 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .grad-blue { background: linear-gradient(95deg, #0071e3, #00a3ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .grad-red { background: linear-gradient(95deg, #e3261b, #ff7a00); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .grad-green { background: linear-gradient(95deg, #0f9a3e, #20c060); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .card { background: #fff; border-radius: 28px; box-shadow: 0 2px 6px rgba(0,0,0,.04), 0 18px 40px rgba(0,0,0,.08); transition: transform .4s ease, box-shadow .4s ease; }
+  .card:hover { transform: scale(1.02); box-shadow: 0 4px 10px rgba(0,0,0,.06), 0 28px 60px rgba(0,0,0,.12); }
+  .eq { background: var(--soft); border-radius: 22px; padding: 24px 28px; font-size: 30px; color: var(--ink); overflow: hidden; }
+  .eq mjx-container { margin: 0 !important; }
+  .eq-lg { font-size: 38px; }
+  .inl { font-size: 1.05em; }
+  table.t { border-collapse: collapse; width: 100%; }
+  table.t th { text-align: left; font-size: 19px; color: var(--mute); font-weight: 600; padding: 10px 14px; border-bottom: 2px solid var(--ink); }
+  table.t td { font-size: 22px; padding: 11px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); vertical-align: middle; }
+  .pill { display: inline-block; font-size: 18px; font-weight: 700; padding: 6px 14px; border-radius: 999px; }
+  .figure { background: #fff; border-radius: 24px; box-shadow: 0 18px 40px rgba(0,0,0,.08); padding: 18px; }
+  .figure img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+  .rise { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; }
+  .d1 { animation-delay: .08s } .d2 { animation-delay: .16s } .d3 { animation-delay: .24s } .d4 { animation-delay: .32s } .d5 { animation-delay: .4s }
+  .stage-wrap:fullscreen { background: #fff; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useLayoutEffect } = React;
+const L = window.LucideReact || {};
+const Icon = ({ name, size = 28, color }) => { const C = L[name]; return C ? <C size={size} color={color} strokeWidth={2.2} /> : null; };
+const REPO = "https://github.com/SirJuanGod/Matlab-Car-Control-";
+const ANIM = "img/animacion.gif";   /* build.py la incrusta una sola vez */
+
+/* ---------- Ecuaciones (MathJax SVG) ---------- */
+function Tex({ t, d = false, className = "" }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    let alive = true;
+    const go = () => { if (!alive || !ref.current) return; ref.current.innerHTML = ""; ref.current.appendChild(MathJax.tex2svg(t, { display: d })); };
+    if (window.__mj) go(); else window.addEventListener("mj-ready", go, { once: true });
+    return () => { alive = false; };
+  }, [t, d]);
+  return <span ref={ref} className={className} />;
+}
+const M = ({ t }) => <span className="inl"><Tex t={t} /></span>;
+
+function QR({ text, size = 300 }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!ref.current || !window.QRCode) return;
+    ref.current.innerHTML = "";
+    new QRCode(ref.current, { text, width: size, height: size, colorDark: "#1d1d1f", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+  }, [text, size]);
+  return <div ref={ref} style={{ width: size, height: size }} />;
+}
+
+/* ---------- Ruta de la presentación ---------- */
+const SECTIONS = ["Contexto", "Modelado", "Control", "Implementación", "Resultados", "Cierre"];
+
+/* ---------- Piezas de layout ---------- */
+const Pad = ({ children, className = "" }) => <div className={`absolute inset-0 pt-[118px] px-[96px] pb-[70px] ${className}`}>{children}</div>;
+const Title = ({ eyebrow, children, sub }) => (
+  <div className="rise">
+    {eyebrow && <div className="eyebrow mb-3">{eyebrow}</div>}
+    <h2 className="h2">{children}</h2>
+    {sub && <p className="lead mt-4 max-w-[1250px]">{sub}</p>}
+  </div>
+);
+const Figure = ({ src, alt, className = "" }) => <div className={`figure rise d2 ${className}`}><img src={src} alt={alt} /></div>;
+const Stat = ({ n, label, cls = "grad-blue", size = 96 }) => (
+  <div className="rise">
+    <div className={cls} style={{ fontSize: size, fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1 }}>{n}</div>
+    <div className="body mt-2" style={{ fontSize: 22 }}>{label}</div>
+  </div>
+);
+const Badge = ({ children, color = "var(--blue)", bg = "#e8f1fd" }) => <span className="pill" style={{ color, background: bg }}>{children}</span>;
+
+/* ================= DIAPOSITIVAS ================= */
+const slides = [
+  /* 1. Portada */
+  { sec: -1, render: () => (
+    <div className="absolute inset-0 flex">
+      <div className="w-[52%] h-full flex flex-col justify-center pl-[110px] pr-10">
+        <div className="eyebrow rise">Proyecto Car_Control</div>
+        <h1 className="h1 mt-5 rise d1">El aire, <span className="grad">bajo control.</span></h1>
+        <p className="lead mt-8 rise d2">Un ventilador sobre un carro mueve una compuerta al ángulo exacto. Control óptimo LQR+I con un sensor, dos actuadores y dos ESP32.</p>
+        <div className="mt-12 rise d3">
+          <div className="small" style={{ fontSize: 19, fontWeight: 700, color: "var(--mute)", letterSpacing: "0.02em" }}>Integrantes</div>
+          <div className="mt-2" style={{ fontSize: 26, fontWeight: 600, lineHeight: 1.45, color: "var(--ink)" }}>
+            Juan Esteban Gómez López<br />Valentina Rodríguez Yarce<br />Santiago Vargas
+          </div>
+        </div>
+      </div>
+      <div className="w-[48%] h-full flex items-center pr-[80px]">
+        <div className="figure rise d2 w-full"><img src={ANIM} alt="Animación del sistema: carro, ventilador y compuerta" /></div>
+      </div>
+    </div>
+  )},
+
+  /* 2. Ruta */
+  { sec: -1, render: () => (
+    <Pad>
+      <Title eyebrow="La ruta">De la pregunta al resultado.</Title>
+      <div className="grid grid-cols-3 gap-7 mt-14">
+        {[
+          ["Contexto", "Qué queremos controlar y por qué es difícil."],
+          ["Modelado", "Variables, ecuaciones físicas y linealización."],
+          ["Control", "Cinco estrategias evaluadas, por qué no H∞ y por qué gana el LQR+I."],
+          ["Implementación", "Del modelo en Simulink al firmware en dos ESP32."],
+          ["Resultados", "Simulación no lineal y prueba en banco."],
+          ["Cierre", "Conclusiones, referencias y repositorio."],
+        ].map(([h, t], i) => (
+          <div key={i} className={`card p-8 rise d${(i % 5) + 1}`}>
+            <div style={{ fontSize: 64, fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1 }} className="grad-blue">{i + 1}</div>
+            <div className="h3 mt-4">{h}</div>
+            <div className="body mt-2" style={{ fontSize: 23 }}>{t}</div>
+          </div>
+        ))}
+      </div>
+    </Pad>
+  )},
+
+  /* 3. Contexto */
+  { sec: 0, render: () => (
+    <Pad className="flex gap-14">
+      <div className="w-[46%] flex flex-col justify-center">
+        <Title eyebrow="Contexto">El reto.</Title>
+        <ul className="mt-10 space-y-6">
+          {[
+            ["Hanger", "Una compuerta de cartón cuelga de un soporte en L. Un potenciómetro mide su ángulo θ."],
+            ["Fan", "Un ventilador de 12 V montado sobre un carro la empuja con su chorro de aire."],
+            ["MoveHorizontal", "El carro avanza o retrocede: cambia la distancia d entre 5 y 25 cm."],
+          ].map(([ic, t], i) => (
+            <li key={i} className={`flex gap-5 items-start rise d${i + 1}`}>
+              <span className="shrink-0 mt-1"><Icon name={ic} size={34} color="#0071e3" /></span>
+              <span className="body">{t}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="card p-7 mt-10 rise d4" style={{ background: "#1d1d1f" }}>
+          <div className="small" style={{ color: "#a1a1a6" }}>Objetivo</div>
+          <div className="h3 mt-1" style={{ color: "#fff" }}>Llevar θ a la consigna (p. ej. 35°) rápido, sin sobrepico y sin error permanente.</div>
+        </div>
+      </div>
+      <div className="w-[54%] flex items-center"><Figure src={ANIM} alt="Animación del sistema" className="w-full" /></div>
+    </Pad>
+  )},
+
+  /* 4. Por qué es difícil */
+  { sec: 0, render: () => (
+    <Pad>
+      <Title eyebrow="Contexto">¿Por qué es difícil?</Title>
+      <div className="grid grid-cols-4 gap-7 mt-16">
+        {[
+          ["ζ = 0.32", "grad-red", "La compuerta oscila", "Péndulo poco amortiguado: ωn = 7.76 rad/s."],
+          ["0.15 s", "grad-blue", "El ventilador es lento", "Constante de tiempo τ_fan, y satura entre 10 % y 90 % de PWM."],
+          ["1 → 2", "grad", "Un sensor, dos actuadores", "Solo se mide θ. Se actúa con el PWM y con la posición del carro."],
+          ["(d₀/d)²", "grad-green", "La ganancia cambia", "Al mover el carro cambia la fuerza del aire sobre la compuerta."],
+        ].map(([n, c, h, t], i) => (
+          <div key={i} className={`card p-8 rise d${i + 1}`}>
+            <div className={c} style={{ fontSize: 66, fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.05 }}>{n}</div>
+            <div className="h3 mt-6" style={{ fontSize: 30 }}>{h}</div>
+            <div className="body mt-3" style={{ fontSize: 23 }}>{t}</div>
+          </div>
+        ))}
+      </div>
+      <p className="lead mt-14 rise d5">Por eso un PID de una sola entrada no basta: hace falta coordinar dos actuadores con un modelo.</p>
+    </Pad>
+  )},
+
+  /* 5. Variables */
+  { sec: 1, render: () => (
+    <Pad>
+      <Title eyebrow="Modelado · 1 de 4">Variables y parámetros.</Title>
+      <div className="grid grid-cols-2 gap-12 mt-10 rise d2">
+        <table className="t">
+          <thead><tr><th>Símbolo</th><th>Significado</th><th>Rango / unidad</th></tr></thead>
+          <tbody>
+            {[["\\theta", "Ángulo de la compuerta (0° = colgando)", "0–90°"],
+              ["\\omega = \\dot\\theta", "Velocidad angular (estimada)", "rad/s"],
+              ["u_{PWM}", "Orden al ventilador", "10–90 %"],
+              ["v_{fan}", "Estado del ventilador", "0–90 %"],
+              ["d", "Distancia carro–compuerta", "5–25 cm"],
+              ["d_{ref}", "Posición pedida al carro", "cm"],
+              ["\\tau_{aero}", "Torque del aire", "N·m"],
+              ["x_i", "Integral del error de ángulo", "rad·s"]].map(([s, m, r], i) => (
+              <tr key={i}><td><M t={s} /></td><td>{m}</td><td>{r}</td></tr>))}
+          </tbody>
+        </table>
+        <table className="t">
+          <thead><tr><th>Parámetro</th><th>Valor</th><th>Origen</th></tr></thead>
+          <tbody>
+            {[["d_0", "10 cm", "Punto de operación"],
+              ["\\theta_{eq}", "35°", "Punto de operación"],
+              ["b_c", "10⁻³ N·m·s/rad", "Supuesto"],
+              ["k_m", "3 × 10⁻⁴ N·m/%", "Supuesto: calibrar"],
+              ["\\tau_{fan}", "0.15 s", "Supuesto"],
+              ["m,\\ b", "0.421 kg, 3.5 N·s/m", "Hoja de datos"],
+              ["F_{max}", "3.0 N", "Hoja de datos"]].map(([s, v, o], i) => (
+              <tr key={i}><td><M t={s} /></td><td>{v}</td><td>{o.startsWith("Supuesto") ? <Badge color="#b25000" bg="#fff1e0">{o}</Badge> : o}</td></tr>))}
+          </tbody>
+        </table>
+      </div>
+    </Pad>
+  )},
+
+  /* 6. Ecuaciones: compuerta y aire */
+  { sec: 1, render: () => (
+    <Pad>
+      <Title eyebrow="Modelado · 2 de 4">La compuerta es un péndulo.</Title>
+      <div className="grid grid-cols-2 gap-10 mt-10">
+        <div className="rise d1">
+          <div className="h3">Compuerta (Lagrange)</div>
+          <div className="eq eq-lg mt-5"><Tex d t={"\\begin{aligned} J\\ddot\\theta + m_g g \\ell_c \\sin\\theta &= \\tau_{aero} - b_c\\dot\\theta \\\\ &\\quad - \\tau_f\\,\\mathrm{sgn}(\\dot\\theta) + \\tau_{ext} \\end{aligned}"} /></div>
+          <ul className="body mt-6 space-y-3" style={{ fontSize: 24 }}>
+            <li><b style={{ color: "var(--ink)" }}>Inercia</b> <M t="J\ddot\theta" /> frente a la <b style={{ color: "var(--ink)" }}>gravedad</b> <M t="m_g g \ell_c \sin\theta" />, que la devuelve a 0°: la planta es estable.</li>
+            <li><M t="b_c\dot\theta" /> y <M t="\tau_f" /> son fricción viscosa y seca en el pivote. <M t="\tau_{ext}" /> es una perturbación.</li>
+          </ul>
+        </div>
+        <div className="rise d2">
+          <div className="h3">Torque del aire</div>
+          <div className="eq eq-lg mt-5"><Tex d t={"\\tau_{aero} = k_m\\, v_{fan}\\left(\\frac{d_0}{d}\\right)^{2}"} /></div>
+          <ul className="body mt-6 space-y-3" style={{ fontSize: 24 }}>
+            <li>El chorro libre pierde velocidad con la distancia: <M t="v_j \approx v_0\,d_0/d" />. La fuerza de impulso crece con <M t="v_j^2" />.</li>
+            <li><M t="k_m" /> agrupa densidad, área y brazo de la compuerta. <b style={{ color: "var(--ink)" }}>Acercar el carro multiplica el torque</b>: por eso el carro es un segundo actuador.</li>
+          </ul>
+        </div>
+      </div>
+    </Pad>
+  )},
+
+  /* 7. Ecuaciones: ventilador, carro, sensores */
+  { sec: 1, render: () => (
+    <Pad>
+      <Title eyebrow="Modelado · 3 de 4">Actuadores y sensores.</Title>
+      <div className="grid grid-cols-3 gap-8 mt-10">
+        <div className="rise d1">
+          <div className="h3">Ventilador</div>
+          <div className="eq mt-4"><Tex d t={"\\tau_{fan}\\dot v_{fan} + v_{fan} = \\mathrm{sat}_{[10,90]}(u_{PWM})"} /></div>
+          <p className="body mt-5" style={{ fontSize: 23 }}>Primer orden con <M t="\tau_{fan}=0.15" /> s. No responde al instante: es el retardo que el controlador debe conocer.</p>
+        </div>
+        <div className="rise d2">
+          <div className="h3">Carro</div>
+          <div className="eq mt-4"><Tex d t={"m\\ddot x = F - b\\dot x,\\qquad d = d_{ini}-x"} /></div>
+          <p className="body mt-5" style={{ fontSize: 23 }}>Newton con fricción lineal. Un PID de posición con banda muerta de ±5 mm lo lleva a <M t="d_{ref}" />.</p>
+        </div>
+        <div className="rise d3">
+          <div className="h3">Sensores</div>
+          <div className="eq mt-4"><Tex d t={"\\hat\\omega(s) = \\frac{s}{0.04s+1}\\,\\theta_{meas}(s)"} /></div>
+          <p className="body mt-5" style={{ fontSize: 23 }}>θ con ADC de 12 bits (0.044°/LSB). ω por derivada filtrada. <M t="\hat d" /> con IMU MPU6050 + filtro de Kalman.</p>
+        </div>
+      </div>
+      <div className="card p-7 mt-10 rise d4 flex items-center gap-6">
+        <Icon name="Info" size={34} color="#0071e3" />
+        <span className="body">Sin medir posición, la IMU deja un error acotado en <M t="\hat d" /> de 1–2 mm. Es aceptable: la integral del ángulo lo absorbe.</span>
+      </div>
+    </Pad>
+  )},
+
+  /* 8. Linealización */
+  { sec: 1, render: () => (
+    <Pad>
+      <Title eyebrow="Modelado · 4 de 4">Linealizado en 35° y 10 cm.</Title>
+      <div className="grid grid-cols-2 gap-10 mt-10">
+        <div className="space-y-6">
+          <div className="rise d1"><div className="small mb-2">Ventilador → ángulo</div>
+            <div className="eq eq-lg"><Tex d t={"G_{v\\theta}(s) = \\frac{1.5}{s^2 + 5s + 60.27}"} /></div></div>
+          <div className="rise d2"><div className="small mb-2">Distancia → ángulo (por cm)</div>
+            <div className="eq eq-lg"><Tex d t={"G_{d\\theta}(s) = \\frac{-8.44}{s^2 + 5s + 60.27}"} /></div></div>
+          <div className="rise d3"><div className="small mb-2">Carro con su PID</div>
+            <div className="eq eq-lg"><Tex d t={"G_{car}(s) \\approx \\frac{1}{0.8s+1}"} /></div></div>
+        </div>
+        <div className="flex flex-col justify-center gap-10">
+          <Stat n="≈ 8°" label="sube la compuerta si el carro se acerca 1 cm (PWM constante)." cls="grad" size={120} />
+          <div className="grid grid-cols-2 gap-8">
+            <Stat n="7.76" label="ωn  [rad/s]" size={76} />
+            <Stat n="0.32" label="ζ (poco amortiguada)" cls="grad-red" size={76} />
+          </div>
+          <p className="body rise d4">Polos en lazo abierto: 0 (integrador), −2.5 ± 7.35j (compuerta), −6.67 (ventilador), −1.25 (carro).</p>
+        </div>
+      </div>
+    </Pad>
+  )},
+
+  /* 9. Estrategias */
+  { sec: 2, render: () => (
+    <Pad>
+      <Title eyebrow="Control · 1 de 5">Cinco estrategias, una elegida.</Title>
+      <table className="t mt-10 rise d2">
+        <thead><tr><th>#</th><th>Estrategia</th><th>Cómo se diseñó</th><th>Resultado</th></tr></thead>
+        <tbody>
+          {[["1", "PID (solo ventilador)", "Asignación de polos, luego optimización ITAE", "Funciona, pero es SISO", "no"],
+            ["2", "Loop shaping robusto", "systune; optimización de Ms + 2·ITAE", "Degenera en un PI filtrado, más lento", "no"],
+            ["3", "H∞ sensibilidad mixta (S/KS)", "Riccati de Glover–Doyle, γ por bisección", "Robusto, pero fijo y no sabe usar el carro", "warn"],
+            ["4", "LQR+I de 3 estados", "Riccati sobre [θ, ω, xᵢ]", "Pierde margen al incluir el ventilador", "warn"],
+            ["5", "LQR+I SIMO de 5 estados", "Riccati sobre [θ, ω, v_fan, d, xᵢ], 2 entradas", "Elegido", "ok"]].map(([n, e, c, r, k]) => (
+            <tr key={n} style={k === "ok" ? { background: "#eef7f0" } : {}}>
+              <td style={{ fontWeight: 800, color: "var(--ink)" }}>{n}</td>
+              <td style={{ fontWeight: 700, color: "var(--ink)" }}>{e}</td><td>{c}</td>
+              <td>{k === "ok" ? <Badge color="#0f7a35" bg="#d5f2de">✓ {r}</Badge> : k === "warn" ? <Badge color="#b25000" bg="#fff1e0">{r}</Badge> : r}</td>
+            </tr>))}
+        </tbody>
+      </table>
+      <div className="grid grid-cols-5 gap-5 mt-9 rise d3">
+        {[["PID rápido", "0.61 s", "2.0 %", "66°"], ["Loop shaping", "1.53 s", "0.3 %", "70°"], ["H∞ S/KS", "0.69 s", "0 %", "75°"], ["LQR+I 3 estados", "4.0 s", "20.3 %", "0.8°"], ["LQR+I SIMO", "2.24 s", "0 %", "67°"]].map(([n, ts, mp, pm], i) => (
+          <div key={i} className="card p-6">
+            <div className="h3" style={{ fontSize: 25 }}>{n}</div>
+            <div className="small mt-2" style={{ fontSize: 18 }}>ts 2 % · sobrepico · margen</div>
+            <div className="body mt-1" style={{ fontWeight: 700, fontSize: 24, color: i === 3 ? "var(--red)" : "var(--ink)" }}>{ts} · {mp} · {pm}</div>
+          </div>))}
+      </div>
+      <p className="small mt-4" style={{ fontSize: 18 }}>Lazo lineal en 35° con el ventilador en el lazo. PID, loop shaping y LQR: README §4.3. H∞: evaluar_hinf.m.</p>
+    </Pad>
+  )},
+
+  /* 10. ¿Por qué no H∞? */
+  { sec: 2, render: () => (
+    <Pad>
+      <Title eyebrow="Control · 2 de 5">H∞ funciona. No es la mejor opción.</Title>
+      <div className="flex gap-10 mt-8">
+        <div className="w-[45%] space-y-6">
+          <div className="rise d1"><div className="small mb-2">Sensibilidad mixta: error pequeño con esfuerzo acotado</div>
+            <div className="eq eq-lg"><Tex d t={"\\min_{K}\\ \\left\\| \\begin{matrix} W_1\\,S \\\\ W_2\\,K S \\end{matrix} \\right\\|_{\\infty} < \\gamma"} />
+              <div className="small mt-2" style={{ fontSize: 19 }}>S = 1/(1 + GK) es la sensibilidad. W₁ castiga el error; W₂, el esfuerzo de cada actuador.</div></div></div>
+          <div className="grid grid-cols-3 gap-5 rise d2">
+            <Stat n="75°" label="margen de fase" cls="grad-green" size={64} />
+            <Stat n="0.69 s" label="ts (2 %), sin sobrepico" size={64} />
+            <Stat n="1.26" label="pico de sensibilidad Ms" cls="grad" size={64} />
+          </div>
+          <p className="body rise d3" style={{ fontSize: 22 }}>Diseño solo ventilador, γ = 0.29. Con el carro 4 cm más lejos sin aviso sigue estable y llega a 34.9°.</p>
+        </div>
+        <div className="w-[55%] space-y-4 rise d2">
+          {[["Car", "No sabe repartir el trabajo con el carro", "Con el carro “barato” pide d_ref = 86 cm (la pista mide 5–25 cm); con el carro “caro” lo ignora. Los pesos no expresan límites ni “mover el carro solo si hace falta”."],
+            ["Layers", "Es un controlador fijo de orden 4 a 7", "Diseñado para un solo punto de operación. Cubrir 135 puntos exige interpolar controladores dinámicos; el LQR solo interpola una K de 2 × 5."],
+            ["Gauge", "Ignora la saturación", "En el escalón pide 139 % de PWM. Frenarlo vuelve el lazo más lento; el LQR+I lo resuelve con anti-windup."]].map(([ic, h, t], i) => (
+            <div key={i} className="card px-6 py-5 flex gap-5">
+              <div className="w-14 h-14 shrink-0 rounded-2xl flex items-center justify-center" style={{ background: "#fff1e0" }}><Icon name={ic} size={30} color="#e86a00" /></div>
+              <div><div className="h3" style={{ fontSize: 26 }}>{h}</div><div className="body mt-1" style={{ fontSize: 20 }}>{t}</div></div>
+            </div>))}
+        </div>
+      </div>
+    </Pad>
+  )},
+
+  /* 10. LQR */
+  { sec: 2, render: () => (
+    <Pad>
+      <Title eyebrow="Control · 3 de 5">LQR: el mejor compromiso, calculado.</Title>
+      <div className="grid grid-cols-2 gap-12 mt-8">
+        <div className="space-y-5">
+          <div className="rise d1"><div className="small mb-2">Minimiza el costo</div>
+            <div className="eq eq-lg"><Tex d t={"J = \\int_0^{\\infty}\\left(x^{T}Qx + u^{T}Ru\\right)dt"} /></div></div>
+          <div className="rise d2"><div className="small mb-2">Riccati → ganancia óptima</div>
+            <div className="eq"><Tex d t={"\\begin{aligned} A^{T}P + PA - PBR^{-1}B^{T}P + Q &= 0 \\\\ K = R^{-1}B^{T}P,\\qquad u &= -Kx \\end{aligned}"} /></div></div>
+          <div className="rise d3"><div className="small mb-2">Estados y entradas</div>
+            <div className="eq"><Tex d t={"\\begin{aligned} x &= \\left[\\,e_\\theta,\\ \\hat\\omega,\\ \\hat v_{fan}-v_{eq},\\ \\hat d - d_{nom},\\ x_i\\,\\right]^{T} \\\\ u &= \\left[\\,\\delta u_{PWM},\\ \\delta d_{ref}\\,\\right]^{T} \\end{aligned}"} /></div></div>
+        </div>
+        <div className="rise d2">
+          <div className="h3">Pesos por la regla de Bryson</div>
+          <p className="small mt-1"><M t="Q_{ii} = 1/x_{i,max}^2" />: cuánto error tolero en cada magnitud.</p>
+          <table className="t mt-4">
+            <thead><tr><th>Peso</th><th>Valor</th><th>Tolerancia</th></tr></thead>
+            <tbody>
+              {[["q_\\theta", "10⁴", "0.57°"], ["q_\\omega", "60", "0.13 rad/s"], ["q_d", "0.5", "1.4 cm"], ["q_{xi}", "10⁴", "0.01 rad·s"], ["r_{pwm}", "0.02", "7 %"], ["r_d", "1", "1 cm: el carro se mueve poco"]].map(([s, v, t], i) => (
+                <tr key={i}><td><M t={s} /></td><td>{v}</td><td>{t}</td></tr>))}
+            </tbody>
+          </table>
+          <p className="body mt-6" style={{ fontSize: 23 }}>La integral <M t="x_i" /> elimina el error permanente aunque <M t="k_m" /> esté mal estimado.</p>
+        </div>
+      </div>
+    </Pad>
+  )},
+
+  /* 11. Lección clave */
+  { sec: 2, render: () => (
+    <Pad className="flex flex-col justify-center">
+      <Title eyebrow="Control · 4 de 5">El actuador debe estar en el modelo.</Title>
+      <div className="grid grid-cols-2 gap-16 mt-14">
+        <div className="card p-12 rise d1">
+          <div className="grad-red" style={{ fontSize: 200, fontWeight: 800, letterSpacing: "-0.05em", lineHeight: 1 }}>0.8°</div>
+          <div className="h3 mt-6">LQR de 3 estados</div>
+          <p className="body mt-2">Prometía 85.5° de margen de fase. Al cerrar el lazo con el retardo real del ventilador, cae a 0.8°: casi inestable.</p>
+        </div>
+        <div className="card p-12 rise d2">
+          <div className="grad-green" style={{ fontSize: 200, fontWeight: 800, letterSpacing: "-0.05em", lineHeight: 1 }}>67°</div>
+          <div className="h3 mt-6">LQR SIMO de 5 estados</div>
+          <p className="body mt-2">Incluye v_fan como estado. Conserva 67° de margen en el canal PWM con el lazo del carro cerrado.</p>
+        </div>
+      </div>
+      <p className="lead mt-12 rise d3">Un LQR solo es tan bueno como el modelo que ve.</p>
+    </Pad>
+  )},
+
+  /* 12. Polos y gain scheduling */
+  { sec: 2, render: () => (
+    <Pad className="flex gap-12">
+      <div className="w-[44%] flex flex-col">
+        <Title eyebrow="Control · 5 de 5">Más rápido y mejor amortiguado.</Title>
+        <div className="space-y-6 mt-8">
+          <div className="rise d2"><Stat n="0.32 → 0.64" label="Amortiguamiento ζ de la compuerta, en lazo abierto y en lazo cerrado." cls="grad" size={80} /></div>
+          <div className="rise d3"><Stat n="135" label="Matrices K (15 ángulos × 9 distancias), interpoladas en línea: gain scheduling." size={80} /></div>
+          <p className="body rise d4" style={{ fontSize: 23 }}>Estable en toda la rejilla: el polo más lento tiene Re = −0.94. Un supervisor acerca el carro si el PWM supera 70 %.</p>
+        </div>
+      </div>
+      <div className="w-[56%] flex items-center"><Figure src="img/f5_polos.png" alt="Mapa de polos en lazo abierto y cerrado" className="w-full" /></div>
+    </Pad>
+  )},
+
+  /* 13. Arquitectura */
+  { sec: 3, render: () => (
+    <Pad>
+      <Title eyebrow="Implementación">Del modelo a dos ESP32.</Title>
+      <div className="flex items-stretch gap-6 mt-8 rise d2">
+        {[
+          ["Gauge", "ESP32 base", ["Potenciómetro → ADC 12 bits", "Oversampling + Kalman de θ", "Puente UART ↔ MATLAB"], "#0071e3"],
+          null,
+          ["Car", "ESP32 del carro", ["LQR+I SIMO a 100 Hz (FreeRTOS)", "PWM ventilador 25 Hz + L298N", "MPU6050 + Kalman, PID del carro"], "#18a34a"],
+          null,
+          ["MonitorSmartphone", "GUI en MATLAB", ["Lee telemetría en vivo", "Envía consignas", "No calcula control"], "#8e3ccb"],
+        ].map((b, i) => b ? (
+          <div key={i} className="card px-8 py-7 flex-1">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{ background: b[3] + "18" }}><Icon name={b[0]} size={36} color={b[3]} /></div>
+            <div className="h3 mt-5">{b[1]}</div>
+            <ul className="mt-4 space-y-2">{b[2].map((x, j) => <li key={j} className="body" style={{ fontSize: 23 }}>{x}</li>)}</ul>
+          </div>
+        ) : (
+          <div key={i} className="flex flex-col items-center justify-center w-[110px]">
+            <Icon name={i === 1 ? "Radio" : "Cable"} size={34} color="#6e6e73" />
+            <div className="small text-center mt-2" style={{ fontSize: 18 }}>{i === 1 ? "ESP-NOW canal 8" : "UART"}</div>
+            <div style={{ fontSize: 40, color: "#6e6e73", lineHeight: 1 }}>⇄</div>
+          </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-3 gap-6 mt-7 rise d3">
+        {[["Simulink", "modelo_miso_compuerta.slx: planta no lineal, ADC, IMU, Kalman, saturaciones."],
+          ["MATLAB → C", "exportar_lqr_c.m genera lqr_tablas.h con las 135 ganancias."],
+          ["Verificación", "Controlador probado en un ESP32 emulado con QEMU antes del hardware."]].map(([h, t], i) => (
+          <div key={i} className="eq" style={{ padding: "16px 24px" }}><div className="h3" style={{ fontSize: 26 }}>{h}</div><div className="body mt-2" style={{ fontSize: 22 }}>{t}</div></div>))}
+      </div>
+    </Pad>
+  )},
+
+  /* 14. Resultado nominal */
+  { sec: 4, render: () => (
+    <Pad className="flex gap-10">
+      <div className="w-[30%] flex flex-col">
+        <Title eyebrow="Resultados · Simulación">Escalón de 0° a 35°.</Title>
+        <p className="body mt-4 rise d1" style={{ fontSize: 23 }}>Modelo no lineal completo en Simulink, con ADC, IMU, Kalman y saturaciones. Carro a 10 cm.</p>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 mt-10">
+          <Stat n="0.59 s" label="Establecimiento (±1°)" size={64} />
+          <Stat n="0.86°" label="Sobrepico" cls="grad" size={64} />
+          <Stat n="0.01°" label="Error final" cls="grad-green" size={64} />
+          <Stat n="65 %" label="PWM máximo" cls="grad-red" size={64} />
+        </div>
+      </div>
+      <div className="w-[70%] flex items-center"><Figure src="img/f1_nominal.png" alt="Respuesta al escalón nominal" className="w-full" /></div>
+    </Pad>
+  )},
+
+  /* 15. El carro actúa */
+  { sec: 4, render: () => (
+    <Pad className="flex gap-10">
+      <div className="w-[30%] flex flex-col">
+        <Title eyebrow="Resultados · Simulación">El carro, segundo actuador.</Title>
+        <ul className="mt-8 space-y-6 rise d2">
+          <li className="body" style={{ fontSize: 23 }}><b style={{ color: "var(--ink)" }}>Carro a 18 cm:</b> el ventilador satura al 90 %. El carro se acerca a 14.6 cm y θ llega a 35°.</li>
+          <li className="body" style={{ fontSize: 23 }}><b style={{ color: "var(--ink)" }}>Consigna de 8°:</b> por debajo de lo que logra el PWM mínimo. El carro se aleja a 13.9 cm y θ llega a 8°.</li>
+        </ul>
+      </div>
+      <div className="w-[70%] flex items-center"><Figure src="img/f2_carro_actua.png" alt="Escenarios donde actúa el carro" className="w-full" /></div>
+    </Pad>
+  )},
+
+  /* 16. Robustez */
+  { sec: 4, render: () => (
+    <Pad>
+      <Title eyebrow="Resultados · Simulación">Robusto ante perturbaciones.</Title>
+      <Figure src="img/f3_perturbaciones.png" alt="Respuesta ante perturbaciones" className="mt-6 h-[480px]" />
+      <div className="grid grid-cols-3 gap-8 mt-6 rise d3">
+        <div className="body" style={{ fontSize: 23 }}>Pierde 50 % de fuerza (franja roja): <b style={{ color: "var(--ink)" }}>error final 0.01°</b>.</div>
+        <div className="body" style={{ fontSize: 23 }}>Empujón de −5 mN·m durante 3 s: <b style={{ color: "var(--ink)" }}>error final 0.02°</b>.</div>
+        <div className="body" style={{ fontSize: 23 }}>Empujón de +5 mN·m durante 3 s: <b style={{ color: "var(--ink)" }}>error final 0.02°</b>.</div>
+      </div>
+    </Pad>
+  )},
+
+  /* 17. Comparativa */
+  { sec: 4, render: () => (
+    <Pad>
+      <Title eyebrow="Resultados · Simulación">¿Y si el carro se mueve sin avisar?</Title>
+      <div className="flex gap-10 mt-6">
+        <Figure src="img/f4_comparativa.png" alt="Comparativa de controladores" className="w-[70%]" />
+        <div className="w-[30%] flex flex-col justify-center gap-10">
+          <Stat n="12.9°" label="cae la compuerta con el PID rápido cuando el carro retrocede de 10 a 14 cm." cls="grad-red" size={100} />
+          <Stat n="1.1°" label="cae con LQR+I (3 estados, solo ventilador). Incluso sin mover el carro, el modelo resiste el cambio de ganancia." cls="grad-green" size={100} />
+        </div>
+      </div>
+    </Pad>
+  )},
+
+  /* 18. Banco */
+  { sec: 4, render: () => (
+    <Pad>
+      <div className="flex items-end justify-between">
+        <Title eyebrow="Resultados · Prueba en banco">Del simulador a la mesa.</Title>
+        <div className="rise d1 mb-2"><Badge color="#b25000" bg="#fff1e0">Datos emulados · prueba física en curso</Badge></div>
+      </div>
+      <div className="flex gap-10 mt-6">
+        <Figure src="img/f6_banco.png" alt="Prueba en banco frente a simulación" className="w-[68%]" />
+        <div className="w-[32%] flex flex-col justify-center gap-7">
+          <table className="t rise d3">
+            <thead><tr><th></th><th>Simulación</th><th>Banco</th></tr></thead>
+            <tbody>
+              <tr><td>ts (±2°)</td><td>0.56 s</td><td>0.56 s</td></tr>
+              <tr><td>Sobrepico</td><td>0.86°</td><td>1.94°</td></tr>
+              <tr><td>Error final</td><td>0.01°</td><td>0.01°</td></tr>
+              <tr><td>Ruido de θ (rms)</td><td>—</td><td>0.36°</td></tr>
+            </tbody>
+          </table>
+          <p className="body rise d4" style={{ fontSize: 21 }}>Banco: k_m 20 % menor, más fricción, turbulencia del chorro, ruido de ADC e IMU, telemetría a 50 Hz. La forma de la respuesta se conserva.</p>
+        </div>
+      </div>
+    </Pad>
+  )},
+
+  /* 19. Conclusiones */
+  { sec: 5, render: () => (
+    <Pad>
+      <Title eyebrow="Cierre">Lo que aprendimos.</Title>
+      <div className="grid grid-cols-2 gap-8 mt-10">
+        {[["El carro es un segundo actuador real.", "Llega a 35° desde 18 cm, donde el ventilador solo no alcanza, y a 8°, por debajo del PWM mínimo.", "2", "actuadores coordinados", "grad-blue"],
+          ["El LQR+I SIMO cumple la tarea.", "Escalón a 35° en 0.59 s, con 0.86° de sobrepico y error final por debajo de 0.05° en todos los escenarios.", "< 0.05°", "error final", "grad-green"],
+          ["El actuador debe estar en el modelo.", "Incluir la dinámica del ventilador llevó el margen de fase de 0.8° a 67°.", "67°", "margen de fase", "grad"],
+          ["Robusto no basta: hay que poder implementarlo.", "H∞ dio buen margen, pero no reparte el trabajo con el carro ni se programa por ganancias tan fácil como el LQR.", "2 × 5", "ganancias por punto de operación", "grad-red"]].map(([h, t, n, l, c], i) => (
+          <div key={i} className={`card p-8 flex gap-8 items-center rise d${i + 1}`}>
+            <div className="shrink-0 w-[200px]">
+              <div className={c} style={{ fontSize: 64, fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1 }}>{n}</div>
+              <div className="small mt-2" style={{ fontSize: 18 }}>{l}</div>
+            </div>
+            <div><div className="h3" style={{ fontSize: 28 }}>{h}</div><div className="body mt-2" style={{ fontSize: 22 }}>{t}</div></div>
+          </div>))}
+      </div>
+    </Pad>
+  )},
+
+  /* 20. Bibliografía */
+  { sec: 5, render: () => (
+    <Pad>
+      <Title eyebrow="Cierre">Referencias.</Title>
+      <ol className="mt-7 grid grid-cols-2 gap-x-12 gap-y-3 rise d2" style={{ fontSize: 18, lineHeight: 1.38, color: "var(--ink2)", listStyle: "decimal", paddingLeft: 28 }}>
+        <li>K. Ogata, <i>Ingeniería de control moderna</i>, 5.ª ed. Pearson, 2010.</li>
+        <li>G. F. Franklin, J. D. Powell y A. Emami-Naeini, <i>Feedback Control of Dynamic Systems</i>, 8.ª ed. Pearson, 2019.</li>
+        <li>K. J. Åström y R. M. Murray, <i>Feedback Systems: An Introduction for Scientists and Engineers</i>, 2.ª ed. Princeton Univ. Press, 2021.</li>
+        <li>B. D. O. Anderson y J. B. Moore, <i>Optimal Control: Linear Quadratic Methods</i>. Prentice Hall, 1990.</li>
+        <li>A. E. Bryson y Y.-C. Ho, <i>Applied Optimal Control</i>. Hemisphere, 1975.</li>
+        <li>R. E. Kalman, “A new approach to linear filtering and prediction problems,” <i>J. Basic Eng.</i>, vol. 82, n.º 1, pp. 35–45, 1960.</li>
+        <li>S. Skogestad e I. Postlethwaite, <i>Multivariable Feedback Control: Analysis and Design</i>, 2.ª ed. Wiley, 2005.</li>
+        <li>N. Rajaratnam, <i>Turbulent Jets</i>. Elsevier, 1976.</li>
+        <li>InvenSense, <i>MPU-6000 and MPU-6050 Product Specification</i>, Rev. 3.4, 2013.</li>
+        <li>Espressif Systems, <i>ESP-IDF Programming Guide: ESP-NOW</i>. docs.espressif.com</li>
+        <li>The MathWorks, <i>Control System Toolbox: lqr, lqe, icare</i>. Documentación de MATLAB R2026b.</li>
+        <li>K. Glover y J. C. Doyle, “State-space formulae for all stabilizing controllers that satisfy an H∞-norm bound,” <i>Systems &amp; Control Letters</i>, vol. 11, n.º 3, pp. 167–172, 1988.</li>
+        <li>Anthropic, <i>Claude</i> (Opus 5.5) [modelo de lenguaje]. Asistencia en el código (MATLAB, C/ESP-IDF) y en la redacción de la documentación y de esta presentación, 2026. claude.ai</li>
+      </ol>
+    </Pad>
+  )},
+
+  /* 21. Repositorio */
+  { sec: 5, render: () => (
+    <div className="absolute inset-0 flex items-center px-[120px] gap-20">
+      <div className="flex-1">
+        <div className="eyebrow rise">Código, modelos y documentación</div>
+        <h1 className="h1 mt-5 rise d1">Gracias. <span className="grad">¿Preguntas?</span></h1>
+        <p className="lead mt-10 rise d2">Todo el proyecto está en GitHub: modelos de Simulink, scripts de MATLAB, firmware ESP-IDF y la documentación técnica.</p>
+        <a href={REPO} className="block mt-8 rise d3" style={{ fontSize: 34, fontWeight: 700, color: "var(--blue)", letterSpacing: "-0.01em" }}>github.com/SirJuanGod/Matlab-Car-Control-</a>
+      </div>
+      <div className="card p-8 rise d3 flex flex-col items-center">
+        <QR text={REPO} size={320} />
+        <div className="small mt-4">Escanea para abrir el repositorio</div>
+      </div>
+    </div>
+  )},
+];
+
+/* ================= ESCENARIO ================= */
+function App() {
+  const [i, setI] = useState(0);
+  const [box, setBox] = useState({ s: 1, x: 0, y: 0 });
+  const wrap = useRef(null);
+  const n = slides.length;
+  const go = d => setI(v => Math.min(n - 1, Math.max(0, v + d)));
+
+  useLayoutEffect(() => {
+    const fit = () => {
+      const el = wrap.current; if (!el) return;
+      const w = el.clientWidth, h = el.clientHeight, s = Math.min(w / 1600, h / 900);
+      setBox({ s, x: (w - 1600 * s) / 2, y: (h - 900 * s) / 2 });
+    };
+    fit(); const ro = new ResizeObserver(fit); ro.observe(wrap.current);
+    return () => ro.disconnect();
+  }, []);
+  useEffect(() => {
+    const k = e => {
+      if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); go(1); }
+      if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); go(-1); }
+      if (e.key === "f") full();
+    };
+    window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k);
+  }, []);
+  const full = () => {
+    try { if (document.fullscreenElement) document.exitFullscreen(); else wrap.current.requestFullscreen().catch(() => {}); } catch (e) {}
+  };
+  const sec = slides[i].sec;
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-6">
+      <div ref={wrap} className="stage-wrap relative w-full max-w-[1600px] aspect-video bg-white rounded-[28px] overflow-hidden shadow-2xl">
+        <div className="stage absolute bg-white" style={{ width: 1600, height: 900, left: box.x, top: box.y, transform: `scale(${box.s})`, transformOrigin: "top left" }}>
+          {/* Ruta */}
+          {sec >= 0 && (
+            <div className="absolute top-0 left-0 right-0 h-[78px] flex items-center px-[96px] gap-8 z-10" style={{ borderBottom: "1px solid #e5e5ea" }}>
+              {SECTIONS.map((s, k) => (
+                <div key={k} className="flex items-center gap-3 transition-all duration-500" style={{ fontSize: 19, fontWeight: k === sec ? 800 : 600, color: k === sec ? "#0071e3" : k < sec ? "#3a3a3c" : "#aeaeb2" }}>
+                  <span className="w-8 h-8 rounded-full flex items-center justify-center text-[16px] transition-all duration-500" style={{ background: k === sec ? "#0071e3" : k < sec ? "#1d1d1f" : "#e5e5ea", color: k <= sec ? "#fff" : "#8e8e93" }}>{k + 1}</span>
+                  {s}
+                </div>
+              ))}
+            </div>
+          )}
+          {/* Diapositivas */}
+          {slides.map((s, idx) => (
+            <div key={idx} className="absolute inset-0 transition-all duration-500 ease-out"
+              style={{ opacity: idx === i ? 1 : 0, transform: `translateX(${idx === i ? 0 : idx < i ? -40 : 40}px)`, pointerEvents: idx === i ? "auto" : "none" }}>
+              {Math.abs(idx - i) <= 1 && s.render()}
+            </div>
+          ))}
+          {/* Pie */}
+          <div className="absolute bottom-0 left-0 right-0 h-[6px] bg-[#e5e5ea] z-10">
+            <div className="h-full transition-all duration-500" style={{ width: `${((i + 1) / n) * 100}%`, background: "linear-gradient(90deg,#0071e3,#8e3ccb)" }} />
+          </div>
+          <div className="absolute bottom-[22px] right-[40px] z-10 flex items-center gap-3">
+            <span style={{ fontSize: 18, color: "#8e8e93", fontWeight: 600 }} className="mr-3">{i + 1} / {n}</span>
+            <button onClick={() => go(-1)} disabled={i === 0} aria-label="Anterior"
+              className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 disabled:opacity-30" style={{ background: "#f5f5f7" }}>
+              <Icon name="ChevronLeft" size={30} color="#1d1d1f" /></button>
+            <button onClick={() => go(1)} disabled={i === n - 1} aria-label="Siguiente"
+              className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 disabled:opacity-30 shadow-xl" style={{ background: "#0071e3" }}>
+              <Icon name="ChevronRight" size={30} color="#fff" /></button>
+          </div>
+        </div>
+      </div>
+      <div className="mt-5 flex items-center gap-6" style={{ color: "#6e6e73", fontSize: 15 }}>
+        <span>← → para navegar</span>
+        <button onClick={full} className="flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow transition-all duration-300 hover:scale-105" style={{ color: "#1d1d1f", fontWeight: 600 }}>
+          <Icon name="Maximize" size={18} color="#1d1d1f" /> Pantalla completa (F)
+        </button>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

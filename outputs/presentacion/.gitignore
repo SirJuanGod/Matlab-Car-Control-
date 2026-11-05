@@ -1,0 +1,4 @@
+# Generado por build.py
+dist/
+# Salida de matlab -batch
+matlab/log.txt
